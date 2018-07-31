@@ -610,7 +610,7 @@ var __extends = (this && this.__extends) || (function () {
         function NewUser(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "detail": "newUserTemp"
+                "newUser": "newUserTemp"
             };
             $.extend(_this, props);
             return _this;
@@ -622,7 +622,7 @@ var __extends = (this && this.__extends) || (function () {
             var header = this.mainView.mainView.header;
             header.showMenu();
             header.setTitle("新增用户");
-            this.mainView.renderByChildren(window.template(this.template.detail, {}));
+            this.mainView.renderByChildren(window.template(this.template.newUser, {}));
             this.bindEvent();
         };
         NewUser.prototype.bindEvent = function () {
@@ -647,9 +647,62 @@ var __extends = (this && this.__extends) || (function () {
             header.showMenu();
             header.setTitle("活跃用户");
             this.mainView.renderByChildren(window.template(this.template.detail, {}));
+            this.renderChart();
             this.bindEvent();
         };
         ActiveUser.prototype.bindEvent = function () {
+        };
+        ActiveUser.prototype.renderChart = function () {
+            var data = [{
+                    year: '1991',
+                    value: 3
+                }, {
+                    year: '1992',
+                    value: 4
+                }, {
+                    year: '1993',
+                    value: 3.5
+                }, {
+                    year: '1994',
+                    value: 5
+                }, {
+                    year: '1995',
+                    value: 4.9
+                }, {
+                    year: '1996',
+                    value: 6
+                }, {
+                    year: '1997',
+                    value: 7
+                }, {
+                    year: '1998',
+                    value: 9
+                }, {
+                    year: '1999',
+                    value: 13
+                }];
+            var chart = new window.G2.Chart({
+                container: 'gchart',
+                width: 600,
+                height: 300,
+                forceFit: true,
+                background: {
+                    fill: "#fff"
+                }
+            });
+            chart.source(data);
+            chart.scale('value', {
+                min: 0
+            });
+            chart.scale('year', {
+                range: [0, 1]
+            });
+            chart.line().position('year*value');
+            chart.point().position('year*value').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            chart.render();
         };
         return ActiveUser;
     }(ChartBase));

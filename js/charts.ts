@@ -932,6 +932,7 @@
             header.setTitle("活跃用户");
 
             this.mainView.renderByChildren((<any>window).template(this.template.detail,{}));
+            this.renderChart();
             this.bindEvent();
         }
 
@@ -940,6 +941,66 @@
          */
         bindEvent() {
 
+        }
+
+        /**
+         * 渲染图表
+         */
+        renderChart() {
+            let data = [{
+                year: '1991',
+                value: 3
+              }, {
+                year: '1992',
+                value: 4
+              }, {
+                year: '1993',
+                value: 3.5
+              }, {
+                year: '1994',
+                value: 5
+              }, {
+                year: '1995',
+                value: 4.9
+              }, {
+                year: '1996',
+                value: 6
+              }, {
+                year: '1997',
+                value: 7
+              }, {
+                year: '1998',
+                value: 9
+              }, {
+                year: '1999',
+                value: 13
+              }];
+
+              let chart = new (<any>window).G2.Chart({
+                container: 'gchart', // 指定图表容器 ID
+                width : 600, // 指定图表宽度
+                height : 300, // 指定图表高度
+                forceFit: true, // 自适应宽度
+                background:{
+                    fill:"#fff"
+                }
+              });
+              // Step 2: 载入数据源
+              chart.source(data);
+              chart.scale('value', {
+                min: 0
+              });
+              chart.scale('year', {
+                range: [0, 1]
+              });
+              // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+              chart.line().position('year*value');
+              chart.point().position('year*value').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+              });
+              // Step 4: 渲染图表
+              chart.render();
         }
     }
 

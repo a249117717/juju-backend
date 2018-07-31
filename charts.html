@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ch-n">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>后台管理</title>
+    <link rel="stylesheet" href="lib/mdui/css/mdui.min.css">
+    <link rel="stylesheet" href="common/css/reset.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div class="g-chart">
+        <div class="c-side">
+            <div class="header">
+                <span class="changePwd">修改密码</span>
+                <div class="name">
+                    <span class="descript">神秘巨星</span>
+                </div>
+            </div>
+            <ul class="menu-list">
+                <li class="newUser mdui-ripple mdui-ripple-white">
+                    <a href="#newUser">新增用户</a>
+                </li>
+                <li class="activeUser mdui-ripple mdui-ripple-white">
+                    <a href="#activeUser">活跃用户</a>
+                </li>
+                <li class="statisticalUser mdui-ripple mdui-ripple-white">
+                    <a href="#statisticalUser">统计用户</a>
+                </li>
+                <li class="userList mdui-ripple mdui-ripple-white">
+                    <a href="#userList">用户列表</a>
+                </li>
+            </ul>
+        </div>
+        <div class="g-right">
+            <!-- 头部 -->
+            <div class="c-header">
+                <div class="name mdui-ripple mdui-ripple-grey">新增用户</div>
+                <div class="menu">
+                    <!-- 搜索框 -->
+                    <div class="search-out">
+                        <input type="text" placeholder="Search" class="search">
+                        <button class="btn btn-search mdui-btn-raised mdui-ripple mdui-ripple-grey"></button>
+                    </div>
+                    <!-- 开始和截止日期选择 -->
+                    <div class="date-out mdui-ripple mdui-ripple-grey">
+                        <div class="start">开始日期：<span class="date">2018-01-01</span></div>
+                        <div class="end">结束日期：<span class="date">2018-01-05</span></div>
+                    </div>
+                    <!-- 单日日期选择 -->
+                    <div class="singleDate mdui-ripple mdui-ripple-grey">
+                        <div class="choice">日期：<span class="date">2018-01-01</span></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 内容 -->
+            <div class="c-content">
+            </div>
+        </div>
+    </div>
+    <!-- 密码变更 -->
+    <div class="g-changePwd">
+        <div class="content">
+            <div class="title">CHANGEPASSWORD</div>
+            <div class="input-group">
+                <input type="text" class="user" placeholder="请输入用户名" />
+                <input type="password" class="oldPwd" placeholder="请输入旧密码" />
+                <input type="password" class="newPwd" placeholder="请输入新密码" />
+                <input type="password" class="rePwd" placeholder="请再次输入新密码">
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
+    
+    <!-- 新增用户模板 -->
+    <script id="newUserTemp" type="text/html">
+        <div class="m-newUser">
+            <div class="defaultDescript">
+                <div class="tip"></div>
+                <div class="content">少时诵诗书所所所所所所</div>
+                <div class="descript">sss</div>
+            </div>
+        </div>
+    </script>
+    <!-- 活跃用户模板 -->
+    <script id="activeUserTemp" type="text/html"></script>
+    <!-- 统计用户模板 -->
+    <script id="statisticalTemp" type="text/html">
+        <div class="m-statisticalUser defaultTable">
+            <div class="detail">
+                <div class="title-out">
+                    <div class="title">详情</div>
+                    <div class="subtitle">Detail</div>
+                </div>
+                <table class="info" border="0">
+                </table>
+                <pading count="{{ count }}"></pading>
+            </div>
+        </div>
+    </script>
+    <!-- 统计用户详情 -->
+    <script id="statisticalDetail" type="text/html">
+        <thead>
+            <tr>
+                <th>创建时间</th>
+                <th>日活跃</th>
+                <th>日注册人数</th>
+                <th>月活跃</th>
+                <th>七日</th>
+                <th>三日</th>
+                <th>总注册人数</th>
+                <th>两日</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ each data as en }}
+                <tr>
+                    <td>{{ formatData(en.create_time) }}</td>
+                    <td>{{ en.dau }}</td>
+                    <td>{{ en.day_register }}</td>
+                    <td>{{ en.mau }}</td>
+                    <td>{{ en.seven_day }}</td>
+                    <td>{{ en.three_day }}</td>
+                    <td>{{ en.total_register }}</td>
+                    <td>{{ en.two_day }}</td>
+                </tr>
+            {{ /each }}
+        </tbody>
+    </script>
+    <!-- 用户列表模板 -->
+    <script id="userListTemp" type="text/html">
+        <div class="m-userList defaultTable">
+            <div class="detail">
+                <div class="title-out">
+                    <div class="title">详情</div>
+                    <div class="subtitle">Detail</div>
+                </div>
+                <table class="info" border="0">
+                </table>
+                <pading count="{{ count }}"></pading>
+            </div>
+        </div>
+    </script>
+    <!-- 用户列表详情 -->
+    <script id="userListDetail" type="text/html">
+        <thead>
+            <tr>
+                <th>创建时间</th>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>登录ip地址</th>
+                <th>登录时间</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>vip</th>
+                <th>头像</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ each data as en }}
+                <tr>
+                    <td>{{ formatData(en.create_time) }}</td>
+                    <td>{{en.uid}}</td>
+                    <td>{{ en.name }}</td>
+                    <td>{{ en.login_ip }}</td>
+                    <td>{{ en.login_time }}</td>
+                    <td>{{ en.sex == "1"?"男":"女" }}</td>
+                    <td>{{ en.age }}</td>
+                    <td>{{ en.vip }}</td>
+                    <td>
+                        <img class="pho" src="{{ en.head_img }}" />
+                    </td>
+                </tr>
+            {{ /each }}
+        </tbody>
+    </script>
+    <!-- 翻页模板 -->
+    <script id="padingTemp" type="text/html">
+        <div class="m-pading">
+            <div class="content">
+                <li class="home mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                <li class="prev mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                <li no="1" class="page active mdui-btn-raised mdui-ripple mdui-ripple-grey">1</li>
+                <li no="2" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">2</li>
+                <li no="3" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">3</li>
+                <li no="4" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">4</li>
+                <li no="5" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">5</li>
+                <li class="next mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                <li class="back mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+            </div>
+            <div class="count">
+                <span class="pageNo">1</span>
+                <span>/</span>
+                <span class="total">5</span>
+            </div>
+        </div>
+    </script>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="common/js/common.js"></script>
+    <script src="lib/mdui/js/mdui.min.js"></script>
+    <script src="lib/artTemplate/template.js"></script>
+    <script src="lib/calendar/calendar.js"></script>
+    <script src="lib/layer/layer.js"></script>
+    <script src="js/charts.js"></script>
+</body>
+</html>

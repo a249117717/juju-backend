@@ -1,0 +1,22 @@
+{{ each month as en mindex }}
+    <div class="date" years="{{ year + "-" + (mindex + 1) }}">
+        <span class="years">{{ year }}年{{ mindex + 1 }}月</span>
+        <ul class="days">
+            {{ each en as day dindex }}
+                {{ if (dindex+1) < weekStart[mindex] }}
+                    <li>
+                        <span class="day"></span>
+                    </li>
+                {{ else if (dindex-5)%7 == 0 || (dindex-6)%7 == 0 }}
+                    <li class="haveValue orangle" day="{{ dindex - weekStart[mindex] + 2 }}">
+                        <span class="day">{{ dindex - weekStart[mindex] + 2 }}</span>
+                    </li>
+                {{ else }}
+                    <li class="haveValue" day="{{ dindex - weekStart[mindex] + 2 }}">
+                        <span class="day">{{ dindex - weekStart[mindex] + 2 }}</span>
+                    </li>
+                {{ /if }}
+            {{ /each }}
+        </ul>
+    </div>
+{{ /each }}

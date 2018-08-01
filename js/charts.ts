@@ -452,12 +452,13 @@
 
         /**
          * 调用组件
+         * @param {Class} componentClass [组件]
          */
         component(componentClass:any) {
             let className:string = componentClass["name"];
             className = className.replace(/^.{1}/,className[0].toLowerCase());
 
-            if(!(className in this.currentChart)) {
+            if(!this.currentChart[className]) {
                 this.currentChart[className] = new componentClass({
                     mainView:this.currentChart
                 });
@@ -473,6 +474,7 @@
         template:string = "padingTemp";
         total:number = 0;   // 总页数
         pageNo:number = 0;  // 当前页码
+        pageSize:number = _pageSize;    // 每页条数
         state = { // 状态
             "home":false,   // 首页
             "prev":false,   // 上一页
@@ -493,7 +495,7 @@
             this.total = parseInt($pading.attr("total"));
             if(!this.total) {
                 // 允许用户传递总个数，当总页数不存在的时候
-                this.total = Math.ceil(parseInt($pading.attr("count")) / _pageSize);
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
             };
 
             this.render();
@@ -512,7 +514,7 @@
             this.$el.find(".total").text(total);
 
             if(total > 0) {    // 总页数大于0才执行
-                this.setPageNo(1,"page");
+                this.setPageNo(1,"home");
                 if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
                     $.each(this.$el.find(".page"),function(index){
                         if(index > total-1) {
@@ -521,6 +523,8 @@
                     });
                 };
             };
+            // 初始化mdui组件
+            (<any>window).mdui.mutation();
 
             this.bindEvent();
         }
@@ -565,6 +569,17 @@
                     self.setPageNo(self.total,"back");
                 };
             });
+
+            // 下拉选择控件
+            this.$el.find(".pageSize").on("close.mdui.select",(e,value) => {
+                let pageSize:number = parseInt(value.inst.value);
+                if(this.pageSize == pageSize) {
+                    // 如果选择的每页条数不变，则不执行下列函数
+                    return;
+                };
+                this.pageSize = pageSize;
+                this.setPageNo(1,"home");
+            });
         }
 
         /**
@@ -574,10 +589,10 @@
          */
         setPageNo(value:number,operation:string) {
             this.pageNo = value;
-            if(this.isFirst) { // 第一次加载不执行下列函数
+            if(this.isFirst) {
                 this.isFirst = false;
-            } else {
-                this.mainView.changePading(value);
+            } else {    // 第一次加载不调用变更函数
+                this.mainView.changePading(value,this.pageSize);
             };
 
             if(value < 3) { // 当前页码小于3，禁用首页
@@ -606,6 +621,36 @@
             
             this.resetNumber(value,operation);
             this.$el.find(".pageNo").text(value);
+        }
+
+        /**
+         * 设置总页数
+         * @param {number} count [总条数]
+         */
+        setTotal(count:number) {
+            let total:number = 0;
+            total = Math.ceil(count / this.pageSize);
+            if(this.total == total) {
+                // 如果总页数不变，则不执行下列函数
+                return;
+            };
+            this.total = total;
+
+            // 设置总页数
+            this.$el.find(".total").text(total);
+
+            if(total > 0) {    // 总页数大于0才执行
+                this.$el.find(".page").show();
+                this.isFirst = true;
+                this.setPageNo(1,"home");
+                if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
+                    $.each(this.$el.find(".page"),function(index){
+                        if(index > total-1) {
+                            $(this).hide();
+                        };
+                    });
+                };
+            };
         }
 
         /**
@@ -821,6 +866,7 @@
     class ChartBase {
         mainView:CDetail = null;
         $el:JQuery<HTMLElement> = null;
+        pading:Pading = null;   // 翻页控件
 
         constructor(props:any) {
             $.extend(this,props);
@@ -863,8 +909,9 @@
         /**
          * 页码变更
          * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
          */
-        changePading(pageNo:number) {}
+        changePading(pageNo:number,pageSize:number) {}
     }
 
     // 新增用户
@@ -1021,13 +1068,14 @@
         /**
          * 获取数据
          * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
          */
-        fetch(pageNo:number = 1) {
+        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
             let self:StatisticalUser = this;
 
             _load(true);
             _resource.statisticalUser(JSON.stringify({
-                "page_size":_pageSize,
+                "page_size":pageSize,
                 "page_index":pageNo,
                 "day":this.day,
                 "token":this.mainView.mainView.token
@@ -1035,6 +1083,9 @@
                 if(self.firstLoad) {
                     self.render(data);
                     self.firstLoad = false;
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
                 };
                 self.renderDetail(data)
                 _load(false);
@@ -1081,9 +1132,10 @@
         /**
          * 页码变更
          * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
          */
-        changePading(pageNo:number) {
-            this.fetch(pageNo);
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
         }
     }
 
@@ -1103,14 +1155,15 @@
         /**
          * 获取数据
          * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
          * @param {uid} string [用户编号]
          */
-        fetch(pageNo:number = 1,uid:number = 0) {
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
             let self:UserList = this;
 
             _load(true);
             _resource.userList(JSON.stringify({
-                "page_size":_pageSize,
+                "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":uid,
                 "token":this.mainView.mainView.token
@@ -1118,6 +1171,9 @@
                 if(self.firstLoad) {
                     self.render(data);
                     self.firstLoad = false;
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
                 };
                 self.renderDetail(data)
                 _load(false);
@@ -1158,9 +1214,10 @@
         /**
          * 页码变更
          * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
          */
-        changePading(pageNo:number) {
-            this.fetch(pageNo);
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
         }
 
         /**
@@ -1169,7 +1226,7 @@
          */
         search(query:string) {
             if(/^\d*$/.test(query)){
-                this.fetch(undefined,query?parseInt(query):undefined);
+                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
             } else {
                 (<any>window).layer.msg("请输入正确的用户编号");
             };

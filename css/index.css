@@ -527,10 +527,18 @@ body {
 }
 
 .m-pading {
-  float: right;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: default;
+  min-height: 46px;
+}
+
+.m-pading .selectSize {
+  float: left;
+}
+
+.m-pading .selectNo {
+  float: right;
 }
 
 .m-pading .count {

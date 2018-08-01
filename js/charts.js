@@ -304,7 +304,7 @@ var __extends = (this && this.__extends) || (function () {
         CDetail.prototype.component = function (componentClass) {
             var className = componentClass["name"];
             className = className.replace(/^.{1}/, className[0].toLowerCase());
-            if (!(className in this.currentChart)) {
+            if (!this.currentChart[className]) {
                 this.currentChart[className] = new componentClass({
                     mainView: this.currentChart
                 });
@@ -321,6 +321,7 @@ var __extends = (this && this.__extends) || (function () {
             this.template = "padingTemp";
             this.total = 0;
             this.pageNo = 0;
+            this.pageSize = _pageSize;
             this.state = {
                 "home": false,
                 "prev": false,
@@ -334,7 +335,7 @@ var __extends = (this && this.__extends) || (function () {
             var $pading = this.mainView.mainView.$el.find("pading");
             this.total = parseInt($pading.attr("total"));
             if (!this.total) {
-                this.total = Math.ceil(parseInt($pading.attr("count")) / _pageSize);
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
             }
             ;
             this.render();
@@ -345,7 +346,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el = $detail.find(".m-pading:last");
             this.$el.find(".total").text(total);
             if (total > 0) {
-                this.setPageNo(1, "page");
+                this.setPageNo(1, "home");
                 if (total <= 5) {
                     $.each(this.$el.find(".page"), function (index) {
                         if (index > total - 1) {
@@ -357,9 +358,11 @@ var __extends = (this && this.__extends) || (function () {
                 ;
             }
             ;
+            window.mdui.mutation();
             this.bindEvent();
         };
         Pading.prototype.bindEvent = function () {
+            var _this = this;
             var self = this;
             this.$el.find(".home").on("click", function () {
                 if (!$(this).attr("disabled")) {
@@ -391,6 +394,15 @@ var __extends = (this && this.__extends) || (function () {
                 }
                 ;
             });
+            this.$el.find(".pageSize").on("close.mdui.select", function (e, value) {
+                var pageSize = parseInt(value.inst.value);
+                if (_this.pageSize == pageSize) {
+                    return;
+                }
+                ;
+                _this.pageSize = pageSize;
+                _this.setPageNo(1, "home");
+            });
         };
         Pading.prototype.setPageNo = function (value, operation) {
             this.pageNo = value;
@@ -398,7 +410,7 @@ var __extends = (this && this.__extends) || (function () {
                 this.isFirst = false;
             }
             else {
-                this.mainView.changePading(value);
+                this.mainView.changePading(value, this.pageSize);
             }
             ;
             if (value < 3) {
@@ -433,6 +445,31 @@ var __extends = (this && this.__extends) || (function () {
             ;
             this.resetNumber(value, operation);
             this.$el.find(".pageNo").text(value);
+        };
+        Pading.prototype.setTotal = function (count) {
+            var total = 0;
+            total = Math.ceil(count / this.pageSize);
+            if (this.total == total) {
+                return;
+            }
+            ;
+            this.total = total;
+            this.$el.find(".total").text(total);
+            if (total > 0) {
+                this.$el.find(".page").show();
+                this.isFirst = true;
+                this.setPageNo(1, "home");
+                if (total <= 5) {
+                    $.each(this.$el.find(".page"), function (index) {
+                        if (index > total - 1) {
+                            $(this).hide();
+                        }
+                        ;
+                    });
+                }
+                ;
+            }
+            ;
         };
         Pading.prototype.resetNumber = function (value, operation) {
             var $page = null;
@@ -592,6 +629,7 @@ var __extends = (this && this.__extends) || (function () {
         function ChartBase(props) {
             this.mainView = null;
             this.$el = null;
+            this.pading = null;
             $.extend(this, props);
         }
         ChartBase.prototype.fetch = function (data) {
@@ -602,7 +640,7 @@ var __extends = (this && this.__extends) || (function () {
         };
         ChartBase.prototype.search = function (query) { };
         ChartBase.prototype.changeDate = function (start, end) { };
-        ChartBase.prototype.changePading = function (pageNo) { };
+        ChartBase.prototype.changePading = function (pageNo, pageSize) { };
         return ChartBase;
     }());
     var NewUser = (function (_super) {
@@ -719,12 +757,13 @@ var __extends = (this && this.__extends) || (function () {
             _this.day = 0;
             return _this;
         }
-        StatisticalUser.prototype.fetch = function (pageNo) {
+        StatisticalUser.prototype.fetch = function (pageNo, pageSize) {
             if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
             var self = this;
             _load(true);
             _resource.statisticalUser(JSON.stringify({
-                "page_size": _pageSize,
+                "page_size": pageSize,
                 "page_index": pageNo,
                 "day": this.day,
                 "token": this.mainView.mainView.token
@@ -732,6 +771,9 @@ var __extends = (this && this.__extends) || (function () {
                 if (self.firstLoad) {
                     self.render(data);
                     self.firstLoad = false;
+                }
+                else {
+                    self.pading.setTotal(data.count);
                 }
                 ;
                 self.renderDetail(data);
@@ -754,8 +796,8 @@ var __extends = (this && this.__extends) || (function () {
             this.day = (new Date(start + " 00:00:00")).getTime();
             this.fetch();
         };
-        StatisticalUser.prototype.changePading = function (pageNo) {
-            this.fetch(pageNo);
+        StatisticalUser.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
         };
         return StatisticalUser;
     }(ChartBase));
@@ -771,13 +813,14 @@ var __extends = (this && this.__extends) || (function () {
             _this.firstLoad = true;
             return _this;
         }
-        UserList.prototype.fetch = function (pageNo, uid) {
+        UserList.prototype.fetch = function (pageNo, pageSize, uid) {
             if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
             if (uid === void 0) { uid = 0; }
             var self = this;
             _load(true);
             _resource.userList(JSON.stringify({
-                "page_size": _pageSize,
+                "page_size": pageSize,
                 "page_index": pageNo,
                 "uid": uid,
                 "token": this.mainView.mainView.token
@@ -785,6 +828,9 @@ var __extends = (this && this.__extends) || (function () {
                 if (self.firstLoad) {
                     self.render(data);
                     self.firstLoad = false;
+                }
+                else {
+                    self.pading.setTotal(data.count);
                 }
                 ;
                 self.renderDetail(data);
@@ -805,12 +851,12 @@ var __extends = (this && this.__extends) || (function () {
         UserList.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template(this.template.detail, data));
         };
-        UserList.prototype.changePading = function (pageNo) {
-            this.fetch(pageNo);
+        UserList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
         };
         UserList.prototype.search = function (query) {
             if (/^\d*$/.test(query)) {
-                this.fetch(undefined, query ? parseInt(query) : undefined);
+                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
             }
             else {
                 window.layer.msg("请输入正确的用户编号");

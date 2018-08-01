@@ -186,21 +186,32 @@
     <!-- 翻页模板 -->
     <script id="padingTemp" type="text/html">
         <div class="m-pading">
-            <div class="content">
-                <li class="home mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
-                <li class="prev mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
-                <li no="1" class="page active mdui-btn-raised mdui-ripple mdui-ripple-grey">1</li>
-                <li no="2" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">2</li>
-                <li no="3" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">3</li>
-                <li no="4" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">4</li>
-                <li no="5" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">5</li>
-                <li class="next mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
-                <li class="back mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+            <div class="selectSize">
+                <span class="tip">条数:</span>
+                <select class="pageSize mdui-select" mdui-select="options">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
             </div>
-            <div class="count">
-                <span class="pageNo">1</span>
-                <span>/</span>
-                <span class="total">5</span>
+            <div class="selectNo">
+                <div class="content">
+                    <li class="home mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                    <li class="prev mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                    <li no="1" class="page active mdui-btn-raised mdui-ripple mdui-ripple-grey">1</li>
+                    <li no="2" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">2</li>
+                    <li no="3" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">3</li>
+                    <li no="4" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">4</li>
+                    <li no="5" class="page mdui-btn-raised mdui-ripple mdui-ripple-grey">5</li>
+                    <li class="next mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                    <li class="back mdui-btn-raised mdui-ripple mdui-ripple-grey"></li>
+                </div>
+                <div class="count">
+                    <span class="pageNo">1</span>
+                    <span>/</span>
+                    <span class="total">5</span>
+                </div>
             </div>
         </div>
     </script>

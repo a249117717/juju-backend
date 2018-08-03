@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div class="g-chart">
+    <div class="g-chartDetail">
         <div class="c-side">
             <div class="header">
                 <span class="changePwd">修改密码</span>
@@ -90,7 +90,14 @@
     <!-- 活跃用户模板 -->
     <script id="activeUserTemp" type="text/html">
         <div class="m-activeUser">
-            <div id="gchart"></div>
+            <div class="g-chart">
+                <ul class="menu">
+                    <li class="active">日活跃DAU</li>
+                    <li>月活跃MAU</li>
+                    <li>DAU/MAU</li>
+                </ul>
+                <div id="diagram"></div>
+            </div>
         </div>
     </script>
     <!-- 统计用户模板 -->

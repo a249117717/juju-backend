@@ -238,7 +238,7 @@ body{
     }
 }
 
-.g-chart {
+.g-chartDetail {
     height:100%;
 
     .g-right {
@@ -539,6 +539,52 @@ body{
         border-top: 1px solid #eee;
         width:100%;
         clear: both;
+    }
+}
+
+.g-chart {
+    padding-top:40px;
+    position: relative;
+    left:0;
+    top:0;
+    width:100%;
+    background-color: #fff;
+
+    .menu {
+        position: absolute;
+        top:10px;
+        left:20px;
+
+        &>li {
+            padding:5px 10px;
+            float:left;
+            border-top:1px solid #000;
+            border-bottom:1px solid #000;
+            border-left:1px solid #000;
+            font-size: 12px;
+            cursor: pointer;
+
+            &:last-child {
+                border-right:1px solid #000;
+                border-radius: 0 5px 5px 0;
+            }
+
+            &:first-child {
+                border-radius: 5px 0 0 5px;
+            }
+
+            &:hover,
+            &.active {
+                background-color: #448AFF;
+                border-color: #448AFF;
+                color:#fff;
+            }
+
+            &:hover+li,
+            &.active+li {
+                border-left-color: #448AFF;
+            }
+        }
     }
 }
 

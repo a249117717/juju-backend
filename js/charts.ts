@@ -10,6 +10,7 @@
 
     // 主体
     class IndexMain {
+        $el:JQuery<HTMLElement> = $(".g-chartDetail");    // 主体
         header:CHeader = null;  // 头部
         side:CSide = null;  // 侧栏
         detail:CDetail = null;  // 详情
@@ -445,7 +446,7 @@
          */
         callChartBySide(chartClass:any) {
             this.currentChart = new chartClass({
-                mainView:this
+                "mainView":this
             });
             this.currentChart.fetch();
         }
@@ -917,7 +918,12 @@
         pading:Pading = null;   // 翻页控件
 
         constructor(props:any) {
+            let parent:IndexMain = null;
             $.extend(this,props);
+
+            // 设置详情内容的左侧标题
+            parent = this.mainView.mainView;
+            parent.header.setTitle(parent.side.$el.find(".active").text());
         }
 
         /**
@@ -986,7 +992,6 @@
         render() {
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu();
-            header.setTitle("新增用户");
 
             this.mainView.renderByChildren((<any>window).template(this.template.newUser,{}));
             this.bindEvent();
@@ -1024,9 +1029,9 @@
         render() {
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu();
-            header.setTitle("活跃用户");
 
             this.mainView.renderByChildren((<any>window).template(this.template.detail,{}));
+            this.$el = $(".m-activeUser");
             this.renderChart();
             this.bindEvent();
         }
@@ -1035,7 +1040,13 @@
          * 事件绑定
          */
         bindEvent() {
+            this.$el.find(".g-chart .menu").on("click","li",function(){
+                let $this:JQuery<HTMLElement> = $(this);
 
+                if(!$this.hasClass("active")) {
+                    $this.addClass("active").siblings(".active").removeClass("active");
+                };
+            });
         }
 
         /**
@@ -1072,10 +1083,11 @@
               }];
 
               let chart = new (<any>window).G2.Chart({
-                container: 'gchart', // 指定图表容器 ID
+                container: 'diagram', // 指定图表容器 ID
                 width : 600, // 指定图表宽度
                 height : 300, // 指定图表高度
                 forceFit: true, // 自适应宽度
+                padding:["auto","auto",45,45],
                 background:{
                     fill:"#fff"
                 }
@@ -1146,7 +1158,6 @@
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu(false,false,true);
-            header.setTitle("统计用户");
 
             this.mainView.renderByChildren((<any>window).template(this.template.statistical,data));
             this.$el = $(".m-statisticalUser");
@@ -1236,7 +1247,6 @@
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu(true);
             header.setPlaceHolder("uid");
-            header.setTitle("用户列表");
 
             this.mainView.renderByChildren((<any>window).template(this.template.userList,data));
             this.$el = $(".m-userList");

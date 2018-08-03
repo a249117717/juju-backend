@@ -25,6 +25,16 @@ function _load(isShow) {
     }
     ;
 }
+function _error(code) {
+    var tip = "";
+    switch (code) {
+        case 404:
+            tip = "请求服务器的资源不存在!";
+            break;
+    }
+    ;
+    return tip;
+}
 !(function () {
     var temp = {};
     for (var en in _resource) {
@@ -43,10 +53,20 @@ function _load(isShow) {
             "type": type,
             "data": data,
             "success": function (data) {
-                success(data);
+                if (success) {
+                    success(data);
+                }
+                ;
             },
             "error": function (request, response) {
-                error(request, response);
+                if (error) {
+                    error(request, response);
+                }
+                else {
+                    window.layer.msg(_error(request.status));
+                    _load(false);
+                }
+                ;
             }
         });
     }

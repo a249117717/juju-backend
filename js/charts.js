@@ -17,6 +17,7 @@ var __extends = (this && this.__extends) || (function () {
     });
     var IndexMain = (function () {
         function IndexMain() {
+            this.$el = $(".g-chartDetail");
             this.header = null;
             this.side = null;
             this.detail = null;
@@ -297,7 +298,7 @@ var __extends = (this && this.__extends) || (function () {
         };
         CDetail.prototype.callChartBySide = function (chartClass) {
             this.currentChart = new chartClass({
-                mainView: this
+                "mainView": this
             });
             this.currentChart.fetch();
         };
@@ -669,7 +670,10 @@ var __extends = (this && this.__extends) || (function () {
             this.mainView = null;
             this.$el = null;
             this.pading = null;
+            var parent = null;
             $.extend(this, props);
+            parent = this.mainView.mainView;
+            parent.header.setTitle(parent.side.$el.find(".active").text());
         }
         ChartBase.prototype.fetch = function (data) {
         };
@@ -698,7 +702,6 @@ var __extends = (this && this.__extends) || (function () {
         NewUser.prototype.render = function () {
             var header = this.mainView.mainView.header;
             header.showMenu();
-            header.setTitle("新增用户");
             this.mainView.renderByChildren(window.template(this.template.newUser, {}));
             this.bindEvent();
         };
@@ -722,12 +725,19 @@ var __extends = (this && this.__extends) || (function () {
         ActiveUser.prototype.render = function () {
             var header = this.mainView.mainView.header;
             header.showMenu();
-            header.setTitle("活跃用户");
             this.mainView.renderByChildren(window.template(this.template.detail, {}));
+            this.$el = $(".m-activeUser");
             this.renderChart();
             this.bindEvent();
         };
         ActiveUser.prototype.bindEvent = function () {
+            this.$el.find(".g-chart .menu").on("click", "li", function () {
+                var $this = $(this);
+                if (!$this.hasClass("active")) {
+                    $this.addClass("active").siblings(".active").removeClass("active");
+                }
+                ;
+            });
         };
         ActiveUser.prototype.renderChart = function () {
             var data = [{
@@ -759,10 +769,11 @@ var __extends = (this && this.__extends) || (function () {
                     value: 13
                 }];
             var chart = new window.G2.Chart({
-                container: 'gchart',
+                container: 'diagram',
                 width: 600,
                 height: 300,
                 forceFit: true,
+                padding: ["auto", "auto", 45, 45],
                 background: {
                     fill: "#fff"
                 }
@@ -822,7 +833,6 @@ var __extends = (this && this.__extends) || (function () {
         StatisticalUser.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
             header.showMenu(false, false, true);
-            header.setTitle("统计用户");
             this.mainView.renderByChildren(window.template(this.template.statistical, data));
             this.$el = $(".m-statisticalUser");
             this.bindEvent();
@@ -879,7 +889,6 @@ var __extends = (this && this.__extends) || (function () {
             var header = this.mainView.mainView.header;
             header.showMenu(true);
             header.setPlaceHolder("uid");
-            header.setTitle("用户列表");
             this.mainView.renderByChildren(window.template(this.template.userList, data));
             this.$el = $(".m-userList");
             this.bindEvent();

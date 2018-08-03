@@ -235,11 +235,11 @@ body {
   padding: 15px 5px;
 }
 
-.g-chart {
+.g-chartDetail {
   height: 100%;
 }
 
-.g-chart .g-right {
+.g-chartDetail .g-right {
   padding-left: 280px;
   width: 100%;
   height: 100%;
@@ -524,6 +524,51 @@ body {
   border-top: 1px solid #eee;
   width: 100%;
   clear: both;
+}
+
+.g-chart {
+  padding-top: 40px;
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+}
+
+.g-chart .menu {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
+
+.g-chart .menu > li {
+  padding: 5px 10px;
+  float: left;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-left: 1px solid #000;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.g-chart .menu > li:last-child {
+  border-right: 1px solid #000;
+  border-radius: 0 5px 5px 0;
+}
+
+.g-chart .menu > li:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.g-chart .menu > li:hover, .g-chart .menu > li.active {
+  background-color: #448AFF;
+  border-color: #448AFF;
+  color: #fff;
+}
+
+.g-chart .menu > li:hover + li,
+.g-chart .menu > li.active + li {
+  border-left-color: #448AFF;
 }
 
 .m-pading {

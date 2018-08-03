@@ -31,6 +31,21 @@ function _load(isShow:boolean) {
     };
 }
 
+/**
+ * 请求错误提示
+ * @param {number} code [错误代码]
+ */
+function _error(code:number) {
+    let tip:string = "";
+    switch(code) {
+        case 404:
+            tip = "请求服务器的资源不存在!"
+        break;
+    };
+
+    return tip;
+}
+
 !(function(){   // 服务器请求
     let temp = {};
     for(let en in _resource) {
@@ -48,10 +63,17 @@ function _load(isShow:boolean) {
             "type":type,
             "data":data,
             "success":function(data:any){
-                success(data);
+                if(success) {
+                    success(data);
+                };
             },
             "error":function(request,response) {
-                error(request,response);
+                if(error) {
+                    error(request,response);
+                } else {
+                    (<any>window).layer.msg(_error(request.status));
+                    _load(false);
+                };
             }
         })
     }

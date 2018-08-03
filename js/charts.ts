@@ -470,11 +470,15 @@
     // 翻页
     class Pading {
         $el:JQuery<HTMLElement> = null;
+        $selectSize:JQuery<HTMLElement> = null; // 下拉选项
+        $selectNo:JQuery<HTMLElement> = null;   // 翻页 
         mainView:ChartBase = null;
         template:string = "padingTemp";
         total:number = 0;   // 总页数
         pageNo:number = 0;  // 当前页码
         pageSize:number = _pageSize;    // 每页条数
+        selectSize:Array<string> = null; // 下拉选项
+        selected:string = null; // 下拉选项默认选中的值
         state = { // 状态
             "home":false,   // 首页
             "prev":false,   // 上一页
@@ -498,6 +502,11 @@
                 this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
             };
 
+            // 下拉选项
+            this.selectSize = $pading.attr("select")?$pading.attr("select").split(","):null;
+            // 下拉选项的默认选中
+            this.selected = $pading.attr("defaultSelect")?$pading.attr("defaultSelect"):null;
+
             this.render();
         }
 
@@ -505,24 +514,15 @@
          * 页面渲染
          */
         render() {
-            let $detail = this.mainView.mainView.$el,
-            total:number = this.total;
+            let $detail = this.mainView.mainView.$el;
 
             $detail.find("pading")[0].outerHTML = (<any>window).template(this.template,{});
             this.$el = $detail.find(".m-pading:last");
-            // 设置总页数
-            this.$el.find(".total").text(total);
+            this.$selectSize = this.$el.find(".selectSize");
+            this.$selectNo = this.$el.find(".selectNo");
 
-            if(total > 0) {    // 总页数大于0才执行
-                this.setPageNo(1,"home");
-                if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
-                    $.each(this.$el.find(".page"),function(index){
-                        if(index > total-1) {
-                            $(this).hide();
-                        };
-                    });
-                };
-            };
+            this.initTotal("init");
+            this.initSelectSize();
             // 初始化mdui组件
             (<any>window).mdui.mutation();
 
@@ -583,6 +583,66 @@
         }
 
         /**
+         * 初始化下拉选项
+         */
+        initSelectSize() {
+            let html:string = "";
+
+            if(this.selectSize) {   // 如果存在下拉选项，则根据其改变，否则使用默认
+                this.selectSize.forEach(en => {
+                    if(en == this.selected) {
+                        html += `<option value='${en}' selected>${en}</option>`;
+                    } else {
+                        html += `<option value='${en}'>${en}</option>`;
+                    };
+                });
+                this.$selectSize.find(".pageSize").html(html);
+            };
+        }
+
+        /**
+         * 初始化或重置总页数
+         * @param {string} operation [操作，init或reset]
+         */
+        initTotal(operation) {
+            let total:number = this.total;
+
+            if(total > 0) {
+                // 设置总页数
+                this.$el.find(".total").text(total);
+            } else {    // 总页数小于或等于0，直接退出当前函数，并将总页数默认设置为1
+                this.$el.find(".total").text(1);
+                return;
+            };
+
+            switch(operation) {
+                case "reset":
+                    this.$el.find(".page").show();
+                    this.isFirst = true;
+                    this.setPageNo(1,"home");
+                    if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
+                        $.each(this.$el.find(".page"),function(index){
+                            if(index > total-1) {
+                                $(this).hide();
+                            };
+                        });
+                    };
+                break;
+                case "init":
+                default:
+                    this.setPageNo(1,"home");
+                    if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
+                        $.each(this.$el.find(".page"),function(index){
+                            if(index > total-1) {
+                                $(this).hide();
+                            };
+                        });
+                    };
+                break;
+            }
+        }
+
+        /**
          * 设置当前页码
          * @param {number} value [页码]
          * @param {string} operation [操作]
@@ -638,19 +698,7 @@
 
             // 设置总页数
             this.$el.find(".total").text(total);
-
-            if(total > 0) {    // 总页数大于0才执行
-                this.$el.find(".page").show();
-                this.isFirst = true;
-                this.setPageNo(1,"home");
-                if(total <= 5) {    // 如果总页码小于等于5，则根据个数显示相应的可点击页码
-                    $.each(this.$el.find(".page"),function(index){
-                        if(index > total-1) {
-                            $(this).hide();
-                        };
-                    });
-                };
-            };
+            this.initTotal("reset");
         }
 
         /**
@@ -1068,9 +1116,9 @@
         /**
          * 获取数据
          * @param {number} pageNo [页码]
-         * @param {number} pageSize [每页条数]
+         * @param {number} pageSize [每页条数，默认为]
          */
-        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+        fetch(pageNo:number = 1,pageSize:number = 50) {
             let self:StatisticalUser = this;
 
             _load(true);
@@ -1126,7 +1174,7 @@
          */
         changeDate(start:string,end:string) {
             this.day = (new Date(`${start} 00:00:00`)).getTime();
-            this.fetch();
+            // this.fetch();
         }
 
         /**

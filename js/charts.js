@@ -317,11 +317,15 @@ var __extends = (this && this.__extends) || (function () {
     var Pading = (function () {
         function Pading(props) {
             this.$el = null;
+            this.$selectSize = null;
+            this.$selectNo = null;
             this.mainView = null;
             this.template = "padingTemp";
             this.total = 0;
             this.pageNo = 0;
             this.pageSize = _pageSize;
+            this.selectSize = null;
+            this.selected = null;
             this.state = {
                 "home": false,
                 "prev": false,
@@ -338,26 +342,18 @@ var __extends = (this && this.__extends) || (function () {
                 this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
             }
             ;
+            this.selectSize = $pading.attr("select") ? $pading.attr("select").split(",") : null;
+            this.selected = $pading.attr("defaultSelect") ? $pading.attr("defaultSelect") : null;
             this.render();
         };
         Pading.prototype.render = function () {
-            var $detail = this.mainView.mainView.$el, total = this.total;
+            var $detail = this.mainView.mainView.$el;
             $detail.find("pading")[0].outerHTML = window.template(this.template, {});
             this.$el = $detail.find(".m-pading:last");
-            this.$el.find(".total").text(total);
-            if (total > 0) {
-                this.setPageNo(1, "home");
-                if (total <= 5) {
-                    $.each(this.$el.find(".page"), function (index) {
-                        if (index > total - 1) {
-                            $(this).hide();
-                        }
-                        ;
-                    });
-                }
-                ;
-            }
-            ;
+            this.$selectSize = this.$el.find(".selectSize");
+            this.$selectNo = this.$el.find(".selectNo");
+            this.initTotal("init");
+            this.initSelectSize();
             window.mdui.mutation();
             this.bindEvent();
         };
@@ -403,6 +399,63 @@ var __extends = (this && this.__extends) || (function () {
                 _this.pageSize = pageSize;
                 _this.setPageNo(1, "home");
             });
+        };
+        Pading.prototype.initSelectSize = function () {
+            var _this = this;
+            var html = "";
+            if (this.selectSize) {
+                this.selectSize.forEach(function (en) {
+                    if (en == _this.selected) {
+                        html += "<option value='" + en + "' selected>" + en + "</option>";
+                    }
+                    else {
+                        html += "<option value='" + en + "'>" + en + "</option>";
+                    }
+                    ;
+                });
+                this.$selectSize.find(".pageSize").html(html);
+            }
+            ;
+        };
+        Pading.prototype.initTotal = function (operation) {
+            var total = this.total;
+            if (total > 0) {
+                this.$el.find(".total").text(total);
+            }
+            else {
+                this.$el.find(".total").text(1);
+                return;
+            }
+            ;
+            switch (operation) {
+                case "reset":
+                    this.$el.find(".page").show();
+                    this.isFirst = true;
+                    this.setPageNo(1, "home");
+                    if (total <= 5) {
+                        $.each(this.$el.find(".page"), function (index) {
+                            if (index > total - 1) {
+                                $(this).hide();
+                            }
+                            ;
+                        });
+                    }
+                    ;
+                    break;
+                case "init":
+                default:
+                    this.setPageNo(1, "home");
+                    if (total <= 5) {
+                        $.each(this.$el.find(".page"), function (index) {
+                            if (index > total - 1) {
+                                $(this).hide();
+                            }
+                            ;
+                        });
+                    }
+                    ;
+                    break;
+            }
         };
         Pading.prototype.setPageNo = function (value, operation) {
             this.pageNo = value;
@@ -455,21 +508,7 @@ var __extends = (this && this.__extends) || (function () {
             ;
             this.total = total;
             this.$el.find(".total").text(total);
-            if (total > 0) {
-                this.$el.find(".page").show();
-                this.isFirst = true;
-                this.setPageNo(1, "home");
-                if (total <= 5) {
-                    $.each(this.$el.find(".page"), function (index) {
-                        if (index > total - 1) {
-                            $(this).hide();
-                        }
-                        ;
-                    });
-                }
-                ;
-            }
-            ;
+            this.initTotal("reset");
         };
         Pading.prototype.resetNumber = function (value, operation) {
             var $page = null;
@@ -759,7 +798,7 @@ var __extends = (this && this.__extends) || (function () {
         }
         StatisticalUser.prototype.fetch = function (pageNo, pageSize) {
             if (pageNo === void 0) { pageNo = 1; }
-            if (pageSize === void 0) { pageSize = _pageSize; }
+            if (pageSize === void 0) { pageSize = 50; }
             var self = this;
             _load(true);
             _resource.statisticalUser(JSON.stringify({
@@ -794,7 +833,6 @@ var __extends = (this && this.__extends) || (function () {
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
             this.day = (new Date(start + " 00:00:00")).getTime();
-            this.fetch();
         };
         StatisticalUser.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);

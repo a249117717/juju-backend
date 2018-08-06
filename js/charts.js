@@ -294,12 +294,9 @@ var __extends = (this && this.__extends) || (function () {
         CDetail.prototype.component = function (componentClass) {
             var className = componentClass["name"];
             className = className.replace(/^.{1}/, className[0].toLowerCase());
-            if (!this.currentChart[className]) {
-                this.currentChart[className] = new componentClass({
-                    mainView: this.currentChart
-                });
-            }
-            ;
+            this.currentChart[className] = new componentClass({
+                mainView: this.currentChart
+            });
             this.currentChart[className].fetch();
         };
         return CDetail;
@@ -484,6 +481,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el.find(".pageNo").text(value);
         };
         Pading.prototype.setTotal = function (count) {
+            console.log(1);
             var total = 0;
             total = Math.ceil(count / this.pageSize);
             if (this.total == total) {
@@ -638,13 +636,18 @@ var __extends = (this && this.__extends) || (function () {
             ;
         };
         ChangePWD.prototype.show = function () {
-            this.$el.addClass("active");
-            this.$el.find(".shade").fadeIn(200);
+            var _this = this;
+            this.$el.show();
+            setTimeout(function () {
+                _this.$el.addClass("active");
+            }, 10);
         };
         ChangePWD.prototype.hide = function () {
-            this.$el.find(".input-group input").val("");
+            var _this = this;
             this.$el.removeClass("active");
-            this.$el.find(".shade").fadeOut(200);
+            setTimeout(function () {
+                _this.$el.hide();
+            }, 200);
         };
         return ChangePWD;
     }());
@@ -850,24 +853,7 @@ var __extends = (this && this.__extends) || (function () {
             if (pageSize === void 0) { pageSize = _pageSize; }
             if (uid === void 0) { uid = 0; }
             var self = this;
-            _load(true);
-            _resource.userList(JSON.stringify({
-                "page_size": pageSize,
-                "page_index": pageNo,
-                "uid": uid,
-                "token": this.mainView.mainView.token
-            }), function (data) {
-                if (self.firstLoad) {
-                    self.render(data);
-                    self.firstLoad = false;
-                }
-                else {
-                    self.pading.setTotal(data.count);
-                }
-                ;
-                self.renderDetail(data);
-                _load(false);
-            });
+            this.render({});
         };
         UserList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
@@ -882,6 +868,16 @@ var __extends = (this && this.__extends) || (function () {
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
                 self.$frozen.fadeIn(200);
+            });
+            this.$frozen.find(".btn-cancel").on("click", function () {
+                self.$frozen.fadeOut(200);
+            });
+            this.$frozen.find(".btn-submit").on("click", function () {
+            });
+            this.$frozen.find(".operation").on("change", function () {
+                var $this = $(this);
+            });
+            this.$el.find(".frozenTime").on("close.mdui.select", function (e, value) {
             });
         };
         UserList.prototype.renderDetail = function (data) {

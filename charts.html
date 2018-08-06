@@ -74,7 +74,7 @@
     <!-- 密码变更 -->
     <div class="g-changePwd">
         <div class="content">
-            <div class="title">CHANGEPASSWORD</div>
+            <div class="title">变更密码</div>
             <div class="input-group">
                 <input type="text" class="user" placeholder="请输入用户名" />
                 <input type="password" class="oldPwd" placeholder="请输入旧密码" />
@@ -168,18 +168,9 @@
                 <pading count="{{ count }}"></pading>
             </div>
             <!-- 冻结信息 -->
-            <div class="frozenInfo">
+            <div class="frozenInfo active">
                 <div class="frozenContent">
                     <div class="title">冻结用户</div>
-                    <div class="input-group">
-                        <input type="text" class="uid" readonly value="111"/>
-                        <input type="password" class="newPwd" placeholder="请输入新密码" />
-                        <textarea class="" cols="30" rows="10" placeholder="请输入冻结理由"></textarea>
-                    </div>
-                    <div class="button-group">
-                        <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
-                        <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -274,10 +265,10 @@
             <div class="selectSize">
                 <span class="tip">条数:</span>
                 <select class="pageSize mdui-select" mdui-select="options">
-                    <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
+                    <option value="50">50</option>
                 </select>
             </div>
             <div class="selectNo">

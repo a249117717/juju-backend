@@ -93,14 +93,13 @@ body{
 }
 
 .g-changePwd {
+    display: none;
     margin:-164px 0 0 -175px;
-    position: absolute;
+    position: fixed;;
     width:350px;
     left:50%;
-    top:-175px;
+    top:50%;
     z-index:11;
-    -webkit-transition:top cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
-    transition:top cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
 
     .shade {
         display: none;
@@ -116,9 +115,18 @@ body{
     }
 
     &.active {
-        top:50%;
-        -webkit-transition:top cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
-        transition:top cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+
+        .shade {
+            display: block;
+        }
+
+        .content {
+            opacity: 1;
+            -webkit-transform:scale(1,1);
+            transform:scale(1,1);
+            -webkit-transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+            transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+        }
     }
 
     .content {
@@ -127,17 +135,22 @@ body{
         top:0;
         z-index: 11;
         background-color: #fff;
-        border-radius: 10px;
+        border-radius: 5px;
+        opacity: 0.3;
+        -webkit-transform:scale(0.3,0.3);
+        transform:scale(0.3,0.3);
+        -webkit-transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
+        transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
 
         .title {
-            height:60px;
-            line-height: 60px;
-            text-align: center;
-            font-size: 18px;
+            padding-left:20px;
+            height:50px;
+            line-height: 50px;
+            font-size: 14px;
             letter-spacing: 3px;
-            background:url("../images/index/title.png");
+            background-color:#262524;
             color:#fff;
-            border-radius: 10px 10px 0 0;
+            border-radius: 5px 5px 0 0;
         }
 
         .user,
@@ -157,16 +170,31 @@ body{
         .button-group {
             background-color: #fff;
             overflow: hidden;
-            border-radius: 0 0 10px 10px;
+            border-radius: 0 0 5px 5px;
 
-            .btn-submit,
-            .btn-cancel {
+            .btn {
                 float: right;
                 margin:12px 10px;
                 padding:10px 30px;
+                border-radius: 5px;
+            }
+
+            .btn-cancel {
+                color:#333;
+                background-color: #eee;
+
+                &:hover {
+                    background-color: #E0E0E0;
+                }
+            }
+
+            .btn-submit {
                 color:#fff;
                 background-color: #42a5f5;
-                border-radius: 5px;
+
+                &:hover {
+                    background-color: #2196F3;
+                }
             }
         }
     }
@@ -678,11 +706,9 @@ body{
     .info {
 
         .btn {
-            padding:0 16px;
+            padding:9px 16px;
             border-radius: 2px;
             background-color: #64B5F6;
-            height: 32px;
-            line-height: 32px;
             font-size: 14px;
             color:#fff;
 
@@ -712,25 +738,42 @@ body{
             background-color:#000;
         }
 
+        &.active {
+            
+            .frozenContent {
+                opacity: 1;
+                -webkit-transform:scale(1,1);
+                transform:scale(1,1);
+                -webkit-transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+                transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+            }
+        }
+
         .frozenContent {
+            margin:0 0 0 -250px;
             position: absolute;
             top:50%;
             left:50%;
-            width:350px;
-            height:100px;
+            width:500px;
+            height:200px;
             z-index: 11;
             background-color: #fff;
-            border-radius: 10px;
+            border-radius: 5px;
+            opacity: 0.8;
+            -webkit-transform:scale(0.8,0.8);
+            transform:scale(0.8,0.8);
+            -webkit-transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
+            transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
 
             .title {
-                height:60px;
-                line-height: 60px;
-                text-align: center;
-                font-size: 18px;
+                padding-left:20px;
+                height:50px;
+                line-height: 50px;
+                font-size: 14px;
                 letter-spacing: 3px;
-                background-color:#F44336;
+                background-color:#262524;
                 color:#fff;
-                border-radius: 10px 10px 0 0;
+                border-radius: 5px 5px 0 0;
             }
         }
     }

@@ -449,11 +449,9 @@
             let className:string = componentClass["name"];
             className = className.replace(/^.{1}/,className[0].toLowerCase());
 
-            if(!this.currentChart[className]) {
-                this.currentChart[className] = new componentClass({
-                    mainView:this.currentChart
-                });
-            };
+            this.currentChart[className] = new componentClass({
+                mainView:this.currentChart
+            });
             this.currentChart[className].fetch();
         }
     }
@@ -675,6 +673,7 @@
          * @param {number} count [总条数]
          */
         setTotal(count:number) {
+            console.log(1);
             let total:number = 0;
             total = Math.ceil(count / this.pageSize);
             if(this.total == total) {
@@ -883,17 +882,20 @@
          * 显示
          */
         show() {
-            this.$el.addClass("active");
-            this.$el.find(".shade").fadeIn(200);
+            this.$el.show();
+            setTimeout(() => {
+                this.$el.addClass("active")
+            },10);
         }
 
         /**
          * 隐藏
          */
         hide() {
-            this.$el.find(".input-group input").val("");
             this.$el.removeClass("active");
-            this.$el.find(".shade").fadeOut(200);
+            setTimeout(() => {
+                this.$el.hide()
+            },200);
         }
     }
 
@@ -1205,24 +1207,24 @@
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
             let self:UserList = this;
-
-            _load(true);
-            _resource.userList(JSON.stringify({
-                "page_size":pageSize,
-                "page_index":pageNo,
-                "uid":uid,
-                "token":this.mainView.mainView.token
-            }),function(data:any){
-                if(self.firstLoad) {
-                    self.render(data);
-                    self.firstLoad = false;
-                } else {
-                    // 设置总页数
-                    self.pading.setTotal(data.count);
-                };
-                self.renderDetail(data)
-                _load(false);
-            });
+            this.render({});
+            // _load(true);
+            // _resource.userList(JSON.stringify({
+            //     "page_size":pageSize,
+            //     "page_index":pageNo,
+            //     "uid":uid,
+            //     "token":this.mainView.mainView.token
+            // }),function(data:any){
+            //     if(self.firstLoad) {
+            //         self.render(data);
+            //         self.firstLoad = false;
+            //     } else {
+            //         // 设置总页数
+            //         self.pading.setTotal(data.count);
+            //     };
+            //     self.renderDetail(data)
+            //     _load(false);
+            // });
         }
 
         /**
@@ -1250,6 +1252,15 @@
             // 冻结
             this.$el.find(".info").on("click",".btn-freeze",function(){
                 self.$frozen.fadeIn(200);
+            });
+
+            // 取消冻结
+            this.$frozen.find(".btn-cancel").on("click",function(){
+                self.$frozen.fadeOut(200);
+            });
+
+            // 确定冻结
+            this.$frozen.find(".btn-submit").on("click",function(){
                 // _resource.addFrozen(JSON.stringify({
                 //     "uid":$(this).attr("uid"),
                 //     "start_time":"",
@@ -1258,6 +1269,17 @@
                 // }),function(data){
 
                 // });
+            });
+
+            this.$frozen.find(".operation").on("change",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                
+            });
+
+            // 下拉选择控件
+            this.$el.find(".frozenTime").on("close.mdui.select",(e,value) => {
+                
             });
         }
 

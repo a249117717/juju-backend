@@ -35,6 +35,7 @@
                 }), function (data) {
                     if (data.code == 0) {
                         window.localStorage["jujuBackend"] = data.token;
+                        $("input").blur();
                         window.layer.alert("登录成功", {
                             "closeBtn": 0
                         }, function () {

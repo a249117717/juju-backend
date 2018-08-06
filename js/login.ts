@@ -62,6 +62,8 @@
                     if(data.code == 0) {
                         // 存储token
                         window.localStorage["jujuBackend"] = data.token;
+                        // 去掉输入框焦点
+                        $("input").blur();
                         (<any>window).layer.alert("登录成功",{
                             "closeBtn":0
                         },function(){

@@ -1,20 +1,52 @@
-let _domain:string = "http://39.108.151.200:9999",
-_loadObject:any = null, // 存储load对象
+const _domain:string = "http://39.108.151.200:9999",
+_router:any = {   // 路由器(key:hash值，value:对应调用的类)
+    "newUser":"NewUser", // 新增用户
+    "activeUser":"ActiveUser",  // 活跃用户
+    "statisticalUser":"StatisticalUser", // 统计用户
+    "userList":"UserList",  // 用户列表
+    "payStatistical":"PayStatistical",  // 付费用户
+    "diamond":"Diamond",  // 钻石流水
+    "freezeList":"FreezeList",  // 冻结名单
+    "infoQuery":"InfoQuery"  // 信息查询
+},
+_pageSize:number = 10;   // 默认每个详情页面的行数统一为10条
+
+let _loadObject:any = null, // 存储load对象
 _resource:any = {  // 服务请求
     "login":{   // 登录
-        "url":_domain + "/v1/backend/public/login"
+        "url":`${_domain}/v1/backend/public/login`
     },
     "changePwd":{   // 密码变更
-        "url":_domain + "/v1/backend/user/update-user"
+        "url":`${_domain}/v1/backend/user/update-user`
     },
     "statisticalUser":{ // 统计用户
-        "url":_domain + "/v1/backend/stat/stat/list-user-stat"
+        "url":`${_domain}/v1/backend/stat/stat/list-user-stat`
     },
     "userList":{    // 用户列表
-        "url":_domain + "/v1/backend/stat/stat/list-player"
+        "url":`${_domain}/v1/backend/stat/stat/list-player`
+    },
+    "payStatistical":{  // 付费统计
+        "url":`${_domain}/v1/backend/stat/stat/list-order-stat`
+    },
+    "diamond":{ // 钻石流水
+        "url":`${_domain}/v1/backend/run/diamond/list-diamond-record`
+    },
+    "freezeList":{    // 冻结名单
+        "url":`${_domain}/v1/backend/run/frozen/list-frozen-user`
+    },
+    "infoQuery":{    // 信息查询
+        "url":`${_domain}/v1/backend/run/frozen/query-user-info`
+    },
+    "addFrozen":{   // 添加玩家id进冻结名单
+        "url":`${_domain}/v1/backend/run/frozen/add-frozen-user`
+    },
+    "delFrozen":{   // 删除冻结名单里的玩家
+        "url":`${_domain}/v1/backend/run/frozen/delete-frozen-user`
+    },
+    "updateFrozen":{    // 更新玩家id进冻结名单
+        "url":`${_domain}/v1/backend/run/frozen/update-frozen-user`
     }
 };
-const _pageSize:number = 10;   // 默认每个详情页面的行数统一为10条
 
 /**
  * 显示加载

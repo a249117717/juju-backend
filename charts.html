@@ -31,6 +31,18 @@
                 <li class="userList mdui-ripple mdui-ripple-white">
                     <a href="#userList">用户列表</a>
                 </li>
+                <li class="payStatistical mdui-ripple mdui-ripple-white">
+                    <a href="#payStatistical">付费统计</a>
+                </li>
+                <li class="diamond mdui-ripple mdui-ripple-white">
+                    <a href="#diamond">钻石流水</a>
+                </li>
+                <li class="freezeList mdui-ripple mdui-ripple-white">
+                    <a href="#freezeList">冻结名单</a>
+                </li>
+                <li class="infoQuery mdui-ripple mdui-ripple-white">
+                    <a href="#infoQuery">信息查询</a>
+                </li>
             </ul>
         </div>
         <div class="g-right">
@@ -155,10 +167,76 @@
                 </table>
                 <pading count="{{ count }}"></pading>
             </div>
+            <!-- 冻结信息 -->
+            <div class="frozenInfo">
+                <div class="frozenContent">
+                    <div class="title">冻结用户</div>
+                    <div class="input-group">
+                        <input type="text" class="uid" readonly value="111"/>
+                        <input type="password" class="newPwd" placeholder="请输入新密码" />
+                        <textarea class="" cols="30" rows="10" placeholder="请输入冻结理由"></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                        <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </script>
     <!-- 用户列表详情 -->
     <script id="userListDetail" type="text/html">
+        <thead>
+            <tr>
+                <th>创建时间</th>
+                <th>编号</th>
+                <th>姓名</th>
+                <th>登录ip地址</th>
+                <th>登录时间</th>
+                <th>性别</th>
+                <th>年龄</th>
+                <th>vip</th>
+                <th>头像</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ each data as en }}
+                <tr>
+                    <td>{{ formatData(en.create_time) }}</td>
+                    <td>{{en.uid}}</td>
+                    <td>{{ en.name }}</td>
+                    <td>{{ en.login_ip }}</td>
+                    <td>{{ en.login_time }}</td>
+                    <td>{{ en.sex == "1"?"男":"女" }}</td>
+                    <td>{{ en.age }}</td>
+                    <td>{{ en.vip }}</td>
+                    <td>
+                        <img class="pho" src="{{ en.head_img }}" />
+                    </td>
+                    <td>
+                        <button class="btn btn-freeze" uid="{{ en.uid }}">冻结</button>
+                    </td>
+                </tr>
+            {{ /each }}
+        </tbody>
+    </script>
+    <!-- 付费统计模板 -->
+    <script id="payStatisticalTemp" type="text/html">
+        <div class="m-payStatistical defaultTable">
+            <div class="detail">
+                <div class="title-out">
+                    <div class="title">详情</div>
+                    <div class="subtitle">Detail</div>
+                </div>
+                <table class="info" border="0">
+                </table>
+                <pading count="{{ count }}"></pading>
+            </div>
+        </div>
+    </script>
+    <!-- 付费统计详情 -->
+    <script id="payStatisticalDetail" type="text/html">
         <thead>
             <tr>
                 <th>创建时间</th>

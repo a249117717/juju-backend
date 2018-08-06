@@ -1,4 +1,14 @@
-var _domain = "http://39.108.151.200:9999", _loadObject = null, _resource = {
+var _domain = "http://39.108.151.200:9999", _router = {
+    "newUser": "NewUser",
+    "activeUser": "ActiveUser",
+    "statisticalUser": "StatisticalUser",
+    "userList": "UserList",
+    "payStatistical": "PayStatistical",
+    "diamond": "Diamond",
+    "freezeList": "FreezeList",
+    "infoQuery": "InfoQuery"
+}, _pageSize = 10;
+var _loadObject = null, _resource = {
     "login": {
         "url": _domain + "/v1/backend/public/login"
     },
@@ -10,9 +20,29 @@ var _domain = "http://39.108.151.200:9999", _loadObject = null, _resource = {
     },
     "userList": {
         "url": _domain + "/v1/backend/stat/stat/list-player"
+    },
+    "payStatistical": {
+        "url": _domain + "/v1/backend/stat/stat/list-order-stat"
+    },
+    "diamond": {
+        "url": _domain + "/v1/backend/run/diamond/list-diamond-record"
+    },
+    "freezeList": {
+        "url": _domain + "/v1/backend/run/frozen/list-frozen-user"
+    },
+    "infoQuery": {
+        "url": _domain + "/v1/backend/run/frozen/query-user-info"
+    },
+    "addFrozen": {
+        "url": _domain + "/v1/backend/run/frozen/add-frozen-user"
+    },
+    "delFrozen": {
+        "url": _domain + "/v1/backend/run/frozen/delete-frozen-user"
+    },
+    "updateFrozen": {
+        "url": _domain + "/v1/backend/run/frozen/update-frozen-user"
     }
 };
-var _pageSize = 10;
 function _load(isShow) {
     var temp = window;
     if (isShow) {

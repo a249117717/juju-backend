@@ -57,25 +57,14 @@ var __extends = (this && this.__extends) || (function () {
             }
             ;
             window.onhashchange = function () {
-                var active = "", type = null;
-                switch (window.location.hash) {
-                    case "#activeUser":
-                        active = ".activeUser";
-                        type = ActiveUser;
-                        break;
-                    case "#statisticalUser":
-                        active = ".statisticalUser";
-                        type = StatisticalUser;
-                        break;
-                    case "#userList":
-                        active = ".userList";
-                        type = UserList;
-                        break;
-                    case "#newUser":
-                    default:
-                        active = ".newUser";
-                        type = NewUser;
-                        break;
+                var active = "", type = null, hash = window.location.hash.substr(1);
+                if (hash in _router) {
+                    active = "." + hash;
+                    type = eval(_router[hash]);
+                }
+                else {
+                    active = ".newUser";
+                    type = NewUser;
                 }
                 ;
                 self.side.setActive(active);
@@ -341,6 +330,7 @@ var __extends = (this && this.__extends) || (function () {
             this.total = parseInt($pading.attr("total"));
             if (!this.total) {
                 this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+                this.total = this.total ? this.total : 1;
             }
             ;
             this.selectSize = $pading.attr("select") ? $pading.attr("select").split(",") : null;
@@ -420,14 +410,7 @@ var __extends = (this && this.__extends) || (function () {
         };
         Pading.prototype.initTotal = function (operation) {
             var total = this.total;
-            if (total > 0) {
-                this.$el.find(".total").text(total);
-            }
-            else {
-                this.$el.find(".total").text(1);
-                return;
-            }
-            ;
+            this.$el.find(".total").text(total);
             switch (operation) {
                 case "reset":
                     this.$el.find(".page").show();
@@ -691,7 +674,7 @@ var __extends = (this && this.__extends) || (function () {
         function NewUser(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "newUser": "newUserTemp"
+                "routerTemp": "newUserTemp"
             };
             $.extend(_this, props);
             return _this;
@@ -702,7 +685,7 @@ var __extends = (this && this.__extends) || (function () {
         NewUser.prototype.render = function () {
             var header = this.mainView.mainView.header;
             header.showMenu();
-            this.mainView.renderByChildren(window.template(this.template.newUser, {}));
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
             this.bindEvent();
         };
         NewUser.prototype.bindEvent = function () {
@@ -799,23 +782,23 @@ var __extends = (this && this.__extends) || (function () {
         function StatisticalUser(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "statistical": "statisticalTemp",
+                "routerTemp": "statisticalTemp",
                 "detail": "statisticalDetail"
             };
             _this.$el = null;
             _this.firstLoad = true;
-            _this.day = 0;
             return _this;
         }
-        StatisticalUser.prototype.fetch = function (pageNo, pageSize) {
+        StatisticalUser.prototype.fetch = function (pageNo, pageSize, day) {
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = 50; }
+            if (day === void 0) { day = 0; }
             var self = this;
             _load(true);
             _resource.statisticalUser(JSON.stringify({
                 "page_size": pageSize,
                 "page_index": pageNo,
-                "day": this.day,
+                "day": day,
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (self.firstLoad) {
@@ -833,7 +816,7 @@ var __extends = (this && this.__extends) || (function () {
         StatisticalUser.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
             header.showMenu(false, false, true);
-            this.mainView.renderByChildren(window.template(this.template.statistical, data));
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-statisticalUser");
             this.bindEvent();
         };
@@ -842,7 +825,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el.find(".info").html(window.template(this.template.detail, data));
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
-            this.day = (new Date(start + " 00:00:00")).getTime();
+            this.fetch(1, 50, (new Date(start + " 00:00:00")).getTime());
         };
         StatisticalUser.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
@@ -854,10 +837,11 @@ var __extends = (this && this.__extends) || (function () {
         function UserList(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "userList": "userListTemp",
+                "routerTemp": "userListTemp",
                 "detail": "userListDetail"
             };
             _this.$el = null;
+            _this.$frozen = null;
             _this.firstLoad = true;
             return _this;
         }
@@ -889,11 +873,16 @@ var __extends = (this && this.__extends) || (function () {
             var header = this.mainView.mainView.header;
             header.showMenu(true);
             header.setPlaceHolder("uid");
-            this.mainView.renderByChildren(window.template(this.template.userList, data));
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-userList");
+            this.$frozen = this.$el.find(".frozenInfo");
             this.bindEvent();
         };
         UserList.prototype.bindEvent = function () {
+            var self = this;
+            this.$el.find(".info").on("click", ".btn-freeze", function () {
+                self.$frozen.fadeIn(200);
+            });
         };
         UserList.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template(this.template.detail, data));
@@ -911,6 +900,131 @@ var __extends = (this && this.__extends) || (function () {
             ;
         };
         return UserList;
+    }(ChartBase));
+    var PayStatistical = (function (_super) {
+        __extends(PayStatistical, _super);
+        function PayStatistical(props) {
+            var _this = _super.call(this, props) || this;
+            _this.template = {
+                "routerTemp": "payStatisticalTemp",
+                "detail": "payStatisticalDetail"
+            };
+            _this.$el = null;
+            _this.firstLoad = true;
+            $.extend(_this, props);
+            return _this;
+        }
+        PayStatistical.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            _load(true);
+            _resource.payStatistical(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "day": 0,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (self.firstLoad) {
+                    self.render(data);
+                    self.firstLoad = false;
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
+        };
+        PayStatistical.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu(false, false, true);
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-payStatistical");
+            this.bindEvent();
+        };
+        PayStatistical.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        PayStatistical.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        PayStatistical.prototype.changeDate = function (start, end) {
+            this.fetch();
+        };
+        PayStatistical.prototype.bindEvent = function () {
+        };
+        return PayStatistical;
+    }(ChartBase));
+    var Diamond = (function (_super) {
+        __extends(Diamond, _super);
+        function Diamond(props) {
+            var _this = _super.call(this, props) || this;
+            _this.template = {
+                "routerTemp": "newUserTemp"
+            };
+            $.extend(_this, props);
+            return _this;
+        }
+        Diamond.prototype.fetch = function () {
+            this.render();
+        };
+        Diamond.prototype.render = function () {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            this.bindEvent();
+        };
+        Diamond.prototype.bindEvent = function () {
+        };
+        return Diamond;
+    }(ChartBase));
+    var FreezeList = (function (_super) {
+        __extends(FreezeList, _super);
+        function FreezeList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.template = {
+                "routerTemp": "newUserTemp"
+            };
+            $.extend(_this, props);
+            return _this;
+        }
+        FreezeList.prototype.fetch = function () {
+            this.render();
+        };
+        FreezeList.prototype.render = function () {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            this.bindEvent();
+        };
+        FreezeList.prototype.bindEvent = function () {
+        };
+        return FreezeList;
+    }(ChartBase));
+    var InfoQuery = (function (_super) {
+        __extends(InfoQuery, _super);
+        function InfoQuery(props) {
+            var _this = _super.call(this, props) || this;
+            _this.template = {
+                "routerTemp": "newUserTemp"
+            };
+            $.extend(_this, props);
+            return _this;
+        }
+        InfoQuery.prototype.fetch = function () {
+            this.render();
+        };
+        InfoQuery.prototype.render = function () {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            this.bindEvent();
+        };
+        InfoQuery.prototype.bindEvent = function () {
+        };
+        return InfoQuery;
     }(ChartBase));
     _currentObject = new IndexMain();
     _currentObject.fetch();

@@ -87,26 +87,16 @@
             // 监听onhashchange事件，地址栏变动
             window.onhashchange = function(){
                 let active:string = "",
-                type:any = null;
+                type:any = null,
+                hash:string = window.location.hash.substr(1);
 
-                switch(window.location.hash) {
-                    case "#activeUser":
-                        active = ".activeUser";
-                        type = ActiveUser;
-                    break;
-                    case "#statisticalUser":
-                        active = ".statisticalUser";
-                        type = StatisticalUser;
-                    break;
-                    case "#userList":
-                        active = ".userList";
-                        type = UserList;
-                    break;
-                    case "#newUser":
-                    default:
-                        active = ".newUser";
-                        type = NewUser;
-                    break;
+                // 如果路由存在相应的hash则访问相应的类
+                if(hash in _router) {
+                    active = `.${hash}`;
+                    type = eval(_router[hash]);
+                } else {    // 如果hash不存在，则默认访问新增用户
+                    active = ".newUser";
+                    type = NewUser;
                 };
 
                 self.side.setActive(active);
@@ -501,6 +491,8 @@
             if(!this.total) {
                 // 允许用户传递总个数，当总页数不存在的时候
                 this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+                // 如果总页数小于1，则设置为1
+                this.total = this.total?this.total:1;
             };
 
             // 下拉选项
@@ -607,14 +599,8 @@
          */
         initTotal(operation) {
             let total:number = this.total;
-
-            if(total > 0) {
-                // 设置总页数
-                this.$el.find(".total").text(total);
-            } else {    // 总页数小于或等于0，直接退出当前函数，并将总页数默认设置为1
-                this.$el.find(".total").text(1);
-                return;
-            };
+            // 设置总页数
+            this.$el.find(".total").text(total);
 
             switch(operation) {
                 case "reset":
@@ -971,7 +957,7 @@
     // 新增用户
     class NewUser extends ChartBase {
         template = { // 模板
-            "newUser":"newUserTemp"
+            "routerTemp":"newUserTemp"
         };
 
         constructor(props:any) {
@@ -993,7 +979,7 @@
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu();
 
-            this.mainView.renderByChildren((<any>window).template(this.template.newUser,{}));
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
             this.bindEvent();
         }
 
@@ -1114,12 +1100,11 @@
     // 统计用户
     class StatisticalUser extends ChartBase {
         template = { // 模板
-            "statistical":"statisticalTemp",
+            "routerTemp":"statisticalTemp",
             "detail":"statisticalDetail"
         };
         $el:JQuery<HTMLElement> = null;
         firstLoad:boolean = true;   // 是否为第一次加载
-        day:number = 0; // 时间戳，默认为0
 
         constructor(props:any) {
             super(props);
@@ -1129,15 +1114,16 @@
          * 获取数据
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数，默认为]
+         * @param {number} day [时间戳，默认为0]
          */
-        fetch(pageNo:number = 1,pageSize:number = 50) {
+        fetch(pageNo:number = 1,pageSize:number = 50,day:number = 0) {
             let self:StatisticalUser = this;
 
             _load(true);
             _resource.statisticalUser(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
-                "day":this.day,
+                "day":day,
                 "token":this.mainView.mainView.token
             }),function(data:any){
                 if(self.firstLoad) {
@@ -1159,7 +1145,7 @@
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu(false,false,true);
 
-            this.mainView.renderByChildren((<any>window).template(this.template.statistical,data));
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-statisticalUser");
 
             this.bindEvent();
@@ -1184,8 +1170,7 @@
          * @param {string} end [结束日期]
          */
         changeDate(start:string,end:string) {
-            this.day = (new Date(`${start} 00:00:00`)).getTime();
-            // this.fetch();
+            this.fetch(1,50,(new Date(`${start} 00:00:00`)).getTime());
         }
 
         /**
@@ -1201,11 +1186,12 @@
     // 用户列表
     class UserList extends ChartBase {
         template = { // 模板
-            "userList":"userListTemp",
+            "routerTemp":"userListTemp",
             "detail":"userListDetail"
         };
         $el:JQuery<HTMLElement> = null;
-        firstLoad = true;   // 第一次加载
+        $frozen:JQuery<HTMLElement> = null; // 冻结
+        firstLoad = true;   // 是否为第一次加载
 
         constructor(props:any) {
             super(props);
@@ -1248,8 +1234,9 @@
             header.showMenu(true);
             header.setPlaceHolder("uid");
 
-            this.mainView.renderByChildren((<any>window).template(this.template.userList,data));
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-userList");
+            this.$frozen = this.$el.find(".frozenInfo");
 
             this.bindEvent();
         }
@@ -1258,7 +1245,20 @@
          * 事件绑定
          */
         bindEvent() {
+            let self:UserList = this;
 
+            // 冻结
+            this.$el.find(".info").on("click",".btn-freeze",function(){
+                self.$frozen.fadeIn(200);
+                // _resource.addFrozen(JSON.stringify({
+                //     "uid":$(this).attr("uid"),
+                //     "start_time":"",
+                //     "end_time":"",
+                //     "reason":""
+                // }),function(data){
+
+                // });
+            });
         }
 
         /**
@@ -1288,6 +1288,205 @@
             } else {
                 (<any>window).layer.msg("请输入正确的用户编号");
             };
+        }
+    }
+
+    // 付费统计
+    class PayStatistical extends ChartBase {
+        template = {
+            "routerTemp":"payStatisticalTemp",
+            "detail":"payStatisticalDetail"
+        };
+        $el:JQuery<HTMLElement> = null;
+        firstLoad = true;   // 是否为第一次加载
+
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         * @param {number} pageSize [每页条数]
+         * @param {uid} string [用户编号]
+         */
+        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+            let self:PayStatistical = this;
+
+            _load(true);
+            _resource.payStatistical(JSON.stringify({
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "day":0,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(self.firstLoad) {
+                    self.render(data);
+                    self.firstLoad = false;
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
+        }
+
+        /**
+         * 页面渲染
+         * @param {object} data [数据]
+         */
+        render(data:any) {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu(false,false,true);
+            
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-payStatistical");
+            this.bindEvent();
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+            this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
+
+        /**
+         * 日期变更（为了头部选择日期之后进行触发）
+         * @param {string} start [开始日期]
+         * @param {string} end [结束日期]
+         */
+        changeDate(start:string,end:string) {
+            this.fetch()
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+
+        }
+    }
+
+    // 钻石流水
+    class Diamond extends ChartBase {
+        template = { // 模板
+            "routerTemp":"newUserTemp"
+        };
+
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         */
+        fetch() {
+            this.render();
+        }
+
+        /**
+         * 页面渲染
+         */
+        render() {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+
+        }
+    }
+
+    // 冻结名单
+    class FreezeList extends ChartBase {
+        template = { // 模板
+            "routerTemp":"newUserTemp"
+        };
+
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         */
+        fetch() {
+            this.render();
+        }
+
+        /**
+         * 页面渲染
+         */
+        render() {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+
+        }
+    }
+
+    // 信息查询
+    class InfoQuery extends ChartBase {
+        template = { // 模板
+            "routerTemp":"newUserTemp"
+        };
+
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         */
+        fetch() {
+            this.render();
+        }
+
+        /**
+         * 页面渲染
+         */
+        render() {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+
         }
     }
 

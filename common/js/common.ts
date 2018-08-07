@@ -95,8 +95,15 @@ function _error(code:number) {
             "type":type,
             "data":data,
             "success":function(data:any){
-                if(success) {
-                    success(data);
+                if(data.code == 0) {
+                    if(success) {
+                        success(data);
+                    };
+                } else {
+                    // 如果服务器返回的code不为0，则表示出现了请求错误，提示用户并返回到首页
+                    (<any>window).layer.alert(data.msg,function(){
+                        window.location.replace("index.html");
+                    });
                 };
             },
             "error":function(request,response) {

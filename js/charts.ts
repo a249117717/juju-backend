@@ -1192,7 +1192,8 @@
             "detail":"userListDetail"
         };
         $el:JQuery<HTMLElement> = null;
-        $frozen:JQuery<HTMLElement> = null; // 冻结
+        $frozen:JQuery<HTMLElement> = null; // 冻结提示框
+        $select:JQuery<HTMLElement> = null; // 冻结时限下拉框
         firstLoad = true;   // 是否为第一次加载
 
         constructor(props:any) {
@@ -1207,24 +1208,24 @@
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
             let self:UserList = this;
-            this.render({});
-            // _load(true);
-            // _resource.userList(JSON.stringify({
-            //     "page_size":pageSize,
-            //     "page_index":pageNo,
-            //     "uid":uid,
-            //     "token":this.mainView.mainView.token
-            // }),function(data:any){
-            //     if(self.firstLoad) {
-            //         self.render(data);
-            //         self.firstLoad = false;
-            //     } else {
-            //         // 设置总页数
-            //         self.pading.setTotal(data.count);
-            //     };
-            //     self.renderDetail(data)
-            //     _load(false);
-            // });
+            // this.render({});
+            _load(true);
+            _resource.userList(JSON.stringify({
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "uid":uid,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(self.firstLoad) {
+                    self.render(data);
+                    self.firstLoad = false;
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
         }
 
         /**
@@ -1239,6 +1240,7 @@
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-userList");
             this.$frozen = this.$el.find(".frozenInfo");
+            this.$select = this.$frozen.find(".group.select")
 
             this.bindEvent();
         }
@@ -1250,13 +1252,21 @@
             let self:UserList = this;
 
             // 冻结
-            this.$el.find(".info").on("click",".btn-freeze",function(){
-                self.$frozen.fadeIn(200);
+            this.$el.find(".info").on("click",".btn-freeze",() => {
+                this.$frozen.show();
+                setTimeout(() => {
+                    this.$frozen.addClass("active");
+                },10);
+
+                
             });
 
             // 取消冻结
-            this.$frozen.find(".btn-cancel").on("click",function(){
-                self.$frozen.fadeOut(200);
+            this.$frozen.find(".btn-cancel").on("click",() => {
+                this.$frozen.removeClass("active");
+                setTimeout(() => {
+                    this.$frozen.hide()
+                },200);
             });
 
             // 确定冻结
@@ -1271,15 +1281,43 @@
                 // });
             });
 
+            // 冻结操作
             this.$frozen.find(".operation").on("change",function(){
-                let $this:JQuery<HTMLElement> = $(this);
+                let val:string = <string>$(this).val();
 
-                
+                switch(val) {
+                    case "0":
+                        self.$select.hide();
+                    break;
+                    case "1":
+                        self.$select.show();
+                    break;
+                };
             });
 
-            // 下拉选择控件
-            this.$el.find(".frozenTime").on("close.mdui.select",(e,value) => {
-                
+            // 冻结时限
+            this.$select.find(".choice").on("click",() => {
+                this.$select.find(".list").show();
+                setTimeout(() => {
+                    this.$select.find(".list").addClass("active");
+
+                    $(document).on("click",() => {
+                        this.$select.find(".list").removeClass("active");
+
+                        setTimeout(() => {
+                            this.$select.find(".list").hide()
+                        },200);
+                        $(document).unbind("click");
+                    });
+                },10);
+            });
+
+            // 选择冻结时限
+            this.$select.find(".list").on("click","li",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                self.$select.find(".choice").attr("day",$this.attr("day")).text($this.text());
+                $this.addClass("active").siblings(".active").removeClass("active");
             });
         }
 

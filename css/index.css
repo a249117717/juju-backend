@@ -5,6 +5,12 @@
   height: 100%;
 }
 
+.relative {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
 html,
 body {
   height: 100%;
@@ -123,8 +129,8 @@ body {
   opacity: 1;
   -webkit-transform: scale(1, 1);
   transform: scale(1, 1);
-  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
 }
 
 .g-changePwd .content {
@@ -133,12 +139,12 @@ body {
   top: 0;
   z-index: 11;
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 3px;
   opacity: 0.3;
   -webkit-transform: scale(0.3, 0.3);
   transform: scale(0.3, 0.3);
-  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
 }
 
 .g-changePwd .content .title {
@@ -149,7 +155,7 @@ body {
   letter-spacing: 3px;
   background-color: #262524;
   color: #fff;
-  border-radius: 5px 5px 0 0;
+  border-radius: 3px 3px 0 0;
 }
 
 .g-changePwd .content .user,
@@ -169,7 +175,7 @@ body {
 .g-changePwd .content .button-group {
   background-color: #fff;
   overflow: hidden;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 3px 3px;
 }
 
 .g-changePwd .content .button-group .btn {
@@ -383,7 +389,7 @@ body {
   left: 0;
   width: 182px;
   height: 1px;
-  background-color: #BDBDBD;
+  background-color: #bdbdbd;
   z-index: 11;
 }
 
@@ -417,7 +423,7 @@ body {
 }
 
 .c-header .menu .search-out .search::-webkit-input-placeholder {
-  color: #BDBDBD;
+  color: #bdbdbd;
 }
 
 .c-header .menu .search-out .btn-search {
@@ -702,41 +708,45 @@ body {
   display: none;
 }
 
-.m-userList .frozenInfo:after {
-  content: "";
-  position: absolute;
-  top: 0;
+.m-userList .frozenInfo .shade {
+  display: none;
+  position: fixed;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.3;
   z-index: 10;
   background-color: #000;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+.m-userList .frozenInfo.active .shade {
+  display: block;
 }
 
 .m-userList .frozenInfo.active .frozenContent {
   opacity: 1;
   -webkit-transform: scale(1, 1);
   transform: scale(1, 1);
-  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
 }
 
 .m-userList .frozenInfo .frozenContent {
-  margin: 0 0 0 -250px;
+  margin: -255px 0 0 -250px;
   position: absolute;
   top: 50%;
   left: 50%;
   width: 500px;
-  height: 200px;
   z-index: 11;
   background-color: #fff;
-  border-radius: 5px;
-  opacity: 0.8;
-  -webkit-transform: scale(0.8, 0.8);
-  transform: scale(0.8, 0.8);
-  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  border-radius: 3px;
+  opacity: 0;
+  -webkit-transform: scale(0.3, 0.3);
+  transform: scale(0.3, 0.3);
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
 }
 
 .m-userList .frozenInfo .frozenContent .title {
@@ -747,5 +757,155 @@ body {
   letter-spacing: 3px;
   background-color: #262524;
   color: #fff;
-  border-radius: 5px 5px 0 0;
+  border-radius: 3px 3px 0 0;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .group.select {
+  display: none;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .uid,
+.m-userList .frozenInfo .frozenContent .input-group .nickname {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-userList .frozenInfo .frozenContent .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-userList .frozenInfo .frozenContent .button-group .btn-submit:hover {
+  background-color: #2196F3;
 }

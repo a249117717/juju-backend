@@ -168,10 +168,66 @@
                 <pading count="{{ count }}"></pading>
             </div>
             <!-- 冻结信息 -->
-            <div class="frozenInfo active">
+            <div class="frozenInfo">
                 <div class="frozenContent">
                     <div class="title">冻结用户</div>
+                    <div class="input-group">
+                        <div class="group">
+                            <div class="tip">用户编号</div>
+                            <div class="descript">
+                                <input class="uid" type="text" disabled value="111">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">用户昵称</div>
+                            <div class="descript">
+                                <input class="nickname" type="text" disabled value="111">
+                            </div>
+                        </div>
+                        <div class="group mdui-theme-accent-blue">
+                            <div class="tip">冻结操作</div>
+                            <div class="descript">
+                                <label class="mdui-radio">
+                                    <input class="operation" type="radio" name="frozenOperation" checked value="0"/>
+                                    <i class="mdui-radio-icon"></i>
+                                    永久
+                                </label>
+                                <label class="mdui-radio">
+                                    <input class="operation" type="radio" name="frozenOperation" value="1"/>
+                                    <i class="mdui-radio-icon"></i>
+                                    限时
+                                </label>
+                            </div>
+                        </div>
+                        <div class="group select">
+                            <div class="tip">冻结时限</div>
+                            <div class="descript relative">
+                                <div class="choice" day="1">1天</div>
+                                <i class="edge"></i>
+                                <ul class="list">
+                                    <li day="1" class="active">1天</li>
+                                    <li day="3">3天</li>
+                                    <li day="5">5天</li>
+                                    <li day="30">1个月</li>
+                                    <li day="90">3个月</li>
+                                    <li day="180">6个月</li>
+                                    <li day="360">12个月</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">冻结事由</div>
+                            <div class="descript">
+                                <textarea class="reason" placeholder="请输入冻结事由"></textarea>    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                        <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+                    </div>
                 </div>
+                <div class="shade"></div>
             </div>
         </div>
     </script>

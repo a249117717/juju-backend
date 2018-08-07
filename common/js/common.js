@@ -83,8 +83,16 @@ function _error(code) {
             "type": type,
             "data": data,
             "success": function (data) {
-                if (success) {
-                    success(data);
+                if (data.code == 0) {
+                    if (success) {
+                        success(data);
+                    }
+                    ;
+                }
+                else {
+                    window.layer.alert(data.msg, function () {
+                        window.location.replace("index.html");
+                    });
                 }
                 ;
             },

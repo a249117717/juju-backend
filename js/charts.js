@@ -845,6 +845,7 @@ var __extends = (this && this.__extends) || (function () {
             };
             _this.$el = null;
             _this.$frozen = null;
+            _this.$select = null;
             _this.firstLoad = true;
             return _this;
         }
@@ -853,7 +854,24 @@ var __extends = (this && this.__extends) || (function () {
             if (pageSize === void 0) { pageSize = _pageSize; }
             if (uid === void 0) { uid = 0; }
             var self = this;
-            this.render({});
+            _load(true);
+            _resource.userList(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "uid": uid,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (self.firstLoad) {
+                    self.render(data);
+                    self.firstLoad = false;
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
         };
         UserList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
@@ -862,22 +880,55 @@ var __extends = (this && this.__extends) || (function () {
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-userList");
             this.$frozen = this.$el.find(".frozenInfo");
+            this.$select = this.$frozen.find(".group.select");
             this.bindEvent();
         };
         UserList.prototype.bindEvent = function () {
+            var _this = this;
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
-                self.$frozen.fadeIn(200);
+                _this.$frozen.show();
+                setTimeout(function () {
+                    _this.$frozen.addClass("active");
+                }, 10);
             });
             this.$frozen.find(".btn-cancel").on("click", function () {
-                self.$frozen.fadeOut(200);
+                _this.$frozen.removeClass("active");
+                setTimeout(function () {
+                    _this.$frozen.hide();
+                }, 200);
             });
             this.$frozen.find(".btn-submit").on("click", function () {
             });
             this.$frozen.find(".operation").on("change", function () {
-                var $this = $(this);
+                var val = $(this).val();
+                switch (val) {
+                    case "0":
+                        self.$select.hide();
+                        break;
+                    case "1":
+                        self.$select.show();
+                        break;
+                }
+                ;
             });
-            this.$el.find(".frozenTime").on("close.mdui.select", function (e, value) {
+            this.$select.find(".choice").on("click", function () {
+                _this.$select.find(".list").show();
+                setTimeout(function () {
+                    _this.$select.find(".list").addClass("active");
+                    $(document).on("click", function () {
+                        _this.$select.find(".list").removeClass("active");
+                        setTimeout(function () {
+                            _this.$select.find(".list").hide();
+                        }, 200);
+                        $(document).unbind("click");
+                    });
+                }, 10);
+            });
+            this.$select.find(".list").on("click", "li", function () {
+                var $this = $(this);
+                self.$select.find(".choice").attr("day", $this.attr("day")).text($this.text());
+                $this.addClass("active").siblings(".active").removeClass("active");
             });
         };
         UserList.prototype.renderDetail = function (data) {

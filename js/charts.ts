@@ -15,6 +15,8 @@
         side:CSide = null;  // 侧栏
         detail:CDetail = null;  // 详情
         changepwd:ChangePWD = null; // 密码变更
+        frozenInfo:FrozenInfo = null;   // 冻结信息
+        givDiamond:GivDiamond = null;   // 赠送钻石
         token = ""; // token
 
         constructor() {
@@ -58,6 +60,7 @@
             let options = {
                 mainView:this
             };
+            
             // 头部
             this.header = new CHeader(options);
             this.header.fetch();
@@ -70,7 +73,10 @@
 
             // 变更密码
             this.changepwd = new ChangePWD(options);
-            this.changepwd.fetch();
+            // 冻结信息
+            this.frozenInfo = new FrozenInfo(options);
+            // 赠送钻石
+            this.givDiamond = new GivDiamond(options);
         }
 
         /**
@@ -781,7 +787,7 @@
 
         constructor(props:any) {
             $.extend(this,props);
-            this.bindEventByOne();
+            this.fetch();
         }
 
         /**
@@ -802,12 +808,6 @@
          * 事件绑定
          */
         bindEvent() {
-        }
-
-        /**
-         * 单次事件绑定
-         */
-        bindEventByOne() {
             // 取消
             this.$el.find(".btn-cancel").on("click",() => {
                 this.hide();
@@ -890,6 +890,309 @@
 
         /**
          * 隐藏
+         */
+        hide() {
+            this.$el.removeClass("active");
+            setTimeout(() => {
+                this.$el.hide()
+            },200);
+        }
+    }
+    
+    // 冻结用户
+    class FrozenInfo {
+        $el:JQuery<HTMLElement> = $(".m-frozenInfo"); // 冻结提示框
+        $select:JQuery<HTMLElement> = this.$el.find(".group.select"); // 冻结提示框
+        mainView:IndexMain = null;
+
+        constructor(props:any) {
+            $.extend(this,props);
+            this.fetch();
+        }
+
+        /**
+         * 数据获取
+         */
+        fetch() {
+            this.render();
+        }
+
+        /**
+         * 渲染
+         */
+        render() {
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+            let self:FrozenInfo = this;
+
+            // 取消冻结
+            this.$el.find(".btn-cancel").on("click",() => {
+                this.hide();
+            });
+
+            // 确定冻结
+            this.$el.find(".btn-submit").on("click",function(){
+                let date:Date = new Date(),
+                start_time:number = parseInt(<any>(date.getTime()/1000)),
+                end_time:number = 0;
+
+                // 如果数据校验不通过，则退出函数
+                if(!self.frozenCheck()) {
+                    return;
+                };
+
+                // 获取冻结截止时间
+                switch(self.$el.find(".operation:checked").val()) {
+                    case "0":
+                        end_time = 0;
+                    break;
+                    case "1":
+                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
+                        end_time = parseInt(<any>(date.getTime()/1000));
+                    break;
+                };
+
+                _load(true);
+                _resource.addFrozen(JSON.stringify({
+                    "uid":parseInt(<string>self.$el.find(".uid").val()),
+                    "start_time":start_time,
+                    "end_time":end_time,
+                    "reason":self.$el.find(".reason").val(),
+                    "token":self.mainView.token
+                }),function(data){
+                    (<any>window).layer.msg("冻结成功！");
+                    // 关闭冻结提示框
+                    self.hide();
+                    _load(false);
+                });
+            });
+
+            // 冻结操作
+            this.$el.find(".operation").on("change",function(){
+                let val:string = <string>$(this).val();
+
+                switch(val) {
+                    case "0":
+                        self.$select.hide();
+                    break;
+                    case "1":
+                        self.$select.show();
+                    break;
+                };
+            });
+
+            // 冻结时限
+            this.$select.find(".choice").on("click",() => {
+                this.$select.find(".list").show();
+                setTimeout(() => {
+                    this.$select.find(".list").addClass("active");
+
+                    $(document).on("click",() => {
+                        this.$select.find(".list").removeClass("active");
+
+                        setTimeout(() => {
+                            this.$select.find(".list").hide()
+                        },200);
+                        $(document).unbind("click");
+                    });
+                },10);
+            });
+
+            // 选择冻结时限
+            this.$select.find(".list").on("click","li",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                self.$select.find(".choice").attr("day",$this.attr("day")).text($this.text());
+                $this.addClass("active").siblings(".active").removeClass("active");
+            });
+        }
+
+        /**
+         * 初始化冻结提示框
+         * @param {number} uid [用户编号]
+         * @param {string} uname [用户名]
+         */
+        initFrozen(uid:number,uname:string) {
+            let $el:JQuery<HTMLElement> = this.$el;
+            // 设置用户编号
+            $el.find(".uid").val(uid);
+            // 设置用户昵称
+            $el.find(".nickname").val(uname);
+            // 初始化冻结操作
+            $el.find(".operation:eq(0)").prop("checked",true).trigger("change");
+            // 初始化冻结天数
+            this.$select.find(".choice").attr("day","1").text("1天");
+            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
+            // 清空冻结事由
+            $el.find(".reason").val("");
+        }
+
+        /**
+         * 冻结数据校验
+         * @return {boolean} bool [是否校验通过]
+         */
+        frozenCheck() : boolean {
+            let str:string = "";
+
+            if(!(<string>this.$el.find(".reason").val()).replace(/\s/g,"")) {
+                str = "请输入冻结事由";
+            };
+
+            if(str) {
+                (<any>window).layer.alert(str);
+                return false;
+            };
+
+            return true;
+        }
+
+        /**
+         * 显示冻结提示框
+         * @param {number} uid [用户编号]
+         * @param {string} uname [用户名]
+         */
+        show(uid:number,uname:string) {
+            this.$el.show();
+            setTimeout(() => {
+                this.$el.addClass("active");
+            },10);
+
+            this.initFrozen(uid,uname);
+        }
+
+        /**
+         * 隐藏冻结提示框
+         */
+        hide() {
+            this.$el.removeClass("active");
+            setTimeout(() => {
+                this.$el.hide()
+            },200);
+        }
+    }
+
+    // 赠送钻石
+    class GivDiamond {
+        $el:JQuery<HTMLElement> = $(".m-givDiamond"); // 冻结提示框
+        mainView:IndexMain = null;
+
+        constructor(props:any) {
+            $.extend(this,props);
+            this.fetch();
+        }
+
+        /**
+         * 数据获取
+         */
+        fetch() {
+            this.render();
+        }
+
+        /**
+         * 渲染
+         */
+        render() {
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+            let self:GivDiamond = this;
+
+            // 确定
+            this.$el.find(".btn-submit").on("click",() => {
+                if(!this.givingCheck()) {
+                    return;
+                };
+
+                _load(true);
+                _resource.addDiamond(JSON.stringify({
+                    "uid":parseInt(<string>self.$el.find(".uid").val()),
+                    "num":parseInt(<string>self.$el.find(".diamondNumber").val()),
+                    "reason":self.$el.find(".reason").val(),
+                    "token":this.mainView.token
+                }),function(data){
+                    (<any>window).layer.msg("赠送成功！");
+                    // 关闭赠送提示框
+                    self.hide();
+                    _load(false);
+                });
+            });
+
+            // 取消
+            this.$el.find(".btn-cancel").on("click",() => {
+                this.hide();
+            });
+
+            // 钻石数量输入
+            this.$el.find(".diamondNumber").on("input",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                if(/^\d*$/.test(<string>$this.val())) {
+                    $this.attr("old",<string>$this.val());
+                } else {
+                    $this.val($this.attr("old"));
+                    (<any>window).layer.tips('请输入正整数', self.$el.find(".diamondNumber")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                };
+            });
+        }
+
+        /**
+         * 初始化赠送提示框
+         * @param {number} uid [用户编号]
+         */
+        initgiving(uid:number) {
+            let $el:JQuery<HTMLElement> = this.$el;
+            $el.find(".uid").val(uid);
+            $el.find(".diamondNumber,.reason").val("");
+        }
+
+        /**
+         * 赠送数据校验
+         * @return {boolean} bool [是否校验通过]
+         */
+        givingCheck() : boolean {
+            let str:string = "";
+
+            if(!<string>this.$el.find(".diamondNumber").val()) {
+                str = "请输入赠送的钻石数量";
+            } else if(!(<string>this.$el.find(".reason").val()).replace(/\s/g,"")) {
+                str = "请输入赠送事由";
+            };
+
+            if(str) {
+                (<any>window).layer.alert(str);
+                return false;
+            };
+
+            return true;
+        }
+
+        /**
+         * 显示冻结提示框
+         * @param {number} uid [用户编号]
+         */
+        show(uid:number) {
+            this.$el.show();
+            setTimeout(() => {
+                this.$el.addClass("active");
+            },10);
+
+            this.initgiving(uid);
+        }
+
+        /**
+         * 隐藏冻结提示框
          */
         hide() {
             this.$el.removeClass("active");
@@ -1106,7 +1409,6 @@
             "detail":"statisticalDetail"
         };
         $el:JQuery<HTMLElement> = null;
-        firstLoad:boolean = true;   // 是否为第一次加载
 
         constructor(props:any) {
             super(props);
@@ -1128,9 +1430,8 @@
                 "day":day,
                 "token":this.mainView.mainView.token
             }),function(data:any){
-                if(self.firstLoad) {
+                if(!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 } else {
                     // 设置总页数
                     self.pading.setTotal(data.count);
@@ -1192,9 +1493,6 @@
             "detail":"userListDetail"
         };
         $el:JQuery<HTMLElement> = null;
-        $frozen:JQuery<HTMLElement> = null; // 冻结提示框
-        $select:JQuery<HTMLElement> = null; // 冻结时限下拉框
-        firstLoad = true;   // 是否为第一次加载
 
         constructor(props:any) {
             super(props);
@@ -1216,9 +1514,8 @@
                 "uid":uid,
                 "token":this.mainView.mainView.token
             }),function(data:any){
-                if(self.firstLoad) {
+                if(!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 } else {
                     // 设置总页数
                     self.pading.setTotal(data.count);
@@ -1235,12 +1532,10 @@
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu(true);
-            header.setPlaceHolder("uid");
+            header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-userList");
-            this.$frozen = this.$el.find(".frozenInfo");
-            this.$select = this.$frozen.find(".group.select")
 
             this.bindEvent();
         }
@@ -1254,97 +1549,13 @@
             // 冻结
             this.$el.find(".info").on("click",".btn-freeze",function(){
                 let $this:JQuery<HTMLElement> = $(this);
-
-                self.$frozen.show();
-                setTimeout(() => {
-                    self.$frozen.addClass("active");
-                },10);
-
-                self.initFrozen($this.attr("uid"),$this.attr("uname"));
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"));
             });
 
-            // 取消冻结
-            this.$frozen.find(".btn-cancel").on("click",() => {
-                this.$frozen.removeClass("active");
-                setTimeout(() => {
-                    this.$frozen.hide()
-                },200);
-            });
-
-            // 确定冻结
-            this.$frozen.find(".btn-submit").on("click",function(){
-                let date:Date = new Date(),
-                start_time:number = parseInt(<any>(date.getTime()/1000)),
-                end_time:number = 0;
-
-                // 如果数据校验不通过，则退出函数
-                if(!self.frozenCheck()) {
-                    return;
-                };
-
-                // 获取冻结截止时间
-                switch(self.$frozen.find(".operation:checked").val()) {
-                    case "0":
-                        end_time = 0;
-                    break;
-                    case "1":
-                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
-                        end_time = parseInt(<any>(date.getTime()/1000));
-                    break;
-                };
-
-                _load(true);
-                _resource.addFrozen(JSON.stringify({
-                    "uid":parseInt(<string>self.$frozen.find(".uid").val()),
-                    "start_time":start_time,
-                    "end_time":end_time,
-                    "reason":self.$frozen.find(".reason").val(),
-                    "token":self.mainView.mainView.token
-                }),function(data){
-                    (<any>window).layer.msg("冻结成功！");
-                    // 关闭冻结提示框
-                    self.$frozen.find(".btn-cancel").trigger("click");
-                    _load(false);
-                });
-            });
-
-            // 冻结操作
-            this.$frozen.find(".operation").on("change",function(){
-                let val:string = <string>$(this).val();
-
-                switch(val) {
-                    case "0":
-                        self.$select.hide();
-                    break;
-                    case "1":
-                        self.$select.show();
-                    break;
-                };
-            });
-
-            // 冻结时限
-            this.$select.find(".choice").on("click",() => {
-                this.$select.find(".list").show();
-                setTimeout(() => {
-                    this.$select.find(".list").addClass("active");
-
-                    $(document).on("click",() => {
-                        this.$select.find(".list").removeClass("active");
-
-                        setTimeout(() => {
-                            this.$select.find(".list").hide()
-                        },200);
-                        $(document).unbind("click");
-                    });
-                },10);
-            });
-
-            // 选择冻结时限
-            this.$select.find(".list").on("click","li",function(){
+            // 赠送钻石
+            this.$el.find(".info").on("click",".btn-diamond",function(){
                 let $this:JQuery<HTMLElement> = $(this);
-
-                self.$select.find(".choice").attr("day",$this.attr("day")).text($this.text());
-                $this.addClass("active").siblings(".active").removeClass("active");
+                self.mainView.mainView.givDiamond.show(parseInt($this.attr("uid")));
             });
         }
 
@@ -1370,50 +1581,10 @@
          * @param {string} query [搜索关键字]
          */
         search(query:string) {
-            if(/^\d*$/.test(query)){
+            query = query.replace(/\s/g,"");
+            if(query){
                 this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
-            } else {
-                (<any>window).layer.msg("请输入正确的用户编号");
             };
-        }
-
-        /**
-         * 初始化冻结提示框
-         * @param {string} uid [用户编号]
-         * @param {string} uname [用户名]
-         */
-        initFrozen(uid:string,uname:string) {
-            let $frozen:JQuery<HTMLElement> = this.$frozen;
-            // 设置用户编号
-            $frozen.find(".uid").val(uid);
-            // 设置用户昵称
-            $frozen.find(".nickname").val(uname);
-            // 初始化冻结操作
-            $frozen.find(".operation:eq(0)").prop("checked",true).trigger("change");
-            // 初始化冻结天数
-            this.$select.find(".choice").attr("day","1").text("1天");
-            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
-            // 清空冻结事由
-            $frozen.find(".reason").val("");
-        }
-
-        /**
-         * 冻结数据校验
-         * @return {boolean} bool [是否校验通过]
-         */
-        frozenCheck() : boolean {
-            let str:string = "";
-
-            if(!(<string>this.$frozen.find(".reason").val()).replace(/\s/g,"")) {
-                str = "请输入冻结事由";
-            };
-
-            if(str) {
-                (<any>window).layer.alert(str);
-                return false;
-            };
-
-            return true;
         }
     }
 
@@ -1424,7 +1595,6 @@
             "detail":"payStatisticalDetail"
         };
         $el:JQuery<HTMLElement> = null;
-        firstLoad = true;   // 是否为第一次加载
 
         constructor(props:any) {
             super(props);
@@ -1446,9 +1616,8 @@
                 "day":0,
                 "token":this.mainView.mainView.token
             }),function(data:any){
-                if(self.firstLoad) {
+                if(!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 } else {
                     // 设置总页数
                     self.pading.setTotal(data.count);
@@ -1508,8 +1677,10 @@
     // 钻石流水
     class Diamond extends ChartBase {
         template = { // 模板
-            "routerTemp":"newUserTemp"
+            "routerTemp":"diamondTemp",
+            "detail":"diamondDetail"
         };
+        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1518,19 +1689,42 @@
 
         /**
          * 数据获取
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         * @param {uid} string [用户编号]
          */
-        fetch() {
-            this.render();
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
+            let self:Diamond = this;
+
+            _load(true);
+            _resource.diamond(JSON.stringify({
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "uid":uid,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(!self.$el) {
+                    self.render(data);
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
         }
 
         /**
          * 页面渲染
+         * @param {object} data [数据]
          */
-        render() {
+        render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
 
-            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-diamond");
             this.bindEvent();
         }
 
@@ -1539,14 +1733,44 @@
          */
         bindEvent() {
 
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+            this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
+
+        /**
+         * 搜索
+         * @param {string} query [搜索关键字]
+         */
+        search(query:string) {
+            query = query.replace(/\s/g,"");
+            if(query){
+                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
+            };
         }
     }
 
     // 冻结名单
     class FreezeList extends ChartBase {
         template = { // 模板
-            "routerTemp":"newUserTemp"
+            "routerTemp":"freezeListTemp",
+            "detail":"freezeListDetail"
         };
+        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1555,19 +1779,42 @@
 
         /**
          * 数据获取
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         * @param {uid} string [用户编号]
          */
-        fetch() {
-            this.render();
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
+            let self:FreezeList = this;
+
+            _load(true);
+            _resource.freezeList(JSON.stringify({
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "uid":uid,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(!self.$el) {
+                    self.render(data);
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
         }
 
         /**
          * 页面渲染
+         * @param {object} data [数据]
          */
-        render() {
+        render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
 
-            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-freezeList");
             this.bindEvent();
         }
 
@@ -1575,7 +1822,55 @@
          * 事件绑定
          */
         bindEvent() {
+            let self:FreezeList = this;
 
+            // 解冻
+            this.$el.find(".info").on("click",".btn-delFreeze",function(){
+                let $this:JQuery<HTMLElement> = $(this),
+                uid:string = $this.attr("uid"),
+                uname:string = $this.attr("uname");
+
+                (<any>window).layer.alert(`确认解除用户编号为:${uid}，用户名为:${uname}的冻结么？`,function(e){
+                    _load(true);
+                    _resource.delFrozen(JSON.stringify({
+                        "uid":parseInt(uid),
+                        "token":self.mainView.mainView.token
+                    }),function(data:any){
+                        (<any>window).layer.msg(data.msg);
+                        $this.prop("disabled",true);
+                        (<any>window).layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+            this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
+
+        /**
+         * 搜索
+         * @param {string} query [搜索关键字]
+         */
+        search(query:string) {
+            query = query.replace(/\s/g,"");
+            if(query){
+                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
+            };
         }
     }
 

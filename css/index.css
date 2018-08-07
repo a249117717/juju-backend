@@ -467,6 +467,23 @@ body {
   padding-right: 20px;
 }
 
+.defaultTable .info .btn {
+  margin: 5px;
+  padding: 9px 16px;
+  border-radius: 2px;
+  background-color: #64B5F6;
+  font-size: 14px;
+  color: #fff;
+}
+
+.defaultTable .info .btn[disabled] {
+  background-color: #eee;
+}
+
+.defaultTable .info .btn:not([disabled]):hover {
+  background-color: #42A5F5;
+}
+
 .defaultTable .detail {
   margin-top: 20px;
   min-height: 100px;
@@ -687,19 +704,7 @@ body {
   background-size: 15px;
 }
 
-.m-userList .info .btn {
-  padding: 9px 16px;
-  border-radius: 2px;
-  background-color: #64B5F6;
-  font-size: 14px;
-  color: #fff;
-}
-
-.m-userList .info .btn:hover {
-  background-color: #42A5F5;
-}
-
-.m-userList .frozenInfo {
+.m-frozenInfo {
   position: fixed;
   top: 0;
   left: 0;
@@ -708,7 +713,7 @@ body {
   display: none;
 }
 
-.m-userList .frozenInfo .shade {
+.m-frozenInfo .shade {
   display: none;
   position: fixed;
   left: 0;
@@ -721,11 +726,11 @@ body {
   z-index: 10;
 }
 
-.m-userList .frozenInfo.active .shade {
+.m-frozenInfo.active .shade {
   display: block;
 }
 
-.m-userList .frozenInfo.active .frozenContent {
+.m-frozenInfo.active .content {
   opacity: 1;
   -webkit-transform: scale(1, 1);
   transform: scale(1, 1);
@@ -733,7 +738,7 @@ body {
   transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
 }
 
-.m-userList .frozenInfo .frozenContent {
+.m-frozenInfo .content {
   margin: -255px 0 0 -250px;
   position: absolute;
   top: 50%;
@@ -749,7 +754,7 @@ body {
   transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
 }
 
-.m-userList .frozenInfo .frozenContent .title {
+.m-frozenInfo .content .title {
   padding-left: 20px;
   height: 50px;
   line-height: 50px;
@@ -760,20 +765,20 @@ body {
   border-radius: 3px 3px 0 0;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group {
+.m-frozenInfo .content .input-group {
   padding: 20px;
   clear: both;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .group {
+.m-frozenInfo .content .input-group .group {
   margin-bottom: 10px;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .group.select {
+.m-frozenInfo .content .input-group .group.select {
   display: none;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .tip {
+.m-frozenInfo .content .input-group .tip {
   padding: 9px 15px;
   float: left;
   width: 110px;
@@ -782,16 +787,16 @@ body {
   text-align: right;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .mdui-radio {
+.m-frozenInfo .content .input-group .mdui-radio {
   padding-left: 25px;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .mdui-radio:not(:first-child) {
+.m-frozenInfo .content .input-group .mdui-radio:not(:first-child) {
   margin-left: 10px;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .uid,
-.m-userList .frozenInfo .frozenContent .input-group .nickname {
+.m-frozenInfo .content .input-group .uid,
+.m-frozenInfo .content .input-group .nickname {
   padding: 0 5px;
   float: left;
   margin: 4px 0;
@@ -802,7 +807,7 @@ body {
   border: 1px solid #ebebeb;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .choice {
+.m-frozenInfo .content .input-group .choice {
   padding-left: 10px;
   width: 320px;
   height: 38px;
@@ -812,11 +817,11 @@ body {
   border: 1px solid #eee;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .choice:hover {
+.m-frozenInfo .content .input-group .choice:hover {
   border-color: #bdbdbd;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .edge {
+.m-frozenInfo .content .input-group .edge {
   margin-top: -3px;
   position: absolute;
   top: 50%;
@@ -828,7 +833,7 @@ body {
   z-index: -1;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .list {
+.m-frozenInfo .content .input-group .list {
   display: none;
   position: absolute;
   left: 110px;
@@ -843,14 +848,14 @@ body {
   transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .list.active {
+.m-frozenInfo .content .input-group .list.active {
   opacity: 1;
   top: 39px;
   -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
   transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .list > li {
+.m-frozenInfo .content .input-group .list > li {
   padding: 0 10px;
   height: 36px;
   line-height: 36px;
@@ -858,54 +863,187 @@ body {
   cursor: pointer;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .list > li:hover {
+.m-frozenInfo .content .input-group .list > li:hover {
   background-color: #eee;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .list > li.active {
+.m-frozenInfo .content .input-group .list > li.active {
   background-color: #2196F3;
   color: #fff;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .reason {
+.m-frozenInfo .content .input-group .reason {
   padding: 5px;
   width: 320px;
   height: 100px;
   resize: none;
 }
 
-.m-userList .frozenInfo .frozenContent .input-group .descript {
+.m-frozenInfo .content .input-group .descript {
   padding-left: 110px;
   min-height: 38px;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group {
+.m-frozenInfo .content .button-group {
   background-color: #fff;
   overflow: hidden;
   border-radius: 0 0 3px 3px;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group .btn {
+.m-frozenInfo .content .button-group .btn {
   float: right;
   margin: 12px 10px;
   padding: 10px 30px;
   border-radius: 5px;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group .btn-cancel {
+.m-frozenInfo .content .button-group .btn-cancel {
   color: #333;
   background-color: #eee;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group .btn-cancel:hover {
+.m-frozenInfo .content .button-group .btn-cancel:hover {
   background-color: #E0E0E0;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group .btn-submit {
+.m-frozenInfo .content .button-group .btn-submit {
   color: #fff;
   background-color: #42a5f5;
 }
 
-.m-userList .frozenInfo .frozenContent .button-group .btn-submit:hover {
+.m-frozenInfo .content .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
+.m-givDiamond {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.m-givDiamond .shade {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #000;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+.m-givDiamond.active .shade {
+  display: block;
+}
+
+.m-givDiamond.active .content {
+  opacity: 1;
+  -webkit-transform: scale(1, 1);
+  transform: scale(1, 1);
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-givDiamond .content {
+  margin: -255px 0 0 -250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  z-index: 11;
+  background-color: #fff;
+  border-radius: 3px;
+  opacity: 0;
+  -webkit-transform: scale(0.3, 0.3);
+  transform: scale(0.3, 0.3);
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-givDiamond .content .title {
+  padding-left: 20px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  background-color: #262524;
+  color: #fff;
+  border-radius: 3px 3px 0 0;
+}
+
+.m-givDiamond .content .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-givDiamond .content .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-givDiamond .content .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-givDiamond .content .input-group .uid,
+.m-givDiamond .content .input-group .diamondNumber {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-givDiamond .content .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-givDiamond .content .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-givDiamond .content .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-givDiamond .content .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-givDiamond .content .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-givDiamond .content .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.m-givDiamond .content .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-givDiamond .content .button-group .btn-submit:hover {
   background-color: #2196F3;
 }

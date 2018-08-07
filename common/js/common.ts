@@ -31,6 +31,9 @@ _resource:any = {  // 服务请求
     "diamond":{ // 钻石流水
         "url":`${_domain}/v1/backend/run/diamond/list-diamond-record`
     },
+    "addDiamond":{  // 赠送钻石
+        "url":`${_domain}/v1/backend/run/diamond/add-diamond-give`
+    },
     "freezeList":{    // 冻结名单
         "url":`${_domain}/v1/backend/run/frozen/list-frozen-user`
     },

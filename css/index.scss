@@ -492,6 +492,26 @@ body{
 }
 
 .defaultTable {
+    
+    .info {
+
+        .btn {
+            margin:5px;
+            padding:9px 16px;
+            border-radius: 2px;
+            background-color: #64B5F6;
+            font-size: 14px;
+            color:#fff;
+
+            &[disabled] {
+                background-color: #eee;
+            }
+
+            &:not([disabled]):hover {
+                background-color: #42A5F5;
+            }
+        }
+    }
 
     .detail {
         margin-top:20px;
@@ -715,230 +735,346 @@ body{
     }
 }
 
-.m-userList {
-    
-    .info {
+.m-frozenInfo {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display: none;
 
-        .btn {
-            padding:9px 16px;
-            border-radius: 2px;
-            background-color: #64B5F6;
-            font-size: 14px;
-            color:#fff;
+    .shade {
+        display: none;
+        position: fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        z-index:10;
+        background-color: #000;
+        opacity: 0.3;
+        z-index:10;
+    }
 
-            &:hover {
-                background-color: #42A5F5;
-            }
+    &.active {
+
+        .shade {
+            display: block;
+        } 
+        
+        .content {
+            opacity: 1;
+            -webkit-transform:scale(1,1);
+            transform:scale(1,1);
+            @include exit;
         }
     }
 
-    .frozenInfo {
+    .content {
+        margin:-255px 0 0 -250px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        width:500px;
+        z-index: 11;
+        background-color: #fff;
+        border-radius: 3px;
+        opacity: 0;
+        -webkit-transform:scale(0.3,0.3);
+        transform:scale(0.3,0.3);
+        @include come;
+
+        .title {
+            padding-left:20px;
+            height:50px;
+            line-height: 50px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            background-color:#262524;
+            color:#fff;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .input-group {
+            padding:20px;
+            clear: both;
+
+            .group {
+                margin-bottom:10px;
+
+                &.select {
+                    display: none;
+                }
+            }
+
+            .tip {
+                padding:9px 15px;
+                float:left;
+                width:110px;
+                height:38px;
+                line-height: 20px;
+                text-align: right;
+            }
+
+            .mdui-radio {
+                padding-left:25px;
+
+                &:not(:first-child) {
+                    margin-left:10px;
+                }
+            }
+
+            .uid,
+            .nickname {
+                padding:0 5px;
+                float:left;
+                margin:4px 0;
+                display: block;
+                width:320px;
+                height:30px;
+                line-height: 30px;
+                border:1px solid #ebebeb;
+            }
+
+            .choice {
+                padding-left:10px;
+                width:320px;
+                height:38px;
+                line-height: 38px;
+                border-radius: 3px;
+                cursor: pointer;
+                border:1px solid #eee;
+
+                &:hover {
+                    border-color: #bdbdbd;
+                }
+            }
+
+            .edge {
+                margin-top:-3px;
+                position: absolute;
+                top:50%;
+                right:40px;
+                border-width:6px 7px 0;
+                border-style:solid;
+                border-color:#bdbdbd transparent transparent;
+                cursor: pointer;
+                z-index: -1;
+            }
+
+            .list {
+                display: none;
+                position: absolute;
+                left:110px;
+                top:100px;
+                background-color: #fff;
+                z-index:12;
+                border: 1px solid #d2d2d2;
+                max-height: 255px;
+                overflow: auto;
+                opacity: 0;
+                -webkit-transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
+                transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
+                
+                &.active {
+                    opacity: 1;
+                    top:39px;
+                    -webkit-transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+                    transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
+                }
+                
+                &>li {
+                    padding:0 10px;
+                    height:36px;
+                    line-height: 36px;
+                    width:320px;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: #eee;
+                    }
+
+                    &.active {
+                        background-color: #2196F3;
+                        color:#fff;
+                    }
+                }
+            }
+
+            .reason {
+                padding:5px;
+                width:320px;
+                height:100px;
+                resize: none;
+            }
+
+            .descript {
+                padding-left:110px;
+                min-height: 38px;
+            }
+        }
+
+        .button-group {
+            background-color: #fff;
+            overflow: hidden;
+            border-radius: 0 0 3px 3px;
+
+            .btn {
+                float: right;
+                margin:12px 10px;
+                padding:10px 30px;
+                border-radius: 5px;
+            }
+
+            .btn-cancel {
+                color:#333;
+                background-color: #eee;
+
+                &:hover {
+                    background-color: #E0E0E0;
+                }
+            }
+
+            .btn-submit {
+                color:#fff;
+                background-color: #42a5f5;
+
+                &:hover {
+                    background-color: #2196F3;
+                }
+            }
+        }
+    }
+}
+
+.m-givDiamond {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display: none;
+
+    .shade {
         position: fixed;
-        top:0;
         left:0;
+        top:0;
         width:100%;
         height:100%;
-        display: none;
+        z-index:10;
+        background-color: #000;
+        opacity: 0.3;
+        z-index:10;
+    }
+
+    &.active {
 
         .shade {
-            display: none;
-            position: fixed;
-            left:0;
-            top:0;
-            width:100%;
-            height:100%;
-            z-index:10;
-            background-color: #000;
-            opacity: 0.3;
-            z-index:10;
+            display: block;
+        } 
+        
+        .content {
+            opacity: 1;
+            -webkit-transform:scale(1,1);
+            transform:scale(1,1);
+            @include exit;
+        }
+    }
+
+    .content {
+        margin:-255px 0 0 -250px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        width:500px;
+        z-index: 11;
+        background-color: #fff;
+        border-radius: 3px;
+        opacity: 0;
+        -webkit-transform:scale(0.3,0.3);
+        transform:scale(0.3,0.3);
+        @include come;
+
+        .title {
+            padding-left:20px;
+            height:50px;
+            line-height: 50px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            background-color:#262524;
+            color:#fff;
+            border-radius: 3px 3px 0 0;
         }
 
-        &.active {
+        .input-group {
+            padding:20px;
+            clear: both;
 
-            .shade {
+            .group {
+                margin-bottom:10px;
+            }
+
+            .tip {
+                padding:9px 15px;
+                float:left;
+                width:110px;
+                height:38px;
+                line-height: 20px;
+                text-align: right;
+            }
+
+            .uid,
+            .diamondNumber {
+                padding:0 5px;
+                float:left;
+                margin:4px 0;
                 display: block;
-            } 
-            
-            .frozenContent {
-                opacity: 1;
-                -webkit-transform:scale(1,1);
-                transform:scale(1,1);
-                @include exit;
+                width:320px;
+                height:30px;
+                line-height: 30px;
+                border:1px solid #ebebeb;
+            }
+
+            .reason {
+                padding:5px;
+                width:320px;
+                height:100px;
+                resize: none;
+            }
+
+            .descript {
+                padding-left:110px;
+                min-height: 38px;
             }
         }
 
-        .frozenContent {
-            margin:-255px 0 0 -250px;
-            position: absolute;
-            top:50%;
-            left:50%;
-            width:500px;
-            z-index: 11;
+        .button-group {
             background-color: #fff;
-            border-radius: 3px;
-            opacity: 0;
-            -webkit-transform:scale(0.3,0.3);
-            transform:scale(0.3,0.3);
-            @include come;
+            overflow: hidden;
+            border-radius: 0 0 3px 3px;
 
-            .title {
-                padding-left:20px;
-                height:50px;
-                line-height: 50px;
-                font-size: 14px;
-                letter-spacing: 3px;
-                background-color:#262524;
+            .btn {
+                float: right;
+                margin:12px 10px;
+                padding:10px 30px;
+                border-radius: 5px;
+            }
+
+            .btn-cancel {
+                color:#333;
+                background-color: #eee;
+
+                &:hover {
+                    background-color: #E0E0E0;
+                }
+            }
+
+            .btn-submit {
                 color:#fff;
-                border-radius: 3px 3px 0 0;
-            }
+                background-color: #42a5f5;
 
-            .input-group {
-                padding:20px;
-                clear: both;
-
-                .group {
-                    margin-bottom:10px;
-
-                    &.select {
-                        display: none;
-                    }
-                }
-
-                .tip {
-                    padding:9px 15px;
-                    float:left;
-                    width:110px;
-                    height:38px;
-                    line-height: 20px;
-                    text-align: right;
-                }
-
-                .mdui-radio {
-                    padding-left:25px;
-
-                    &:not(:first-child) {
-                        margin-left:10px;
-                    }
-                }
-
-                .uid,
-                .nickname {
-                    padding:0 5px;
-                    float:left;
-                    margin:4px 0;
-                    display: block;
-                    width:320px;
-                    height:30px;
-                    line-height: 30px;
-                    border:1px solid #ebebeb;
-                }
-
-                .choice {
-                    padding-left:10px;
-                    width:320px;
-                    height:38px;
-                    line-height: 38px;
-                    border-radius: 3px;
-                    cursor: pointer;
-                    border:1px solid #eee;
-
-                    &:hover {
-                        border-color: #bdbdbd;
-                    }
-                }
-
-                .edge {
-                    margin-top:-3px;
-                    position: absolute;
-                    top:50%;
-                    right:40px;
-                    border-width:6px 7px 0;
-                    border-style:solid;
-                    border-color:#bdbdbd transparent transparent;
-                    cursor: pointer;
-                    z-index: -1;
-                }
-
-                .list {
-                    display: none;
-                    position: absolute;
-                    left:110px;
-                    top:100px;
-                    background-color: #fff;
-                    z-index:12;
-                    border: 1px solid #d2d2d2;
-                    max-height: 255px;
-                    overflow: auto;
-                    opacity: 0;
-                    -webkit-transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
-                    transition:all cubic-bezier(0.4, 0.0, 0.6, 1) 0.2s;
-                    
-                    &.active {
-                        opacity: 1;
-                        top:39px;
-                        -webkit-transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
-                        transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
-                    }
-                    
-                    &>li {
-                        padding:0 10px;
-                        height:36px;
-                        line-height: 36px;
-                        width:320px;
-                        cursor: pointer;
-
-                        &:hover {
-                            background-color: #eee;
-                        }
-
-                        &.active {
-                            background-color: #2196F3;
-                            color:#fff;
-                        }
-                    }
-                }
-
-                .reason {
-                    padding:5px;
-                    width:320px;
-                    height:100px;
-                    resize: none;
-                }
-
-                .descript {
-                    padding-left:110px;
-                    min-height: 38px;
-                }
-            }
-
-            .button-group {
-                background-color: #fff;
-                overflow: hidden;
-                border-radius: 0 0 3px 3px;
-    
-                .btn {
-                    float: right;
-                    margin:12px 10px;
-                    padding:10px 30px;
-                    border-radius: 5px;
-                }
-    
-                .btn-cancel {
-                    color:#333;
-                    background-color: #eee;
-    
-                    &:hover {
-                        background-color: #E0E0E0;
-                    }
-                }
-    
-                .btn-submit {
-                    color:#fff;
-                    background-color: #42a5f5;
-    
-                    &:hover {
-                        background-color: #2196F3;
-                    }
+                &:hover {
+                    background-color: #2196F3;
                 }
             }
         }

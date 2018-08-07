@@ -22,6 +22,8 @@ var __extends = (this && this.__extends) || (function () {
             this.side = null;
             this.detail = null;
             this.changepwd = null;
+            this.frozenInfo = null;
+            this.givDiamond = null;
             this.token = "";
             this.getToken();
             this.initMethod();
@@ -48,7 +50,8 @@ var __extends = (this && this.__extends) || (function () {
             this.side = new CSide(options);
             this.side.fetch();
             this.changepwd = new ChangePWD(options);
-            this.changepwd.fetch();
+            this.frozenInfo = new FrozenInfo(options);
+            this.givDiamond = new GivDiamond(options);
         };
         IndexMain.prototype.windowEvent = function () {
             var self = this;
@@ -563,7 +566,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el = $(".g-changePwd");
             this.mainView = null;
             $.extend(this, props);
-            this.bindEventByOne();
+            this.fetch();
         }
         ChangePWD.prototype.fetch = function () {
             this.render();
@@ -572,8 +575,6 @@ var __extends = (this && this.__extends) || (function () {
             this.bindEvent();
         };
         ChangePWD.prototype.bindEvent = function () {
-        };
-        ChangePWD.prototype.bindEventByOne = function () {
             var _this = this;
             this.$el.find(".btn-cancel").on("click", function () {
                 _this.hide();
@@ -650,6 +651,214 @@ var __extends = (this && this.__extends) || (function () {
             }, 200);
         };
         return ChangePWD;
+    }());
+    var FrozenInfo = (function () {
+        function FrozenInfo(props) {
+            this.$el = $(".m-frozenInfo");
+            this.$select = this.$el.find(".group.select");
+            this.mainView = null;
+            $.extend(this, props);
+            this.fetch();
+        }
+        FrozenInfo.prototype.fetch = function () {
+            this.render();
+        };
+        FrozenInfo.prototype.render = function () {
+            this.bindEvent();
+        };
+        FrozenInfo.prototype.bindEvent = function () {
+            var _this = this;
+            var self = this;
+            this.$el.find(".btn-cancel").on("click", function () {
+                _this.hide();
+            });
+            this.$el.find(".btn-submit").on("click", function () {
+                var date = new Date(), start_time = parseInt((date.getTime() / 1000)), end_time = 0;
+                if (!self.frozenCheck()) {
+                    return;
+                }
+                ;
+                switch (self.$el.find(".operation:checked").val()) {
+                    case "0":
+                        end_time = 0;
+                        break;
+                    case "1":
+                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
+                        end_time = parseInt((date.getTime() / 1000));
+                        break;
+                }
+                ;
+                _load(true);
+                _resource.addFrozen(JSON.stringify({
+                    "uid": parseInt(self.$el.find(".uid").val()),
+                    "start_time": start_time,
+                    "end_time": end_time,
+                    "reason": self.$el.find(".reason").val(),
+                    "token": self.mainView.token
+                }), function (data) {
+                    window.layer.msg("冻结成功！");
+                    self.hide();
+                    _load(false);
+                });
+            });
+            this.$el.find(".operation").on("change", function () {
+                var val = $(this).val();
+                switch (val) {
+                    case "0":
+                        self.$select.hide();
+                        break;
+                    case "1":
+                        self.$select.show();
+                        break;
+                }
+                ;
+            });
+            this.$select.find(".choice").on("click", function () {
+                _this.$select.find(".list").show();
+                setTimeout(function () {
+                    _this.$select.find(".list").addClass("active");
+                    $(document).on("click", function () {
+                        _this.$select.find(".list").removeClass("active");
+                        setTimeout(function () {
+                            _this.$select.find(".list").hide();
+                        }, 200);
+                        $(document).unbind("click");
+                    });
+                }, 10);
+            });
+            this.$select.find(".list").on("click", "li", function () {
+                var $this = $(this);
+                self.$select.find(".choice").attr("day", $this.attr("day")).text($this.text());
+                $this.addClass("active").siblings(".active").removeClass("active");
+            });
+        };
+        FrozenInfo.prototype.initFrozen = function (uid, uname) {
+            var $el = this.$el;
+            $el.find(".uid").val(uid);
+            $el.find(".nickname").val(uname);
+            $el.find(".operation:eq(0)").prop("checked", true).trigger("change");
+            this.$select.find(".choice").attr("day", "1").text("1天");
+            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
+            $el.find(".reason").val("");
+        };
+        FrozenInfo.prototype.frozenCheck = function () {
+            var str = "";
+            if (!this.$el.find(".reason").val().replace(/\s/g, "")) {
+                str = "请输入冻结事由";
+            }
+            ;
+            if (str) {
+                window.layer.alert(str);
+                return false;
+            }
+            ;
+            return true;
+        };
+        FrozenInfo.prototype.show = function (uid, uname) {
+            var _this = this;
+            this.$el.show();
+            setTimeout(function () {
+                _this.$el.addClass("active");
+            }, 10);
+            this.initFrozen(uid, uname);
+        };
+        FrozenInfo.prototype.hide = function () {
+            var _this = this;
+            this.$el.removeClass("active");
+            setTimeout(function () {
+                _this.$el.hide();
+            }, 200);
+        };
+        return FrozenInfo;
+    }());
+    var GivDiamond = (function () {
+        function GivDiamond(props) {
+            this.$el = $(".m-givDiamond");
+            this.mainView = null;
+            $.extend(this, props);
+            this.fetch();
+        }
+        GivDiamond.prototype.fetch = function () {
+            this.render();
+        };
+        GivDiamond.prototype.render = function () {
+            this.bindEvent();
+        };
+        GivDiamond.prototype.bindEvent = function () {
+            var _this = this;
+            var self = this;
+            this.$el.find(".btn-submit").on("click", function () {
+                if (!_this.givingCheck()) {
+                    return;
+                }
+                ;
+                _load(true);
+                _resource.addDiamond(JSON.stringify({
+                    "uid": parseInt(self.$el.find(".uid").val()),
+                    "num": parseInt(self.$el.find(".diamondNumber").val()),
+                    "reason": self.$el.find(".reason").val(),
+                    "token": _this.mainView.token
+                }), function (data) {
+                    window.layer.msg("赠送成功！");
+                    self.hide();
+                    _load(false);
+                });
+            });
+            this.$el.find(".btn-cancel").on("click", function () {
+                _this.hide();
+            });
+            this.$el.find(".diamondNumber").on("input", function () {
+                var $this = $(this);
+                if (/^\d*$/.test($this.val())) {
+                    $this.attr("old", $this.val());
+                }
+                else {
+                    $this.val($this.attr("old"));
+                    window.layer.tips('请输入正整数', self.$el.find(".diamondNumber")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                }
+                ;
+            });
+        };
+        GivDiamond.prototype.initgiving = function (uid) {
+            var $el = this.$el;
+            $el.find(".uid").val(uid);
+            $el.find(".diamondNumber,.reason").val("");
+        };
+        GivDiamond.prototype.givingCheck = function () {
+            var str = "";
+            if (!this.$el.find(".diamondNumber").val()) {
+                str = "请输入赠送的钻石数量";
+            }
+            else if (!this.$el.find(".reason").val().replace(/\s/g, "")) {
+                str = "请输入赠送事由";
+            }
+            ;
+            if (str) {
+                window.layer.alert(str);
+                return false;
+            }
+            ;
+            return true;
+        };
+        GivDiamond.prototype.show = function (uid) {
+            var _this = this;
+            this.$el.show();
+            setTimeout(function () {
+                _this.$el.addClass("active");
+            }, 10);
+            this.initgiving(uid);
+        };
+        GivDiamond.prototype.hide = function () {
+            var _this = this;
+            this.$el.removeClass("active");
+            setTimeout(function () {
+                _this.$el.hide();
+            }, 200);
+        };
+        return GivDiamond;
     }());
     var ChartBase = (function () {
         function ChartBase(props) {
@@ -789,7 +998,6 @@ var __extends = (this && this.__extends) || (function () {
                 "detail": "statisticalDetail"
             };
             _this.$el = null;
-            _this.firstLoad = true;
             return _this;
         }
         StatisticalUser.prototype.fetch = function (pageNo, pageSize, day) {
@@ -804,9 +1012,8 @@ var __extends = (this && this.__extends) || (function () {
                 "day": day,
                 "token": this.mainView.mainView.token
             }), function (data) {
-                if (self.firstLoad) {
+                if (!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 }
                 else {
                     self.pading.setTotal(data.count);
@@ -844,9 +1051,6 @@ var __extends = (this && this.__extends) || (function () {
                 "detail": "userListDetail"
             };
             _this.$el = null;
-            _this.$frozen = null;
-            _this.$select = null;
-            _this.firstLoad = true;
             return _this;
         }
         UserList.prototype.fetch = function (pageNo, pageSize, uid) {
@@ -861,9 +1065,8 @@ var __extends = (this && this.__extends) || (function () {
                 "uid": uid,
                 "token": this.mainView.mainView.token
             }), function (data) {
-                if (self.firstLoad) {
+                if (!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 }
                 else {
                     self.pading.setTotal(data.count);
@@ -876,88 +1079,20 @@ var __extends = (this && this.__extends) || (function () {
         UserList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
             header.showMenu(true);
-            header.setPlaceHolder("uid");
+            header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-userList");
-            this.$frozen = this.$el.find(".frozenInfo");
-            this.$select = this.$frozen.find(".group.select");
             this.bindEvent();
         };
         UserList.prototype.bindEvent = function () {
-            var _this = this;
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
                 var $this = $(this);
-                self.$frozen.show();
-                setTimeout(function () {
-                    self.$frozen.addClass("active");
-                }, 10);
-                self.initFrozen($this.attr("uid"), $this.attr("uname"));
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"));
             });
-            this.$frozen.find(".btn-cancel").on("click", function () {
-                _this.$frozen.removeClass("active");
-                setTimeout(function () {
-                    _this.$frozen.hide();
-                }, 200);
-            });
-            this.$frozen.find(".btn-submit").on("click", function () {
-                var date = new Date(), start_time = parseInt((date.getTime() / 1000)), end_time = 0;
-                if (!self.frozenCheck()) {
-                    return;
-                }
-                ;
-                switch (self.$frozen.find(".operation:checked").val()) {
-                    case "0":
-                        end_time = 0;
-                        break;
-                    case "1":
-                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
-                        end_time = parseInt((date.getTime() / 1000));
-                        break;
-                }
-                ;
-                _load(true);
-                _resource.addFrozen(JSON.stringify({
-                    "uid": parseInt(self.$frozen.find(".uid").val()),
-                    "start_time": start_time,
-                    "end_time": end_time,
-                    "reason": self.$frozen.find(".reason").val(),
-                    "token": self.mainView.mainView.token
-                }), function (data) {
-                    window.layer.msg("冻结成功！");
-                    self.$frozen.find(".btn-cancel").trigger("click");
-                    _load(false);
-                });
-            });
-            this.$frozen.find(".operation").on("change", function () {
-                var val = $(this).val();
-                switch (val) {
-                    case "0":
-                        self.$select.hide();
-                        break;
-                    case "1":
-                        self.$select.show();
-                        break;
-                }
-                ;
-            });
-            this.$select.find(".choice").on("click", function () {
-                _this.$select.find(".list").show();
-                setTimeout(function () {
-                    _this.$select.find(".list").addClass("active");
-                    $(document).on("click", function () {
-                        _this.$select.find(".list").removeClass("active");
-                        setTimeout(function () {
-                            _this.$select.find(".list").hide();
-                        }, 200);
-                        $(document).unbind("click");
-                    });
-                }, 10);
-            });
-            this.$select.find(".list").on("click", "li", function () {
+            this.$el.find(".info").on("click", ".btn-diamond", function () {
                 var $this = $(this);
-                self.$select.find(".choice").attr("day", $this.attr("day")).text($this.text());
-                $this.addClass("active").siblings(".active").removeClass("active");
+                self.mainView.mainView.givDiamond.show(parseInt($this.attr("uid")));
             });
         };
         UserList.prototype.renderDetail = function (data) {
@@ -967,35 +1102,11 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         UserList.prototype.search = function (query) {
-            if (/^\d*$/.test(query)) {
+            query = query.replace(/\s/g, "");
+            if (query) {
                 this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
             }
-            else {
-                window.layer.msg("请输入正确的用户编号");
-            }
             ;
-        };
-        UserList.prototype.initFrozen = function (uid, uname) {
-            var $frozen = this.$frozen;
-            $frozen.find(".uid").val(uid);
-            $frozen.find(".nickname").val(uname);
-            $frozen.find(".operation:eq(0)").prop("checked", true).trigger("change");
-            this.$select.find(".choice").attr("day", "1").text("1天");
-            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
-            $frozen.find(".reason").val("");
-        };
-        UserList.prototype.frozenCheck = function () {
-            var str = "";
-            if (!this.$frozen.find(".reason").val().replace(/\s/g, "")) {
-                str = "请输入冻结事由";
-            }
-            ;
-            if (str) {
-                window.layer.alert(str);
-                return false;
-            }
-            ;
-            return true;
         };
         return UserList;
     }(ChartBase));
@@ -1008,7 +1119,6 @@ var __extends = (this && this.__extends) || (function () {
                 "detail": "payStatisticalDetail"
             };
             _this.$el = null;
-            _this.firstLoad = true;
             $.extend(_this, props);
             return _this;
         }
@@ -1023,9 +1133,8 @@ var __extends = (this && this.__extends) || (function () {
                 "day": 0,
                 "token": this.mainView.mainView.token
             }), function (data) {
-                if (self.firstLoad) {
+                if (!self.$el) {
                     self.render(data);
-                    self.firstLoad = false;
                 }
                 else {
                     self.pading.setTotal(data.count);
@@ -1060,21 +1169,58 @@ var __extends = (this && this.__extends) || (function () {
         function Diamond(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "routerTemp": "newUserTemp"
+                "routerTemp": "diamondTemp",
+                "detail": "diamondDetail"
             };
+            _this.$el = null;
             $.extend(_this, props);
             return _this;
         }
-        Diamond.prototype.fetch = function () {
-            this.render();
+        Diamond.prototype.fetch = function (pageNo, pageSize, uid) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            if (uid === void 0) { uid = 0; }
+            var self = this;
+            _load(true);
+            _resource.diamond(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "uid": uid,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    self.render(data);
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
         };
-        Diamond.prototype.render = function () {
+        Diamond.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu();
-            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-diamond");
             this.bindEvent();
         };
         Diamond.prototype.bindEvent = function () {
+        };
+        Diamond.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        Diamond.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        Diamond.prototype.search = function (query) {
+            query = query.replace(/\s/g, "");
+            if (query) {
+                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
+            }
+            ;
         };
         return Diamond;
     }(ChartBase));
@@ -1083,21 +1229,74 @@ var __extends = (this && this.__extends) || (function () {
         function FreezeList(props) {
             var _this = _super.call(this, props) || this;
             _this.template = {
-                "routerTemp": "newUserTemp"
+                "routerTemp": "freezeListTemp",
+                "detail": "freezeListDetail"
             };
+            _this.$el = null;
             $.extend(_this, props);
             return _this;
         }
-        FreezeList.prototype.fetch = function () {
-            this.render();
+        FreezeList.prototype.fetch = function (pageNo, pageSize, uid) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            if (uid === void 0) { uid = 0; }
+            var self = this;
+            _load(true);
+            _resource.freezeList(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "uid": uid,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    self.render(data);
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
         };
-        FreezeList.prototype.render = function () {
+        FreezeList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu();
-            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-freezeList");
             this.bindEvent();
         };
         FreezeList.prototype.bindEvent = function () {
+            var self = this;
+            this.$el.find(".info").on("click", ".btn-delFreeze", function () {
+                var $this = $(this), uid = $this.attr("uid"), uname = $this.attr("uname");
+                window.layer.alert("\u786E\u8BA4\u89E3\u9664\u7528\u6237\u7F16\u53F7\u4E3A:" + uid + "\uFF0C\u7528\u6237\u540D\u4E3A:" + uname + "\u7684\u51BB\u7ED3\u4E48\uFF1F", function (e) {
+                    _load(true);
+                    _resource.delFrozen(JSON.stringify({
+                        "uid": parseInt(uid),
+                        "token": self.mainView.mainView.token
+                    }), function (data) {
+                        window.layer.msg(data.msg);
+                        $this.prop("disabled", true);
+                        window.layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+        };
+        FreezeList.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        FreezeList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        FreezeList.prototype.search = function (query) {
+            query = query.replace(/\s/g, "");
+            if (query) {
+                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
+            }
+            ;
         };
         return FreezeList;
     }(ChartBase));

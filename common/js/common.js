@@ -27,6 +27,9 @@ var _loadObject = null, _resource = {
     "diamond": {
         "url": _domain + "/v1/backend/run/diamond/list-diamond-record"
     },
+    "addDiamond": {
+        "url": _domain + "/v1/backend/run/diamond/add-diamond-give"
+    },
     "freezeList": {
         "url": _domain + "/v1/backend/run/frozen/list-frozen-user"
     },

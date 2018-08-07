@@ -190,12 +190,12 @@
                                 <label class="mdui-radio">
                                     <input class="operation" type="radio" name="frozenOperation" checked value="0"/>
                                     <i class="mdui-radio-icon"></i>
-                                    永久
+                                    <span>永久</span>
                                 </label>
                                 <label class="mdui-radio">
                                     <input class="operation" type="radio" name="frozenOperation" value="1"/>
                                     <i class="mdui-radio-icon"></i>
-                                    限时
+                                    <span>限时</span>
                                 </label>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                         <img class="pho" src="{{ en.head_img }}" />
                     </td>
                     <td>
-                        <button class="btn btn-freeze" uid="{{ en.uid }}">冻结</button>
+                        <button class="btn btn-freeze" uid="{{ en.uid }}" uname="{{ en.name }}">冻结</button>
                     </td>
                 </tr>
             {{ /each }}

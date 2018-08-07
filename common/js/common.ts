@@ -58,7 +58,7 @@ function _load(isShow:boolean) {
         _loadObject = temp.layer.load(1, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-    } else {
+    } else if(_loadObject) {
         temp.layer.close(_loadObject);
     };
 }
@@ -100,10 +100,9 @@ function _error(code:number) {
                         success(data);
                     };
                 } else {
-                    // 如果服务器返回的code不为0，则表示出现了请求错误，提示用户并返回到首页
-                    (<any>window).layer.alert(data.msg,function(){
-                        window.location.replace("index.html");
-                    });
+                    // 如果服务器返回的code不为0，则表示出现了请求错误，提示用户
+                    (<any>window).layer.alert(data.msg);
+                    _load(false);
                 };
             },
             "error":function(request,response) {

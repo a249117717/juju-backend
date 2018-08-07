@@ -1172,7 +1172,7 @@
          * @param {string} end [结束日期]
          */
         changeDate(start:string,end:string) {
-            this.fetch(1,50,(new Date(`${start} 00:00:00`)).getTime());
+            this.fetch(1,50,parseInt(<any>((new Date(`${start} 00:00:00`)).getTime()/1000)));
         }
 
         /**
@@ -1208,7 +1208,7 @@
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
             let self:UserList = this;
-            // this.render({});
+            
             _load(true);
             _resource.userList(JSON.stringify({
                 "page_size":pageSize,
@@ -1252,13 +1252,15 @@
             let self:UserList = this;
 
             // 冻结
-            this.$el.find(".info").on("click",".btn-freeze",() => {
-                this.$frozen.show();
+            this.$el.find(".info").on("click",".btn-freeze",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                self.$frozen.show();
                 setTimeout(() => {
-                    this.$frozen.addClass("active");
+                    self.$frozen.addClass("active");
                 },10);
 
-                
+                self.initFrozen($this.attr("uid"),$this.attr("uname"));
             });
 
             // 取消冻结
@@ -1271,14 +1273,39 @@
 
             // 确定冻结
             this.$frozen.find(".btn-submit").on("click",function(){
-                // _resource.addFrozen(JSON.stringify({
-                //     "uid":$(this).attr("uid"),
-                //     "start_time":"",
-                //     "end_time":"",
-                //     "reason":""
-                // }),function(data){
+                let date:Date = new Date(),
+                start_time:number = parseInt(<any>(date.getTime()/1000)),
+                end_time:number = 0;
 
-                // });
+                // 如果数据校验不通过，则退出函数
+                if(!self.frozenCheck()) {
+                    return;
+                };
+
+                // 获取冻结截止时间
+                switch(self.$frozen.find(".operation:checked").val()) {
+                    case "0":
+                        end_time = 0;
+                    break;
+                    case "1":
+                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
+                        end_time = parseInt(<any>(date.getTime()/1000));
+                    break;
+                };
+
+                _load(true);
+                _resource.addFrozen(JSON.stringify({
+                    "uid":parseInt(<string>self.$frozen.find(".uid").val()),
+                    "start_time":start_time,
+                    "end_time":end_time,
+                    "reason":self.$frozen.find(".reason").val(),
+                    "token":self.mainView.mainView.token
+                }),function(data){
+                    (<any>window).layer.msg("冻结成功！");
+                    // 关闭冻结提示框
+                    self.$frozen.find(".btn-cancel").trigger("click");
+                    _load(false);
+                });
             });
 
             // 冻结操作
@@ -1348,6 +1375,45 @@
             } else {
                 (<any>window).layer.msg("请输入正确的用户编号");
             };
+        }
+
+        /**
+         * 初始化冻结提示框
+         * @param {string} uid [用户编号]
+         * @param {string} uname [用户名]
+         */
+        initFrozen(uid:string,uname:string) {
+            let $frozen:JQuery<HTMLElement> = this.$frozen;
+            // 设置用户编号
+            $frozen.find(".uid").val(uid);
+            // 设置用户昵称
+            $frozen.find(".nickname").val(uname);
+            // 初始化冻结操作
+            $frozen.find(".operation:eq(0)").prop("checked",true).trigger("change");
+            // 初始化冻结天数
+            this.$select.find(".choice").attr("day","1").text("1天");
+            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
+            // 清空冻结事由
+            $frozen.find(".reason").val("");
+        }
+
+        /**
+         * 冻结数据校验
+         * @return {boolean} bool [是否校验通过]
+         */
+        frozenCheck() : boolean {
+            let str:string = "";
+
+            if(!(<string>this.$frozen.find(".reason").val()).replace(/\s/g,"")) {
+                str = "请输入冻结事由";
+            };
+
+            if(str) {
+                (<any>window).layer.alert(str);
+                return false;
+            };
+
+            return true;
         }
     }
 

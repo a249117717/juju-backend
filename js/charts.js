@@ -828,7 +828,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el.find(".info").html(window.template(this.template.detail, data));
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
-            this.fetch(1, 50, (new Date(start + " 00:00:00")).getTime());
+            this.fetch(1, 50, parseInt(((new Date(start + " 00:00:00")).getTime() / 1000)));
         };
         StatisticalUser.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
@@ -887,10 +887,12 @@ var __extends = (this && this.__extends) || (function () {
             var _this = this;
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
-                _this.$frozen.show();
+                var $this = $(this);
+                self.$frozen.show();
                 setTimeout(function () {
-                    _this.$frozen.addClass("active");
+                    self.$frozen.addClass("active");
                 }, 10);
+                self.initFrozen($this.attr("uid"), $this.attr("uname"));
             });
             this.$frozen.find(".btn-cancel").on("click", function () {
                 _this.$frozen.removeClass("active");
@@ -899,6 +901,33 @@ var __extends = (this && this.__extends) || (function () {
                 }, 200);
             });
             this.$frozen.find(".btn-submit").on("click", function () {
+                var date = new Date(), start_time = parseInt((date.getTime() / 1000)), end_time = 0;
+                if (!self.frozenCheck()) {
+                    return;
+                }
+                ;
+                switch (self.$frozen.find(".operation:checked").val()) {
+                    case "0":
+                        end_time = 0;
+                        break;
+                    case "1":
+                        date.setDate(date.getDate() + parseInt(self.$select.find(".active").attr("day")));
+                        end_time = parseInt((date.getTime() / 1000));
+                        break;
+                }
+                ;
+                _load(true);
+                _resource.addFrozen(JSON.stringify({
+                    "uid": parseInt(self.$frozen.find(".uid").val()),
+                    "start_time": start_time,
+                    "end_time": end_time,
+                    "reason": self.$frozen.find(".reason").val(),
+                    "token": self.mainView.mainView.token
+                }), function (data) {
+                    window.layer.msg("冻结成功！");
+                    self.$frozen.find(".btn-cancel").trigger("click");
+                    _load(false);
+                });
             });
             this.$frozen.find(".operation").on("change", function () {
                 var val = $(this).val();
@@ -945,6 +974,28 @@ var __extends = (this && this.__extends) || (function () {
                 window.layer.msg("请输入正确的用户编号");
             }
             ;
+        };
+        UserList.prototype.initFrozen = function (uid, uname) {
+            var $frozen = this.$frozen;
+            $frozen.find(".uid").val(uid);
+            $frozen.find(".nickname").val(uname);
+            $frozen.find(".operation:eq(0)").prop("checked", true).trigger("change");
+            this.$select.find(".choice").attr("day", "1").text("1天");
+            this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
+            $frozen.find(".reason").val("");
+        };
+        UserList.prototype.frozenCheck = function () {
+            var str = "";
+            if (!this.$frozen.find(".reason").val().replace(/\s/g, "")) {
+                str = "请输入冻结事由";
+            }
+            ;
+            if (str) {
+                window.layer.alert(str);
+                return false;
+            }
+            ;
+            return true;
         };
         return UserList;
     }(ChartBase));

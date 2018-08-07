@@ -50,7 +50,7 @@ function _load(isShow) {
             shade: [0.1, '#fff']
         });
     }
-    else {
+    else if (_loadObject) {
         temp.layer.close(_loadObject);
     }
     ;
@@ -90,9 +90,8 @@ function _error(code) {
                     ;
                 }
                 else {
-                    window.layer.alert(data.msg, function () {
-                        window.location.replace("index.html");
-                    });
+                    window.layer.alert(data.msg);
+                    _load(false);
                 }
                 ;
             },

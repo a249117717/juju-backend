@@ -657,6 +657,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el = $(".m-frozenInfo");
             this.$select = this.$el.find(".group.select");
             this.mainView = null;
+            this.sTime = null;
             $.extend(this, props);
             this.fetch();
         }
@@ -673,7 +674,7 @@ var __extends = (this && this.__extends) || (function () {
                 _this.hide();
             });
             this.$el.find(".btn-submit").on("click", function () {
-                var date = new Date(), start_time = parseInt((date.getTime() / 1000)), end_time = 0;
+                var date = new Date(), start_time = parseInt((date.getTime() / 1000)), end_time = 0, option = null;
                 if (!self.frozenCheck()) {
                     return;
                 }
@@ -688,18 +689,28 @@ var __extends = (this && this.__extends) || (function () {
                         break;
                 }
                 ;
-                _load(true);
-                _resource.addFrozen(JSON.stringify({
+                option = {
                     "uid": parseInt(self.$el.find(".uid").val()),
                     "start_time": start_time,
                     "end_time": end_time,
                     "reason": self.$el.find(".reason").val(),
                     "token": self.mainView.token
-                }), function (data) {
-                    window.layer.msg("冻结成功！");
-                    self.hide();
-                    _load(false);
-                });
+                };
+                _load(true);
+                if (self.sTime != null) {
+                    _resource.updateFrozen(JSON.stringify(option), function (data) {
+                        window.layer.msg("更新成功！");
+                        self.hide();
+                        _load(false);
+                    });
+                }
+                else {
+                    _resource.addFrozen(JSON.stringify(option), function (data) {
+                        window.layer.msg("冻结成功！");
+                        self.hide();
+                        _load(false);
+                    });
+                }
             });
             this.$el.find(".operation").on("change", function () {
                 var val = $(this).val();
@@ -732,14 +743,14 @@ var __extends = (this && this.__extends) || (function () {
                 $this.addClass("active").siblings(".active").removeClass("active");
             });
         };
-        FrozenInfo.prototype.initFrozen = function (uid, uname) {
+        FrozenInfo.prototype.initFrozen = function (uid, uname, reason) {
             var $el = this.$el;
             $el.find(".uid").val(uid);
             $el.find(".nickname").val(uname);
             $el.find(".operation:eq(0)").prop("checked", true).trigger("change");
             this.$select.find(".choice").attr("day", "1").text("1天");
             this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
-            $el.find(".reason").val("");
+            $el.find(".reason").val(reason);
         };
         FrozenInfo.prototype.frozenCheck = function () {
             var str = "";
@@ -754,13 +765,14 @@ var __extends = (this && this.__extends) || (function () {
             ;
             return true;
         };
-        FrozenInfo.prototype.show = function (uid, uname) {
+        FrozenInfo.prototype.show = function (uid, uname, reason, sTime) {
             var _this = this;
             this.$el.show();
             setTimeout(function () {
                 _this.$el.addClass("active");
             }, 10);
-            this.initFrozen(uid, uname);
+            this.sTime = sTime;
+            this.initFrozen(uid, uname, reason);
         };
         FrozenInfo.prototype.hide = function () {
             var _this = this;
@@ -1284,6 +1296,10 @@ var __extends = (this && this.__extends) || (function () {
                     });
                 });
             });
+            this.$el.find(".info").on("click", ".btn-update", function () {
+                var $this = $(this);
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"), $this.parents("tr").find(".reason").text(), parseInt($this.attr("stime")));
+            });
         };
         FreezeList.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template(this.template.detail, data));
@@ -1315,7 +1331,8 @@ var __extends = (this && this.__extends) || (function () {
         };
         InfoQuery.prototype.render = function () {
             var header = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
             this.bindEvent();
         };

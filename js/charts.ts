@@ -904,6 +904,7 @@
         $el:JQuery<HTMLElement> = $(".m-frozenInfo"); // 冻结提示框
         $select:JQuery<HTMLElement> = this.$el.find(".group.select"); // 冻结提示框
         mainView:IndexMain = null;
+        sTime:number = null;   // 开始时间（更新状态才会有这个时间）
 
         constructor(props:any) {
             $.extend(this,props);
@@ -939,7 +940,8 @@
             this.$el.find(".btn-submit").on("click",function(){
                 let date:Date = new Date(),
                 start_time:number = parseInt(<any>(date.getTime()/1000)),
-                end_time:number = 0;
+                end_time:number = 0,
+                option:{} = null;
 
                 // 如果数据校验不通过，则退出函数
                 if(!self.frozenCheck()) {
@@ -957,19 +959,30 @@
                     break;
                 };
 
-                _load(true);
-                _resource.addFrozen(JSON.stringify({
+                option = {
                     "uid":parseInt(<string>self.$el.find(".uid").val()),
                     "start_time":start_time,
                     "end_time":end_time,
                     "reason":self.$el.find(".reason").val(),
                     "token":self.mainView.token
-                }),function(data){
-                    (<any>window).layer.msg("冻结成功！");
-                    // 关闭冻结提示框
-                    self.hide();
-                    _load(false);
-                });
+                };
+
+                _load(true);
+                if(self.sTime != null) {    // 更新
+                    _resource.updateFrozen(JSON.stringify(option),function(data){
+                        (<any>window).layer.msg("更新成功！");
+                        // 关闭冻结提示框
+                        self.hide();
+                        _load(false);
+                    });
+                } else {    // 新增
+                    _resource.addFrozen(JSON.stringify(option),function(data){
+                        (<any>window).layer.msg("冻结成功！");
+                        // 关闭冻结提示框
+                        self.hide();
+                        _load(false);
+                    });
+                }
             });
 
             // 冻结操作
@@ -1016,8 +1029,9 @@
          * 初始化冻结提示框
          * @param {number} uid [用户编号]
          * @param {string} uname [用户名]
+         * @param {string} reason [事由，可为空]
          */
-        initFrozen(uid:number,uname:string) {
+        initFrozen(uid:number,uname:string,reason?:string) {
             let $el:JQuery<HTMLElement> = this.$el;
             // 设置用户编号
             $el.find(".uid").val(uid);
@@ -1029,7 +1043,7 @@
             this.$select.find(".choice").attr("day","1").text("1天");
             this.$select.find(".list li:eq(0)").addClass("active").siblings(".active").removeClass("active");
             // 清空冻结事由
-            $el.find(".reason").val("");
+            $el.find(".reason").val(reason);
         }
 
         /**
@@ -1055,14 +1069,17 @@
          * 显示冻结提示框
          * @param {number} uid [用户编号]
          * @param {string} uname [用户名]
+         * @param {string} reason [事由，可为空]
+         * @param {number} sTime [冻结开始时间戳]
          */
-        show(uid:number,uname:string) {
+        show(uid:number,uname:string,reason?:string,sTime?:number) {
             this.$el.show();
             setTimeout(() => {
                 this.$el.addClass("active");
             },10);
 
-            this.initFrozen(uid,uname);
+            this.sTime = sTime;
+            this.initFrozen(uid,uname,reason);
         }
 
         /**
@@ -1843,6 +1860,12 @@
                     });
                 });
             });
+
+            // 更新
+            this.$el.find(".info").on("click",".btn-update",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"),<string>$this.parents("tr").find(".reason").text(),parseInt($this.attr("stime")));
+            });
         }
 
         /**
@@ -1887,9 +1910,17 @@
 
         /**
          * 数据获取
+         * @param {uid} string [用户编号]
          */
         fetch() {
             this.render();
+            // _load(true);
+            // _resource.infoQuery(JSON.stringify({
+            //     "uid":199980,
+            //     "token":this.mainView.mainView.token
+            // }),function(data:any){
+            //     _load(false);
+            // });
         }
 
         /**
@@ -1897,7 +1928,8 @@
          */
         render() {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
             this.bindEvent();

@@ -431,8 +431,11 @@
                     <td>{{ formatData(en.start_time) }}</td>
                     <td>{{ en.end_time=="0"?"永久":formatData(en.end_time) }}</td>
                     <td>{{ en.operator_uid }}</td>
-                    <td>{{ en.reason }}</td>
-                    <td><button class="btn btn-delFreeze mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}" uname="{{ en.name }}">解冻</button></td>
+                    <td class="reason">{{ en.reason }}</td>
+                    <td>
+                        <button class="btn btn-delFreeze mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}" uname="{{ en.name }}">解冻</button>
+                        <button class="btn btn-update mdui-ripple mdui-ripple-grey" stime="{{ en.start_time }}" uid="{{ en.uid }}" uname="{{ en.name }}">更新</button>
+                    </td>
                 </tr>
             {{ /each }}
         </tbody>

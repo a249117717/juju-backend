@@ -34,9 +34,12 @@
          * 单次事件绑定
          */
         bindEventByOne() {
+            let self:Login = this;
+
             // 登录
-            this.$el.find(".btn-submit").on("click",() => {
-                this.login();
+            this.$el.find(".btn-submit").on("click",function(){
+                self.login();
+                $(this).blur();
             });
 
             // 密码输入框键盘点击事件
@@ -44,7 +47,9 @@
                 if(e.keyCode == 13) {
                     // 当用户在密码输入框按下回车键，则触发点击Login按钮
                     this.$el.find(".btn-submit").click();
-                };             
+                    // 去掉输入框焦点
+                    $("input:focus").blur();
+                };
             });
         }
 
@@ -62,8 +67,6 @@
                     if(data.code == 0) {
                         // 存储token
                         window.localStorage["jujuBackend"] = data.token;
-                        // 去掉输入框焦点
-                        $("input").blur();
                         (<any>window).layer.alert("登录成功",{
                             "closeBtn":0
                         },function(){

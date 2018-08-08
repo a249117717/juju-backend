@@ -62,7 +62,7 @@ function _error(code) {
     var tip = "";
     switch (code) {
         case 404:
-            tip = "请求服务器的资源不存在!";
+            tip = "请求服务器的资源不存在";
             break;
     }
     ;

@@ -74,7 +74,7 @@ function _error(code:number) {
     let tip:string = "";
     switch(code) {
         case 404:
-            tip = "请求服务器的资源不存在!"
+            tip = "请求服务器的资源不存在"
         break;
     };
 

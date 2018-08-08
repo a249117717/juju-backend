@@ -16,12 +16,15 @@
         };
         Login.prototype.bindEventByOne = function () {
             var _this = this;
+            var self = this;
             this.$el.find(".btn-submit").on("click", function () {
-                _this.login();
+                self.login();
+                $(this).blur();
             });
             this.$el.find(".pwd").on("keyup", function (e) {
                 if (e.keyCode == 13) {
                     _this.$el.find(".btn-submit").click();
+                    $("input:focus").blur();
                 }
                 ;
             });
@@ -35,7 +38,6 @@
                 }), function (data) {
                     if (data.code == 0) {
                         window.localStorage["jujuBackend"] = data.token;
-                        $("input").blur();
                         window.layer.alert("登录成功", {
                             "closeBtn": 0
                         }, function () {

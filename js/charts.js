@@ -27,7 +27,6 @@ var __extends = (this && this.__extends) || (function () {
             this.token = "";
             this.getToken();
             this.initMethod();
-            this.bindEventByOne();
         }
         IndexMain.prototype.fetch = function () {
             this.render();
@@ -36,8 +35,6 @@ var __extends = (this && this.__extends) || (function () {
             this.bindEvent();
         };
         IndexMain.prototype.bindEvent = function () {
-        };
-        IndexMain.prototype.bindEventByOne = function () {
             this.windowEvent();
         };
         IndexMain.prototype.initMethod = function () {
@@ -46,12 +43,12 @@ var __extends = (this && this.__extends) || (function () {
             };
             this.header = new CHeader(options);
             this.header.fetch();
-            this.detail = new CDetail(options);
             this.side = new CSide(options);
             this.side.fetch();
             this.changepwd = new ChangePWD(options);
             this.frozenInfo = new FrozenInfo(options);
             this.givDiamond = new GivDiamond(options);
+            this.detail = new CDetail(options);
         };
         IndexMain.prototype.windowEvent = function () {
             var self = this;
@@ -917,91 +914,6 @@ var __extends = (this && this.__extends) || (function () {
         ChartBase.prototype.frozen = function () { };
         return ChartBase;
     }());
-    var ActiveUser = (function (_super) {
-        __extends(ActiveUser, _super);
-        function ActiveUser(props) {
-            var _this = _super.call(this, props) || this;
-            _this.template = {
-                "detail": "activeUserTemp"
-            };
-            $.extend(_this, props);
-            return _this;
-        }
-        ActiveUser.prototype.fetch = function () {
-            this.render();
-        };
-        ActiveUser.prototype.render = function () {
-            var header = this.mainView.mainView.header;
-            header.showMenu();
-            this.mainView.renderByChildren(window.template(this.template.detail, {}));
-            this.$el = $(".m-activeUser");
-            this.renderChart();
-            this.bindEvent();
-        };
-        ActiveUser.prototype.bindEvent = function () {
-            this.$el.find(".g-chart .menu").on("click", "li", function () {
-                var $this = $(this);
-                if (!$this.hasClass("active")) {
-                    $this.addClass("active").siblings(".active").removeClass("active");
-                }
-                ;
-            });
-        };
-        ActiveUser.prototype.renderChart = function () {
-            var data = [{
-                    year: '1991',
-                    value: 3
-                }, {
-                    year: '1992',
-                    value: 4
-                }, {
-                    year: '1993',
-                    value: 3.5
-                }, {
-                    year: '1994',
-                    value: 5
-                }, {
-                    year: '1995',
-                    value: 4.9
-                }, {
-                    year: '1996',
-                    value: 6
-                }, {
-                    year: '1997',
-                    value: 7
-                }, {
-                    year: '1998',
-                    value: 9
-                }, {
-                    year: '1999',
-                    value: 13
-                }];
-            var chart = new window.G2.Chart({
-                container: 'diagram',
-                width: 600,
-                height: 300,
-                forceFit: true,
-                padding: ["auto", "auto", 45, 45],
-                background: {
-                    fill: "#fff"
-                }
-            });
-            chart.source(data);
-            chart.scale('value', {
-                min: 0
-            });
-            chart.scale('year', {
-                range: [0, 1]
-            });
-            chart.line().position('year*value');
-            chart.point().position('year*value').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-            });
-            chart.render();
-        };
-        return ActiveUser;
-    }(ChartBase));
     var StatisticalUser = (function (_super) {
         __extends(StatisticalUser, _super);
         function StatisticalUser(props) {
@@ -1036,9 +948,6 @@ var __extends = (this && this.__extends) || (function () {
                 if (!self.$el) {
                     self.render(data);
                 }
-                else {
-                    self.pading.setTotal(data.count);
-                }
                 ;
                 self.renderDetail(data);
                 _load(false);
@@ -1054,6 +963,29 @@ var __extends = (this && this.__extends) || (function () {
         StatisticalUser.prototype.bindEvent = function () { };
         StatisticalUser.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template(this.template.detail, data));
+            var chart = new window.G2.Chart({
+                container: 'diagram',
+                width: 600,
+                height: 300,
+                forceFit: true,
+                padding: ["auto", "auto", 45, 45],
+                background: {
+                    fill: "#fff"
+                }
+            });
+            chart.source(data);
+            chart.scale('value', {
+                min: 0
+            });
+            chart.scale('year', {
+                range: [0, 1]
+            });
+            chart.line().position('year*value');
+            chart.point().position('year*value').size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            chart.render();
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
             start = parseInt(((new Date(start + " 00:00:00")).getTime() / 1000));

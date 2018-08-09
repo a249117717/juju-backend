@@ -22,7 +22,6 @@
         constructor() {
             this.getToken();
             this.initMethod();
-            this.bindEventByOne();
         }
 
         /**
@@ -43,13 +42,6 @@
          * 事件绑定
          */
         bindEvent() {
-            
-        }
-
-        /**
-         * 单次事件绑定
-         */
-        bindEventByOne() {
             this.windowEvent();
         }
         
@@ -65,8 +57,6 @@
             this.header = new CHeader(options);
             this.header.fetch();
 
-            this.detail = new CDetail(options)
-
             // 侧栏
             this.side = new CSide(options);
             this.side.fetch();
@@ -77,6 +67,9 @@
             this.frozenInfo = new FrozenInfo(options);
             // 赠送钻石
             this.givDiamond = new GivDiamond(options);
+
+            // 详情
+            this.detail = new CDetail(options)
         }
 
         /**
@@ -1310,112 +1303,6 @@
         frozen(){}
     }
 
-    // 活跃用户
-    class ActiveUser extends ChartBase {
-        template = { // 模板
-            "detail":"activeUserTemp"
-        };
-
-        constructor(props:any) {
-            super(props);
-            $.extend(this,props);
-        }
-
-        /**
-         * 数据获取
-         */
-        fetch() {
-            this.render();
-        }
-
-        /**
-         * 页面渲染
-         */
-        render() {
-            let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
-
-            this.mainView.renderByChildren((<any>window).template(this.template.detail,{}));
-            this.$el = $(".m-activeUser");
-            this.renderChart();
-            this.bindEvent();
-        }
-
-        /**
-         * 事件绑定
-         */
-        bindEvent() {
-            this.$el.find(".g-chart .menu").on("click","li",function(){
-                let $this:JQuery<HTMLElement> = $(this);
-
-                if(!$this.hasClass("active")) {
-                    $this.addClass("active").siblings(".active").removeClass("active");
-                };
-            });
-        }
-
-        /**
-         * 渲染图表
-         */
-        renderChart() {
-            let data = [{
-                year: '1991',
-                value: 3
-              }, {
-                year: '1992',
-                value: 4
-              }, {
-                year: '1993',
-                value: 3.5
-              }, {
-                year: '1994',
-                value: 5
-              }, {
-                year: '1995',
-                value: 4.9
-              }, {
-                year: '1996',
-                value: 6
-              }, {
-                year: '1997',
-                value: 7
-              }, {
-                year: '1998',
-                value: 9
-              }, {
-                year: '1999',
-                value: 13
-              }];
-
-              let chart = new (<any>window).G2.Chart({
-                container: 'diagram', // 指定图表容器 ID
-                width : 600, // 指定图表宽度
-                height : 300, // 指定图表高度
-                forceFit: true, // 自适应宽度
-                padding:["auto","auto",45,45],
-                background:{
-                    fill:"#fff"
-                }
-              });
-              // Step 2: 载入数据源
-              chart.source(data);
-              chart.scale('value', {
-                min: 0
-              });
-              chart.scale('year', {
-                range: [0, 1]
-              });
-              // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-              chart.line().position('year*value');
-              chart.point().position('year*value').size(4).shape('circle').style({
-                stroke: '#fff',
-                lineWidth: 1
-              });
-              // Step 4: 渲染图表
-              chart.render();
-        }
-    }
-
     // 统计用户
     class StatisticalUser extends ChartBase {
         $el:JQuery<HTMLElement> = null;
@@ -1456,9 +1343,6 @@
             }),function(data:any){
                 if(!self.$el) {
                     self.render(data);
-                } else {
-                    // 设置总页数
-                    self.pading.setTotal(data.count);
                 };
                 self.renderDetail(data)
                 _load(false);
@@ -1489,6 +1373,33 @@
          */
         renderDetail(data:any) {
             this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+
+            let chart = new (<any>window).G2.Chart({
+            container: 'diagram', // 指定图表容器 ID
+            width : 600, // 指定图表宽度
+            height : 300, // 指定图表高度
+            forceFit: true, // 自适应宽度
+            padding:["auto","auto",45,45],
+            background:{
+                fill:"#fff"
+            }
+            });
+            // Step 2: 载入数据源
+            chart.source(data);
+            chart.scale('value', {
+            min: 0
+            });
+            chart.scale('year', {
+            range: [0, 1]
+            });
+            // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+            chart.line().position('year*value');
+            chart.point().position('year*value').size(4).shape('circle').style({
+            stroke: '#fff',
+            lineWidth: 1
+            });
+            // Step 4: 渲染图表
+            chart.render();
         }
 
         /**

@@ -100,9 +100,13 @@
                 if(hash in _router) {
                     active = `.${hash}`;
                     type = eval(_router[hash]);
-                } else {    // 如果hash不存在，则默认访问新增用户
-                    active = ".newUser";
-                    type = NewUser;
+                } else {    // 如果hash不存在，则访问json中的一个
+                    let en:string = "";
+                    for(en in _router) {
+                        active = `.${en}`;
+                        type = eval(_router[en]);
+                        break;
+                    };
                 };
 
                 self.side.setActive(active);
@@ -139,7 +143,6 @@
 
         constructor(props:any) {
             $.extend(this,props);
-            this.bindEventByOne();
         }
 
         /**
@@ -161,13 +164,6 @@
          * 事件绑定
          */
         bindEvent() {
-            
-        }
-
-        /**
-         * 单次事件绑定
-         */
-        bindEventByOne() {
             let self:CHeader = this;
 
             // 初始化日期选择控件
@@ -228,31 +224,49 @@
         }
 
         /**
-         * 初始化日期（截止日期为今天，开始日期为截止日期往前推7天）
+         * 初始化日期（截止日期为昨天，开始日期为截止日期往前推7天）
          * @param {boolean} isSingle [是否为单日期]
          */
         initDate(isSingle?:boolean) {
-            let date:Date = new Date(),
-            start:string = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`,
-            end:string = "";
-            // 设置开始日期
-            date.setDate(date.getDate() - 7);
-            end = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
-            start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
-            end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
+            let date:any = this.getInitDate(),
+            start:string = date.start,
+            end:string = date.end;
 
             if(isSingle == void 0) {
                 // 如果传参为undefined，则表示重置所有的日期
-                this.$singleDate.text(start);
+                this.$singleDate.text(end);
                 this.$start.text(start);
                 this.$end.text(end);
             } else if(isSingle) {
                 // 重置单日期
-                this.$singleDate.text(start);
+                this.$singleDate.text(end);
             } else {
                 // 重置日期
                 this.$start.text(start);
                 this.$end.text(end);
+            };
+        }
+
+        /**
+         * 获取初始日期时间戳（开始日期为昨天，截止日期为开始日期往前推7天）
+         * @return {object} obj [start:开始日期,end:截止日期]
+         */
+        getInitDate() :any {
+            let date:Date = new Date(),
+            start:string = "",
+            end:string = "";
+            // 设置截止日期
+            date.setDate(date.getDate() - 1);
+            end = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+            // 设置开始日期
+            date.setDate(date.getDate() - 7);
+            start = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+            start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
+            end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
+
+            return {
+                "start":start,
+                "end":end
             };
         }
 
@@ -314,15 +328,31 @@
         }
 
         /**
+         * 设置最大可选择日期
+         * @param {string} maxDate [日期，可不传参表示去除最大日期限制]
+         */
+        setMaxDate(maxDate:string) {
+            let temp:string[] = null;
+
+            if(maxDate && maxDate.length == 10) {
+                temp = maxDate.split("-");
+                maxDate = `${temp[0]}-${parseInt(temp[1])}-${parseInt(temp[2])}`;
+            };
+            this.calendar.setMaxDate(maxDate);
+        }
+
+        /**
          * 头部选择控件控制
          * @param {boolean} showSearch [是否显示搜索框，默认false]
          * @param {boolean} showDate [是否显示开始和截止日期选择，默认false]
          * @param {boolean} showSingleDate [是否显示单日日期选择，默认false]
+         * @param {string} maxDate [最大可选择日期]
          */
-        showMenu(showSearch:boolean = false,showDate:boolean = false,showSingleDate:boolean = false) {
+        showMenu(showSearch:boolean = false,showDate:boolean = false,showSingleDate:boolean = false,maxDate:string = null) {
             this.showSearch(showSearch);
             this.showDate(showDate);
             this.showSingleDate(showSingleDate);
+            this.setMaxDate(maxDate);
         }
     }
 
@@ -333,7 +363,6 @@
 
         constructor(props:any) {
             $.extend(this,props);
-            this.bindEventByOne();
         }
 
         /**
@@ -354,13 +383,6 @@
          * 事件绑定
          */
         bindEvent() {
-            
-        }
-
-        /**
-         * 单次事件绑定
-         */
-        bindEventByOne() {
             // 左侧菜单栏点击
             this.$el.find(".menu-list").on("click","li",function(){
                 let $this:JQuery<HTMLElement> = $(this);
@@ -1288,43 +1310,6 @@
         frozen(){}
     }
 
-    // 新增用户
-    class NewUser extends ChartBase {
-        template = { // 模板
-            "routerTemp":"newUserTemp"
-        };
-
-        constructor(props:any) {
-            super(props);
-            $.extend(this,props);
-        }
-
-        /**
-         * 数据获取
-         */
-        fetch() {
-            this.render();
-        }
-
-        /**
-         * 页面渲染
-         */
-        render() {
-            let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
-
-            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
-            this.bindEvent();
-        }
-
-        /**
-         * 事件绑定
-         */
-        bindEvent() {
-
-        }
-    }
-
     // 活跃用户
     class ActiveUser extends ChartBase {
         template = { // 模板
@@ -1433,11 +1418,12 @@
 
     // 统计用户
     class StatisticalUser extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        maxDate:string = null;  // 最大可选择日期
         template = { // 模板
             "routerTemp":"statisticalTemp",
             "detail":"statisticalDetail"
         };
-        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1447,16 +1433,25 @@
          * 获取数据
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数，默认为]
-         * @param {number} day [时间戳，默认为0]
+         * @param {number} start [开始时间戳，默认为0]
+         * @param {number} end [结束时间戳，默认为0]
          */
-        fetch(pageNo:number = 1,pageSize:number = 50,day:number = 0) {
+        fetch(pageNo:number = 1,pageSize:number = 50,start?:number,end?:number) {
             let self:StatisticalUser = this;
+
+            if(!start) {    // 如果开始日期不存在，则调用changeDate函数，并将初始日期传递过去
+                let date = this.mainView.mainView.header.getInitDate();
+                this.maxDate = date.end;
+                this.changeDate(date.start,date.end);
+                return;
+            };
 
             _load(true);
             _resource.statisticalUser(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
-                "day":day,
+                "start_time":start,
+                "end_time":end,
                 "token":this.mainView.mainView.token
             }),function(data:any){
                 if(!self.$el) {
@@ -1475,7 +1470,7 @@
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu(false,false,true);
+            header.showMenu(false,true,false,this.maxDate);
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-statisticalUser");
@@ -1501,17 +1496,11 @@
          * @param {string} start [开始日期]
          * @param {string} end [结束日期]
          */
-        changeDate(start:string,end:string) {
-            this.fetch(1,50,parseInt(<any>((new Date(`${start} 00:00:00`)).getTime()/1000)));
-        }
+        changeDate(start:string|number,end:string|number) {
+            start = parseInt(<any>((new Date(`${start} 00:00:00`)).getTime()/1000));
+            end = parseInt(<any>((new Date(`${end} 00:00:00`)).getTime()/1000));
 
-        /**
-         * 页码变更
-         * @param {number} pageNo [页码]
-         * @param {number} pageSize [每页条数]
-         */
-        changePading(pageNo:number,pageSize:number) {
-            this.fetch(pageNo,pageSize);
+            this.fetch(1,50,start,end);
         }
     }
 

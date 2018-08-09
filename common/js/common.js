@@ -1,6 +1,4 @@
 var _domain = "http://39.108.151.200:9999", _router = {
-    "newUser": "NewUser",
-    "activeUser": "ActiveUser",
     "statisticalUser": "StatisticalUser",
     "userList": "UserList",
     "payStatistical": "PayStatistical",

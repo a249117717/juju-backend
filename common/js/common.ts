@@ -1,7 +1,5 @@
 const _domain:string = "http://39.108.151.200:9999",
 _router:any = {   // 路由器(key:hash值，value:对应调用的类)
-    "newUser":"NewUser", // 新增用户
-    "activeUser":"ActiveUser",  // 活跃用户
     "statisticalUser":"StatisticalUser", // 统计用户
     "userList":"UserList",  // 用户列表
     "payStatistical":"PayStatistical",  // 付费用户

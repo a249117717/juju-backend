@@ -66,8 +66,13 @@ var __extends = (this && this.__extends) || (function () {
                     type = eval(_router[hash]);
                 }
                 else {
-                    active = ".newUser";
-                    type = NewUser;
+                    var en = "";
+                    for (en in _router) {
+                        active = "." + en;
+                        type = eval(_router[en]);
+                        break;
+                    }
+                    ;
                 }
                 ;
                 self.side.setActive(active);
@@ -101,7 +106,6 @@ var __extends = (this && this.__extends) || (function () {
                 this.$search.attr("placeholder", val);
             };
             $.extend(this, props);
-            this.bindEventByOne();
         }
         CHeader.prototype.fetch = function () {
             this.render();
@@ -111,8 +115,6 @@ var __extends = (this && this.__extends) || (function () {
             this.bindEvent();
         };
         CHeader.prototype.bindEvent = function () {
-        };
-        CHeader.prototype.bindEventByOne = function () {
             var _this = this;
             var self = this;
             this.calendar = new window.Calendar({
@@ -162,24 +164,33 @@ var __extends = (this && this.__extends) || (function () {
             });
         };
         CHeader.prototype.initDate = function (isSingle) {
-            var date = new Date(), start = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(), end = "";
-            date.setDate(date.getDate() - 7);
-            end = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-            start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
-            end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
+            var date = this.getInitDate(), start = date.start, end = date.end;
             if (isSingle == void 0) {
-                this.$singleDate.text(start);
+                this.$singleDate.text(end);
                 this.$start.text(start);
                 this.$end.text(end);
             }
             else if (isSingle) {
-                this.$singleDate.text(start);
+                this.$singleDate.text(end);
             }
             else {
                 this.$start.text(start);
                 this.$end.text(end);
             }
             ;
+        };
+        CHeader.prototype.getInitDate = function () {
+            var date = new Date(), start = "", end = "";
+            date.setDate(date.getDate() - 1);
+            end = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            date.setDate(date.getDate() - 7);
+            start = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
+            end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
+            return {
+                "start": start,
+                "end": end
+            };
         };
         CHeader.prototype.setTitle = function (title) {
             this.$el.find(".name").text(title);
@@ -218,13 +229,24 @@ var __extends = (this && this.__extends) || (function () {
             }
             ;
         };
-        CHeader.prototype.showMenu = function (showSearch, showDate, showSingleDate) {
+        CHeader.prototype.setMaxDate = function (maxDate) {
+            var temp = null;
+            if (maxDate && maxDate.length == 10) {
+                temp = maxDate.split("-");
+                maxDate = temp[0] + "-" + parseInt(temp[1]) + "-" + parseInt(temp[2]);
+            }
+            ;
+            this.calendar.setMaxDate(maxDate);
+        };
+        CHeader.prototype.showMenu = function (showSearch, showDate, showSingleDate, maxDate) {
             if (showSearch === void 0) { showSearch = false; }
             if (showDate === void 0) { showDate = false; }
             if (showSingleDate === void 0) { showSingleDate = false; }
+            if (maxDate === void 0) { maxDate = null; }
             this.showSearch(showSearch);
             this.showDate(showDate);
             this.showSingleDate(showSingleDate);
+            this.setMaxDate(maxDate);
         };
         return CHeader;
     }());
@@ -233,7 +255,6 @@ var __extends = (this && this.__extends) || (function () {
             this.$el = $(".c-side");
             this.mainView = null;
             $.extend(this, props);
-            this.bindEventByOne();
         }
         CSide.prototype.fetch = function () {
             this.render();
@@ -242,8 +263,6 @@ var __extends = (this && this.__extends) || (function () {
             this.bindEvent();
         };
         CSide.prototype.bindEvent = function () {
-        };
-        CSide.prototype.bindEventByOne = function () {
             var _this = this;
             this.$el.find(".menu-list").on("click", "li", function () {
                 var $this = $(this);
@@ -898,29 +917,6 @@ var __extends = (this && this.__extends) || (function () {
         ChartBase.prototype.frozen = function () { };
         return ChartBase;
     }());
-    var NewUser = (function (_super) {
-        __extends(NewUser, _super);
-        function NewUser(props) {
-            var _this = _super.call(this, props) || this;
-            _this.template = {
-                "routerTemp": "newUserTemp"
-            };
-            $.extend(_this, props);
-            return _this;
-        }
-        NewUser.prototype.fetch = function () {
-            this.render();
-        };
-        NewUser.prototype.render = function () {
-            var header = this.mainView.mainView.header;
-            header.showMenu();
-            this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
-            this.bindEvent();
-        };
-        NewUser.prototype.bindEvent = function () {
-        };
-        return NewUser;
-    }(ChartBase));
     var ActiveUser = (function (_super) {
         __extends(ActiveUser, _super);
         function ActiveUser(props) {
@@ -1010,23 +1006,31 @@ var __extends = (this && this.__extends) || (function () {
         __extends(StatisticalUser, _super);
         function StatisticalUser(props) {
             var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.maxDate = null;
             _this.template = {
                 "routerTemp": "statisticalTemp",
                 "detail": "statisticalDetail"
             };
-            _this.$el = null;
             return _this;
         }
-        StatisticalUser.prototype.fetch = function (pageNo, pageSize, day) {
+        StatisticalUser.prototype.fetch = function (pageNo, pageSize, start, end) {
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = 50; }
-            if (day === void 0) { day = 0; }
             var self = this;
+            if (!start) {
+                var date = this.mainView.mainView.header.getInitDate();
+                this.maxDate = date.end;
+                this.changeDate(date.start, date.end);
+                return;
+            }
+            ;
             _load(true);
             _resource.statisticalUser(JSON.stringify({
                 "page_size": pageSize,
                 "page_index": pageNo,
-                "day": day,
+                "start_time": start,
+                "end_time": end,
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (!self.$el) {
@@ -1042,7 +1046,7 @@ var __extends = (this && this.__extends) || (function () {
         };
         StatisticalUser.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(false, false, true);
+            header.showMenu(false, true, false, this.maxDate);
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-statisticalUser");
             this.bindEvent();
@@ -1052,10 +1056,9 @@ var __extends = (this && this.__extends) || (function () {
             this.$el.find(".info").html(window.template(this.template.detail, data));
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
-            this.fetch(1, 50, parseInt(((new Date(start + " 00:00:00")).getTime() / 1000)));
-        };
-        StatisticalUser.prototype.changePading = function (pageNo, pageSize) {
-            this.fetch(pageNo, pageSize);
+            start = parseInt(((new Date(start + " 00:00:00")).getTime() / 1000));
+            end = parseInt(((new Date(end + " 00:00:00")).getTime() / 1000));
+            this.fetch(1, 50, start, end);
         };
         return StatisticalUser;
     }(ChartBase));

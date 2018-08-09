@@ -2,6 +2,10 @@
     color:#ff991d;
 }
 
+.m-calendar .disabled {
+    color:#BDBDBD !important;
+}
+
 .m-calendar .shade {
     display: none;
     position: fixed;
@@ -138,7 +142,7 @@
     cursor: pointer;
 }
 
-.m-calendar .txtContent .days .haveValue:hover {
+.m-calendar .txtContent .days .haveValue:not(.disabled):hover {
     color:#42A5F5 !important;
     font-weight: bold;
 }

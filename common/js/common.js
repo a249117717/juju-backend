@@ -68,6 +68,20 @@ function _error(code) {
     ;
     return tip;
 }
+function _resourceError(code, msg) {
+    switch (code) {
+        case 401:
+            window.layer.alert(msg, function () {
+                window.location.replace("index.html");
+            });
+            break;
+        default:
+            window.layer.alert(msg);
+            break;
+    }
+    ;
+    _load(false);
+}
 !(function () {
     var temp = {};
     for (var en in _resource) {
@@ -93,8 +107,7 @@ function _error(code) {
                     ;
                 }
                 else {
-                    window.layer.alert(data.msg);
-                    _load(false);
+                    _resourceError(data.code, data.msg);
                 }
                 ;
             },

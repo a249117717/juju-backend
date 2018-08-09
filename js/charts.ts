@@ -904,6 +904,7 @@
         $el:JQuery<HTMLElement> = $(".m-frozenInfo"); // 冻结提示框
         $select:JQuery<HTMLElement> = this.$el.find(".group.select"); // 冻结提示框
         mainView:IndexMain = null;
+        currentDetail:ChartBase = null;   // 当前的详情
         sTime:number = null;   // 开始时间（更新状态才会有这个时间）
 
         constructor(props:any) {
@@ -971,6 +972,8 @@
                 if(self.sTime != null) {    // 更新
                     _resource.updateFrozen(JSON.stringify(option),function(data){
                         (<any>window).layer.msg("更新成功！");
+                        // 调用相应详情的冻结函数
+                        self.currentDetail.frozen();
                         // 关闭冻结提示框
                         self.hide();
                         _load(false);
@@ -978,6 +981,8 @@
                 } else {    // 新增
                     _resource.addFrozen(JSON.stringify(option),function(data){
                         (<any>window).layer.msg("冻结成功！");
+                        // 调用相应详情的冻结函数
+                        self.currentDetail.frozen();
                         // 关闭冻结提示框
                         self.hide();
                         _load(false);
@@ -1069,10 +1074,12 @@
          * 显示冻结提示框
          * @param {number} uid [用户编号]
          * @param {string} uname [用户名]
+         * @param {ChartBase} obj [当前详情]
          * @param {string} reason [事由，可为空]
          * @param {number} sTime [冻结开始时间戳]
          */
-        show(uid:number,uname:string,reason?:string,sTime?:number) {
+        show(uid:number,uname:string,obj,reason?:string,sTime?:number) {
+            this.currentDetail = obj;
             this.$el.show();
             setTimeout(() => {
                 this.$el.addClass("active");
@@ -1274,6 +1281,11 @@
          * @param {number} pageSize [每页条数]
          */
         changePading(pageNo:number,pageSize:number) {}
+
+        /**
+         * 冻结用户
+         */
+        frozen(){}
     }
 
     // 新增用户
@@ -1509,6 +1521,7 @@
             "routerTemp":"userListTemp",
             "detail":"userListDetail"
         };
+        $currentForzen:JQuery<HTMLElement> = null;  // 当前需要冻结的对象
         $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
@@ -1566,7 +1579,8 @@
             // 冻结
             this.$el.find(".info").on("click",".btn-freeze",function(){
                 let $this:JQuery<HTMLElement> = $(this);
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"));
+                self.$currentForzen = $this;
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"),self);
             });
 
             // 赠送钻石
@@ -1602,6 +1616,13 @@
             if(query){
                 this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
             };
+        }
+
+        /**
+         * 冻结
+         */
+        frozen() {
+            this.$currentForzen.prop("disabled",true);
         }
     }
 
@@ -1864,7 +1885,7 @@
             // 更新
             this.$el.find(".info").on("click",".btn-update",function(){
                 let $this:JQuery<HTMLElement> = $(this);
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"),<string>$this.parents("tr").find(".reason").text(),parseInt($this.attr("stime")));
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"),self,<string>$this.parents("tr").find(".reason").text(),parseInt($this.attr("stime")));
             });
         }
 

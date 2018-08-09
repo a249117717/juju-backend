@@ -657,6 +657,7 @@ var __extends = (this && this.__extends) || (function () {
             this.$el = $(".m-frozenInfo");
             this.$select = this.$el.find(".group.select");
             this.mainView = null;
+            this.currentDetail = null;
             this.sTime = null;
             $.extend(this, props);
             this.fetch();
@@ -700,6 +701,7 @@ var __extends = (this && this.__extends) || (function () {
                 if (self.sTime != null) {
                     _resource.updateFrozen(JSON.stringify(option), function (data) {
                         window.layer.msg("更新成功！");
+                        self.currentDetail.frozen();
                         self.hide();
                         _load(false);
                     });
@@ -707,6 +709,7 @@ var __extends = (this && this.__extends) || (function () {
                 else {
                     _resource.addFrozen(JSON.stringify(option), function (data) {
                         window.layer.msg("冻结成功！");
+                        self.currentDetail.frozen();
                         self.hide();
                         _load(false);
                     });
@@ -765,8 +768,9 @@ var __extends = (this && this.__extends) || (function () {
             ;
             return true;
         };
-        FrozenInfo.prototype.show = function (uid, uname, reason, sTime) {
+        FrozenInfo.prototype.show = function (uid, uname, obj, reason, sTime) {
             var _this = this;
+            this.currentDetail = obj;
             this.$el.show();
             setTimeout(function () {
                 _this.$el.addClass("active");
@@ -891,6 +895,7 @@ var __extends = (this && this.__extends) || (function () {
         ChartBase.prototype.search = function (query) { };
         ChartBase.prototype.changeDate = function (start, end) { };
         ChartBase.prototype.changePading = function (pageNo, pageSize) { };
+        ChartBase.prototype.frozen = function () { };
         return ChartBase;
     }());
     var NewUser = (function (_super) {
@@ -1062,6 +1067,7 @@ var __extends = (this && this.__extends) || (function () {
                 "routerTemp": "userListTemp",
                 "detail": "userListDetail"
             };
+            _this.$currentForzen = null;
             _this.$el = null;
             return _this;
         }
@@ -1100,7 +1106,8 @@ var __extends = (this && this.__extends) || (function () {
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
                 var $this = $(this);
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"));
+                self.$currentForzen = $this;
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"), self);
             });
             this.$el.find(".info").on("click", ".btn-diamond", function () {
                 var $this = $(this);
@@ -1119,6 +1126,9 @@ var __extends = (this && this.__extends) || (function () {
                 this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
+        };
+        UserList.prototype.frozen = function () {
+            this.$currentForzen.prop("disabled", true);
         };
         return UserList;
     }(ChartBase));
@@ -1298,7 +1308,7 @@ var __extends = (this && this.__extends) || (function () {
             });
             this.$el.find(".info").on("click", ".btn-update", function () {
                 var $this = $(this);
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"), $this.parents("tr").find(".reason").text(), parseInt($this.attr("stime")));
+                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"), self, $this.parents("tr").find(".reason").text(), parseInt($this.attr("stime")));
             });
         };
         FreezeList.prototype.renderDetail = function (data) {

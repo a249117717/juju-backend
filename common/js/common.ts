@@ -70,7 +70,7 @@ function _load(isShow:boolean) {
  * 请求错误提示
  * @param {number} code [错误代码]
  */
-function _error(code:number) {
+function _error(code:number) : string {
     let tip:string = "";
     switch(code) {
         case 404:
@@ -79,6 +79,25 @@ function _error(code:number) {
     };
 
     return tip;
+}
+
+/**
+ * 服务器返回错误号
+ * @param {number} code [错误号]
+ * @param {string} msg [错误信息]
+ */
+function _resourceError(code:number,msg:string) {
+    switch(code) {
+        case 401:
+            (<any>window).layer.alert(msg,function(){
+                window.location.replace("index.html");
+            });
+        break;
+        default:
+            (<any>window).layer.alert(msg);
+        break;
+    };
+    _load(false);
 }
 
 !(function(){   // 服务器请求
@@ -103,9 +122,7 @@ function _error(code:number) {
                         success(data);
                     };
                 } else {
-                    // 如果服务器返回的code不为0，则表示出现了请求错误，提示用户
-                    (<any>window).layer.alert(data.msg);
-                    _load(false);
+                    _resourceError(data.code,data.msg);
                 };
             },
             "error":function(request,response) {

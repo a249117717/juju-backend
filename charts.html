@@ -19,14 +19,8 @@
                 </div>
             </div>
             <ul class="menu-list">
-                <li class="newUser mdui-ripple mdui-ripple-white">
-                    <a href="#newUser">新增用户</a>
-                </li>
-                <li class="activeUser mdui-ripple mdui-ripple-white">
-                    <a href="#activeUser">活跃用户</a>
-                </li>
                 <li class="statisticalUser mdui-ripple mdui-ripple-white">
-                    <a href="#statisticalUser">统计用户</a>
+                    <a href="#statisticalUser">用户统计</a>
                 </li>
                 <li class="userList mdui-ripple mdui-ripple-white">
                     <a href="#userList">用户列表</a>
@@ -431,6 +425,70 @@
                 </tr>
             {{ /each }}
         </tbody>
+    </script>
+    <!-- 信息查询模板 -->
+    <script id="infoQueryTemp" type="text/html">
+        <div class="m-infoQuery">
+            <div class="question">请输入要查询的用户编号</div>
+            <div class="detail">
+                <div class="title-out">
+                    <div class="title">详情</div>
+                    <div class="subtitle">Detail</div>
+                </div>
+                <div class="info-out"></div>
+            </div>
+        </div>
+    </script>
+    <!-- 信息查询详情 -->
+    <script id="infoQueryDetail" type="text/html">
+        <table class="info" border="0">
+                <tr>
+                    <td>用户编号</td>
+                    <td>{{ data.uid }}</td>
+                </tr>
+                <tr>
+                    <td>姓名</td>
+                    <td>{{ data.name }}</td>
+                </tr>
+                <tr>
+                    <td>性别</td>
+                    <td>{{ data.sex == "1"?"男":"女" }}</td>
+                </tr>
+                <tr>
+                    <td>生日</td>
+                    <td>{{ formatData(data.birthday) }}</td>
+                </tr>
+                <tr>
+                    <td>星座</td>
+                    <td>{{ data.constellation }}</td>
+                </tr>
+                <tr>
+                    <td>游戏时间</td>
+                    <td>{{ data.game_time }}</td>
+                </tr>
+                <tr>
+                    <td>邀请码</td>
+                    <td>{{ data.invite_code }}</td>
+                </tr>
+                <tr>
+                    <td>积分</td>
+                    <td>{{ data.score }}</td>
+                </tr>
+                <tr>
+                    <td>vip</td>
+                    <td>{{ data.vip }}</td>
+                </tr>
+                <tr>
+                    <td>vip到期时间</td>
+                    <td>{{ data.vip_expire_time }}</td>
+                </tr>
+                <tr>
+                    <td>头像</td>
+                    <td>
+                        <img class="pic" src="{{ data.head_img }}">
+                    </td>
+                </tr>
+            </table>
     </script>
     <!-- 翻页模板 -->
     <script id="padingTemp" type="text/html">

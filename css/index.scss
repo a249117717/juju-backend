@@ -26,6 +26,37 @@ body{
     transition:all cubic-bezier(0.0, 0.0, 0.2, 1) 0.2s;
 }
 
+@mixin detail {
+    .detail {
+        margin-top:20px;
+        min-height: 100px;
+        background-color: #fff;
+
+        .title-out {
+            padding:15px;
+            margin:0 auto;
+            position: relative;
+            top:-20px;
+            left:0;
+            min-height: 84px;
+            width:95%;
+            background: linear-gradient(60deg, #ffa726, #fb8c00);
+            box-shadow: 0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2);
+            border-radius: 5px;
+
+            .title {
+                margin-bottom:15px;
+                color:#fff;
+                font-size: 18px;
+            }
+
+            .subtitle {
+                color:#EEEEEE;
+            }
+        }
+    }
+}
+
 .g-login {
     margin:-117.5px 0 0 -175px;
     position: fixed;
@@ -492,54 +523,8 @@ body{
 }
 
 .defaultTable {
-    
-    .info {
-
-        .btn {
-            margin:5px;
-            padding:9px 16px;
-            border-radius: 2px;
-            background-color: #64B5F6;
-            font-size: 14px;
-            color:#fff;
-
-            &[disabled] {
-                background-color: #eee;
-            }
-
-            &:not([disabled]):hover {
-                background-color: #42A5F5;
-            }
-        }
-    }
 
     .detail {
-        margin-top:20px;
-        min-height: 100px;
-        background-color: #fff;
-
-        .title-out {
-            padding:15px;
-            margin:0 auto;
-            position: relative;
-            top:-20px;
-            left:0;
-            min-height: 84px;
-            width:95%;
-            background: linear-gradient(60deg, #ffa726, #fb8c00);
-            box-shadow: 0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), 0 7px 8px -5px rgba(255, 152, 0, 0.2);
-            border-radius: 5px;
-
-            .title {
-                margin-bottom:15px;
-                color:#fff;
-                font-size: 18px;
-            }
-
-            .subtitle {
-                color:#EEEEEE;
-            }
-        }
 
         .info {
             margin-bottom: 20px;
@@ -573,6 +558,28 @@ body{
             }
         }
     }
+    
+    .info {
+
+        .btn {
+            margin:5px;
+            padding:9px 16px;
+            border-radius: 2px;
+            background-color: #64B5F6;
+            font-size: 14px;
+            color:#fff;
+
+            &[disabled] {
+                background-color: #eee;
+            }
+
+            &:not([disabled]):hover {
+                background-color: #42A5F5;
+            }
+        }
+    }
+
+    @include detail;
 }
 
 .defaultDescript {
@@ -1079,4 +1086,46 @@ body{
             }
         }
     }
+}
+
+.m-infoQuery {
+     
+    .question {
+        margin-top:100px;
+        padding-top:220px;
+        background: url(../images/charts/question.png) no-repeat center top;
+        text-align: center;
+        font-size: 18px;
+    }
+
+    .detail {
+        display: none;
+    }
+
+    .info-out {
+        padding:0 10px 20px 10px;
+    }
+
+    .info {
+        border:1px solid #eee;
+
+        td {
+            padding:10px;
+            background-color: #fff;
+            border-bottom:1px solid #eee;
+        }
+
+        td:first-child {
+            width:150px;
+            background-color: #2196F3;
+            color:#fff;
+            text-align: right;
+        }
+
+        .pic {
+            width:200px;
+        }
+    }
+
+    @include detail;
 }

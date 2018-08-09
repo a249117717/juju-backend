@@ -1136,11 +1136,11 @@ var __extends = (this && this.__extends) || (function () {
         __extends(PayStatistical, _super);
         function PayStatistical(props) {
             var _this = _super.call(this, props) || this;
+            _this.$el = null;
             _this.template = {
                 "routerTemp": "payStatisticalTemp",
                 "detail": "payStatisticalDetail"
             };
-            _this.$el = null;
             $.extend(_this, props);
             return _this;
         }
@@ -1190,11 +1190,11 @@ var __extends = (this && this.__extends) || (function () {
         __extends(Diamond, _super);
         function Diamond(props) {
             var _this = _super.call(this, props) || this;
+            _this.$el = null;
             _this.template = {
                 "routerTemp": "diamondTemp",
                 "detail": "diamondDetail"
             };
-            _this.$el = null;
             $.extend(_this, props);
             return _this;
         }
@@ -1250,11 +1250,11 @@ var __extends = (this && this.__extends) || (function () {
         __extends(FreezeList, _super);
         function FreezeList(props) {
             var _this = _super.call(this, props) || this;
+            _this.$el = null;
             _this.template = {
                 "routerTemp": "freezeListTemp",
                 "detail": "freezeListDetail"
             };
-            _this.$el = null;
             $.extend(_this, props);
             return _this;
         }
@@ -1293,7 +1293,9 @@ var __extends = (this && this.__extends) || (function () {
             var self = this;
             this.$el.find(".info").on("click", ".btn-delFreeze", function () {
                 var $this = $(this), uid = $this.attr("uid"), uname = $this.attr("uname");
-                window.layer.alert("\u786E\u8BA4\u89E3\u9664\u7528\u6237\u7F16\u53F7\u4E3A:" + uid + "\uFF0C\u7528\u6237\u540D\u4E3A:" + uname + "\u7684\u51BB\u7ED3\u4E48\uFF1F", function (e) {
+                window.layer.confirm("\u786E\u8BA4\u89E3\u9664\u7528\u6237\u7F16\u53F7\u4E3A:" + uid + "\uFF0C\u7528\u6237\u540D\u4E3A:" + uname + "\u7684\u51BB\u7ED3\u4E48\uFF1F", {
+                    btn: ['确定', '取消']
+                }, function (e) {
                     _load(true);
                     _resource.delFrozen(JSON.stringify({
                         "uid": parseInt(uid),
@@ -1304,6 +1306,8 @@ var __extends = (this && this.__extends) || (function () {
                         window.layer.close(e);
                         _load(false);
                     });
+                }, function (e) {
+                    window.layer.close(e);
                 });
             });
             this.$el.find(".info").on("click", ".btn-update", function () {
@@ -1330,13 +1334,17 @@ var __extends = (this && this.__extends) || (function () {
         __extends(InfoQuery, _super);
         function InfoQuery(props) {
             var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.$question = null;
+            _this.$detail = null;
             _this.template = {
-                "routerTemp": "newUserTemp"
+                "routerTemp": "infoQueryTemp",
+                "detail": "infoQueryDetail"
             };
             $.extend(_this, props);
             return _this;
         }
-        InfoQuery.prototype.fetch = function () {
+        InfoQuery.prototype.fetch = function (uid) {
             this.render();
         };
         InfoQuery.prototype.render = function () {
@@ -1344,9 +1352,37 @@ var __extends = (this && this.__extends) || (function () {
             header.showMenu(true);
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template(this.template.routerTemp, {}));
+            this.$el = $(".m-infoQuery");
+            this.$question = this.$el.find(".question");
+            this.$detail = this.$el.find(".detail");
             this.bindEvent();
         };
         InfoQuery.prototype.bindEvent = function () {
+        };
+        InfoQuery.prototype.renderDetail = function (data) {
+            this.$question.hide();
+            this.$detail.show();
+            this.$detail.find(".info-out").html(window.template(this.template.detail, data));
+        };
+        InfoQuery.prototype.search = function (query) {
+            var self = this;
+            query = query.replace(/\s/g, "");
+            if (/^\d*$/.test(query)) {
+                _load(true);
+                _resource.infoQuery(JSON.stringify({
+                    "uid": parseInt(query),
+                    "token": this.mainView.mainView.token
+                }), function (data) {
+                    self.renderDetail(data);
+                    _load(false);
+                });
+            }
+            else {
+                this.$question.show();
+                this.$detail.hide();
+                window.layer.msg("请输入正确的用户编号");
+            }
+            ;
         };
         return InfoQuery;
     }(ChartBase));

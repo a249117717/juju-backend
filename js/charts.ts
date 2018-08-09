@@ -1628,11 +1628,11 @@
 
     // 付费统计
     class PayStatistical extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
         template = {
             "routerTemp":"payStatisticalTemp",
             "detail":"payStatisticalDetail"
         };
-        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1714,11 +1714,11 @@
 
     // 钻石流水
     class Diamond extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
         template = { // 模板
             "routerTemp":"diamondTemp",
             "detail":"diamondDetail"
         };
-        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1804,11 +1804,11 @@
 
     // 冻结名单
     class FreezeList extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
         template = { // 模板
             "routerTemp":"freezeListTemp",
             "detail":"freezeListDetail"
         };
-        $el:JQuery<HTMLElement> = null;
 
         constructor(props:any) {
             super(props);
@@ -1868,7 +1868,9 @@
                 uid:string = $this.attr("uid"),
                 uname:string = $this.attr("uname");
 
-                (<any>window).layer.alert(`确认解除用户编号为:${uid}，用户名为:${uname}的冻结么？`,function(e){
+                (<any>window).layer.confirm(`确认解除用户编号为:${uid}，用户名为:${uname}的冻结么？`,{
+                    btn:['确定','取消']
+                },function(e){
                     _load(true);
                     _resource.delFrozen(JSON.stringify({
                         "uid":parseInt(uid),
@@ -1879,6 +1881,8 @@
                         (<any>window).layer.close(e);
                         _load(false);
                     });
+                },function(e){
+                    (<any>window).layer.close(e);
                 });
             });
 
@@ -1920,8 +1924,12 @@
 
     // 信息查询
     class InfoQuery extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        $question:JQuery<HTMLElement> = null;
+        $detail:JQuery<HTMLElement> = null;
         template = { // 模板
-            "routerTemp":"newUserTemp"
+            "routerTemp":"infoQueryTemp",
+            "detail":"infoQueryDetail"
         };
 
         constructor(props:any) {
@@ -1931,17 +1939,10 @@
 
         /**
          * 数据获取
-         * @param {uid} string [用户编号]
+         * @param {number} uid [用户编号]
          */
-        fetch() {
+        fetch(uid:number) {
             this.render();
-            // _load(true);
-            // _resource.infoQuery(JSON.stringify({
-            //     "uid":199980,
-            //     "token":this.mainView.mainView.token
-            // }),function(data:any){
-            //     _load(false);
-            // });
         }
 
         /**
@@ -1953,6 +1954,9 @@
             header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,{}));
+            this.$el = $(".m-infoQuery");
+            this.$question = this.$el.find(".question");
+            this.$detail = this.$el.find(".detail");
             this.bindEvent();
         }
 
@@ -1961,6 +1965,40 @@
          */
         bindEvent() {
 
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+            this.$question.hide();
+            this.$detail.show();
+            this.$detail.find(".info-out").html((<any>window).template(this.template.detail,data));
+        }
+
+        /**
+         * 搜索
+         * @param {string} query [搜索关键字]
+         */
+        search(query:string) {
+            let self:InfoQuery = this;
+
+            query = query.replace(/\s/g,"");
+            if(/^\d*$/.test(query)){
+                _load(true);
+                _resource.infoQuery(JSON.stringify({
+                    "uid":parseInt(query),
+                    "token":this.mainView.mainView.token
+                }),function(data:any){
+                    self.renderDetail(data);
+                    _load(false);
+                });
+            } else {
+                this.$question.show();
+                this.$detail.hide();
+                (<any>window).layer.msg("请输入正确的用户编号");
+            };
         }
     }
 

@@ -3,7 +3,7 @@
 
     // 注册过滤器，转换时间戳
     (<any>window).template.helper('formatData',function(data,format){
-        var date = new Date();
+        let date:Date = new Date();
         date.setTime(data*1000);
         return `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`;
     });
@@ -1325,7 +1325,6 @@
          */
         fetch(pageNo:number = 1,pageSize:number = 50,start?:number,end?:number) {
             let self:StatisticalUser = this;
-
             if(!start) {    // 如果开始日期不存在，则调用changeDate函数，并将初始日期传递过去
                 let date = this.mainView.mainView.header.getInitDate();
                 this.maxDate = date.end;
@@ -1373,33 +1372,104 @@
          */
         renderDetail(data:any) {
             this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+            this.renderChart(data);
+        }
 
+        /**
+         * 渲染图表
+         * @param {Object} data [数据]
+         */
+        renderChart(data:any) {
             let chart = new (<any>window).G2.Chart({
-            container: 'diagram', // 指定图表容器 ID
-            width : 600, // 指定图表宽度
-            height : 300, // 指定图表高度
-            forceFit: true, // 自适应宽度
-            padding:["auto","auto",45,45],
-            background:{
-                fill:"#fff"
-            }
+                container: 'diagram', // 指定图表容器 ID
+                height : 400, // 指定图表高度
+                forceFit: true, // 自适应宽度
+                padding:['auto',50,'auto','auto'],
+                background:{
+                    fill:"#fff"
+                }
             });
+
             // Step 2: 载入数据源
-            chart.source(data);
+            chart.source(this.formatData(data));
+            // 设置坐标轴范围
             chart.scale('value', {
-            min: 0
+                min: 0
             });
-            chart.scale('year', {
-            range: [0, 1]
+            // 设置提示框
+            chart.tooltip(true,{
+                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                crosshairs: {
+                  type: 'line'
+                }
             });
+            // 设置坐标轴
+            chart.axis('value', {
+                line: {
+                  stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                  stroke: '#BDBDBD'
+                }
+            });
+            // 设置图例
+            chart.legend(true);
             // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
-            chart.line().position('year*value');
-            chart.point().position('year*value').size(4).shape('circle').style({
-            stroke: '#fff',
-            lineWidth: 1
+            chart.line().position('create_time*value').color("type");
+            chart.point().position('create_time*value').color("type").size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
             });
             // Step 4: 渲染图表
             chart.render();
+        }
+
+        /**
+         * 格式化数据
+         * @param {Object} data [数据]
+         */
+        formatData(data:any) : object {
+            let temp:any[] = [],
+            date:Date = new Date();
+
+            data.data.forEach(en => {
+                date.setTime(en.create_time*1000);
+                en.create_time = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`;
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"日活跃",
+                    "value":parseInt(en.dau)
+                });
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"日注册人数",
+                    "value":parseInt(en.day_register)
+                });
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"月活跃",
+                    "value":parseInt(en.mau)
+                });
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"七日",
+                    "value":parseInt(en.seven_day)
+                });
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"三日",
+                    "value":parseInt(en.three_day)
+                });
+                temp.push({
+                    "create_time":en.create_time,
+                    "type":"两日",
+                    "value":parseInt(en.two_day)
+                });
+            });
+            
+            return temp;
         }
 
         /**

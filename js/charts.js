@@ -963,29 +963,83 @@ var __extends = (this && this.__extends) || (function () {
         StatisticalUser.prototype.bindEvent = function () { };
         StatisticalUser.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template(this.template.detail, data));
+            this.renderChart(data);
+        };
+        StatisticalUser.prototype.renderChart = function (data) {
             var chart = new window.G2.Chart({
                 container: 'diagram',
-                width: 600,
-                height: 300,
+                height: 400,
                 forceFit: true,
-                padding: ["auto", "auto", 45, 45],
+                padding: ['auto', 50, 'auto', 'auto'],
                 background: {
                     fill: "#fff"
                 }
             });
-            chart.source(data);
+            chart.source(this.formatData(data));
             chart.scale('value', {
                 min: 0
             });
-            chart.scale('year', {
-                range: [0, 1]
+            chart.tooltip(true, {
+                itemTpl: "<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                crosshairs: {
+                    type: 'line'
+                }
             });
-            chart.line().position('year*value');
-            chart.point().position('year*value').size(4).shape('circle').style({
+            chart.axis('value', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.legend(true);
+            chart.line().position('create_time*value').color("type");
+            chart.point().position('create_time*value').color("type").size(4).shape('circle').style({
                 stroke: '#fff',
                 lineWidth: 1
             });
             chart.render();
+        };
+        StatisticalUser.prototype.formatData = function (data) {
+            var temp = [], date = new Date();
+            data.data.forEach(function (en) {
+                date.setTime(en.create_time * 1000);
+                en.create_time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "日活跃",
+                    "value": parseInt(en.dau)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "日注册人数",
+                    "value": parseInt(en.day_register)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "月活跃",
+                    "value": parseInt(en.mau)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "七日",
+                    "value": parseInt(en.seven_day)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "三日",
+                    "value": parseInt(en.three_day)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "两日",
+                    "value": parseInt(en.two_day)
+                });
+            });
+            return temp;
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
             start = parseInt(((new Date(start + " 00:00:00")).getTime() / 1000));

@@ -1584,7 +1584,7 @@
         search(query:string) {
             query = query.replace(/\s/g,"");
             if(query){
-                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
+                this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
 
@@ -1767,7 +1767,7 @@
         search(query:string) {
             query = query.replace(/\s/g,"");
             if(query){
-                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
+                this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
     }
@@ -1887,7 +1887,7 @@
         search(query:string) {
             query = query.replace(/\s/g,"");
             if(query){
-                this.fetch(undefined,(<any>this.mainView).pading.pageSize,query?parseInt(query):undefined);
+                this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
     }

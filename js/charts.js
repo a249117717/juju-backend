@@ -1112,7 +1112,7 @@ var __extends = (this && this.__extends) || (function () {
         UserList.prototype.search = function (query) {
             query = query.replace(/\s/g, "");
             if (query) {
-                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
+                this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
         };
@@ -1229,7 +1229,7 @@ var __extends = (this && this.__extends) || (function () {
         Diamond.prototype.search = function (query) {
             query = query.replace(/\s/g, "");
             if (query) {
-                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
+                this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
         };
@@ -1313,7 +1313,7 @@ var __extends = (this && this.__extends) || (function () {
         FreezeList.prototype.search = function (query) {
             query = query.replace(/\s/g, "");
             if (query) {
-                this.fetch(undefined, this.mainView.pading.pageSize, query ? parseInt(query) : undefined);
+                this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
         };

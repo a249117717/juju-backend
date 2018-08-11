@@ -920,6 +920,7 @@ var __extends = (this && this.__extends) || (function () {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
             _this.maxDate = null;
+            _this.chart = null;
             _this.template = {
                 "routerTemp": "statisticalTemp",
                 "detail": "statisticalDetail"
@@ -958,15 +959,7 @@ var __extends = (this && this.__extends) || (function () {
             header.showMenu(false, true, false, this.maxDate);
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-statisticalUser");
-            this.bindEvent();
-        };
-        StatisticalUser.prototype.bindEvent = function () { };
-        StatisticalUser.prototype.renderDetail = function (data) {
-            this.$el.find(".info").html(window.template(this.template.detail, data));
-            this.renderChart(data);
-        };
-        StatisticalUser.prototype.renderChart = function (data) {
-            var chart = new window.G2.Chart({
+            this.chart = new window.G2.Chart({
                 container: 'diagram',
                 height: 400,
                 forceFit: true,
@@ -975,6 +968,16 @@ var __extends = (this && this.__extends) || (function () {
                     fill: "#fff"
                 }
             });
+            this.bindEvent();
+        };
+        StatisticalUser.prototype.bindEvent = function () { };
+        StatisticalUser.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+            this.renderChart(data);
+        };
+        StatisticalUser.prototype.renderChart = function (data) {
+            var chart = this.chart;
+            chart.clear();
             chart.source(this.formatData(data));
             chart.scale('value', {
                 min: 0
@@ -1052,12 +1055,12 @@ var __extends = (this && this.__extends) || (function () {
         __extends(UserList, _super);
         function UserList(props) {
             var _this = _super.call(this, props) || this;
+            _this.$currentForzen = null;
+            _this.$el = null;
             _this.template = {
                 "routerTemp": "userListTemp",
                 "detail": "userListDetail"
             };
-            _this.$currentForzen = null;
-            _this.$el = null;
             return _this;
         }
         UserList.prototype.fetch = function (pageNo, pageSize, uid) {
@@ -1111,7 +1114,10 @@ var __extends = (this && this.__extends) || (function () {
         };
         UserList.prototype.search = function (query) {
             query = query.replace(/\s/g, "");
-            if (query) {
+            if (!/^\d*$/.test(query)) {
+                window.layer.msg("请填写正确的用户编号");
+            }
+            else if (query) {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
@@ -1374,6 +1380,143 @@ var __extends = (this && this.__extends) || (function () {
             ;
         };
         return InfoQuery;
+    }(ChartBase));
+    var MessageList = (function (_super) {
+        __extends(MessageList, _super);
+        function MessageList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.$addMessage = null;
+            _this.template = {
+                "routerTemp": "messageListTemp",
+                "detail": "messageListDetail"
+            };
+            return _this;
+        }
+        MessageList.prototype.fetch = function (pageNo, pageSize, uid) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            if (uid === void 0) { uid = 0; }
+            var self = this;
+            _load(true);
+            _resource.messageList(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "uid": uid,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    self.render({ data: data });
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
+        };
+        MessageList.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-messageList");
+            this.$addMessage = this.$el.find(".addMessage");
+            this.bindEvent();
+        };
+        MessageList.prototype.bindEvent = function () {
+            var self = this;
+            this.$addMessage.find(".btn-submit").on("click", function () {
+                var option = {
+                    "uid": 0,
+                    "content": "",
+                    "send_time": 1533225600,
+                    "token": self.mainView.mainView.token
+                };
+                if (!self.addMessageCheck()) {
+                    return;
+                }
+                ;
+                switch (self.$addMessage.find(".operation:checked").val()) {
+                    case "0":
+                        option.uid = 0;
+                        break;
+                    case "1":
+                        option.uid = parseInt(self.$addMessage.find(".uid").val());
+                        break;
+                }
+                ;
+                option.content = self.$addMessage.find(".reason").val();
+                window.layer.confirm("是否确认增加消息", function (e) {
+                    _load(true);
+                    _resource.addMessage(JSON.stringify(option), function (data) {
+                        window.layer.msg("增加成功");
+                        window.layer.close(e);
+                    });
+                });
+            });
+            this.$addMessage.find(".operation").on("change", function () {
+                var $this = $(this);
+                switch ($this.val()) {
+                    case "0":
+                        self.$addMessage.find(".inputUid").hide().find(".uid").val("");
+                        break;
+                    case "1":
+                        self.$addMessage.find(".inputUid").show().find(".uid").focus();
+                        break;
+                }
+                ;
+            });
+            this.$el.find(".detail").on("click", ".btn-delete", function () {
+                var $this = $(this), mid = parseInt($this.attr("mid"));
+                window.layer.confirm("\u786E\u8BA4\u5220\u9664\u7F16\u53F7\u4E3A" + mid + "\u7684\u6D88\u606F\u4E48\uFF1F", function (e) {
+                    _resource.deleteMessage(JSON.stringify({
+                        "id": mid,
+                        "token": self.mainView.mainView.token
+                    }), function (data) {
+                        $this.prop("disabled", true);
+                        window.layer.msg("删除成功");
+                        window.layer.close(e);
+                    });
+                });
+            });
+        };
+        MessageList.prototype.addMessageCheck = function () {
+            var tip = "", $addMessage = this.$addMessage, uid = $addMessage.find(".uid").val().replace(/\s/g, "");
+            if ($addMessage.find(".operation:checked").val() == "1" && (!uid || !/^\d*$/.test(uid))) {
+                if (!uid) {
+                    tip = "请输入用户编号";
+                }
+                else if (!/^\d*$/.test(uid)) {
+                    tip = "请填写正确的用户编号";
+                }
+                ;
+            }
+            else if (!this.$addMessage.find(".reason").val().replace(/\s/g, "")) {
+                tip = "请填写消息内容";
+            }
+            ;
+            if (tip) {
+                window.layer.msg(tip);
+            }
+            ;
+            return true;
+        };
+        MessageList.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        MessageList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        return MessageList;
+    }(ChartBase));
+    var SystemNotice = (function (_super) {
+        __extends(SystemNotice, _super);
+        function SystemNotice(props) {
+            return _super.call(this, props) || this;
+        }
+        return SystemNotice;
     }(ChartBase));
     _currentObject = new IndexMain();
     _currentObject.fetch();

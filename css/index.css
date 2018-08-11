@@ -1049,3 +1049,187 @@ body {
 .m-statisticalUser #diagram {
   margin: 20px 0 40px 0;
 }
+
+.m-messageList .addMessage {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin: 20px 0 40px 0;
+  padding: 60px 20px 20px 20px;
+  clear: both;
+  background-color: #fff;
+}
+
+.m-messageList .addMessage .title {
+  position: absolute;
+  left: 20px;
+  top: -20px;
+  background-color: #F44336;
+  color: #fff;
+  width: 150px;
+  height: 84px;
+  line-height: 84px;
+  font-size: 18px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.m-messageList .addMessage .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-messageList .addMessage .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-messageList .addMessage .input-group .group.select {
+  display: none;
+}
+
+.m-messageList .addMessage .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-messageList .addMessage .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.m-messageList .addMessage .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.m-messageList .addMessage .input-group .uid,
+.m-messageList .addMessage .input-group .nickname {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-messageList .addMessage .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.m-messageList .addMessage .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.m-messageList .addMessage .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.m-messageList .addMessage .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-messageList .addMessage .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-messageList .addMessage .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.m-messageList .addMessage .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.m-messageList .addMessage .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.m-messageList .addMessage .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-messageList .addMessage .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-messageList .addMessage .input-group,
+.m-messageList .addMessage .button-group {
+  margin: 0 auto;
+  width: 520px;
+}
+
+.m-messageList .addMessage .inputUid {
+  display: none;
+}
+
+.m-messageList .addMessage .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-messageList .addMessage .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-messageList .addMessage .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-messageList .addMessage .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.m-messageList .addMessage .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-messageList .addMessage .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}

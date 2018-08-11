@@ -1307,6 +1307,7 @@
     class StatisticalUser extends ChartBase {
         $el:JQuery<HTMLElement> = null;
         maxDate:string = null;  // 最大可选择日期
+        chart:any = null;   // 图表
         template = { // 模板
             "routerTemp":"statisticalTemp",
             "detail":"statisticalDetail"
@@ -1354,9 +1355,20 @@
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
             header.showMenu(false,true,false,this.maxDate);
+            
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-statisticalUser");
+
+            this.chart = new (<any>window).G2.Chart({
+                container: 'diagram', // 指定图表容器 ID
+                height : 400, // 指定图表高度
+                forceFit: true, // 自适应宽度
+                padding:['auto',50,'auto','auto'],
+                background:{
+                    fill:"#fff"
+                }
+            });
 
             this.bindEvent();
         }
@@ -1380,15 +1392,8 @@
          * @param {Object} data [数据]
          */
         renderChart(data:any) {
-            let chart = new (<any>window).G2.Chart({
-                container: 'diagram', // 指定图表容器 ID
-                height : 400, // 指定图表高度
-                forceFit: true, // 自适应宽度
-                padding:['auto',50,'auto','auto'],
-                background:{
-                    fill:"#fff"
-                }
-            });
+            let chart = this.chart;
+            chart.clear();
 
             // Step 2: 载入数据源
             chart.source(this.formatData(data));
@@ -1487,13 +1492,13 @@
 
     // 用户列表
     class UserList extends ChartBase {
+        $currentForzen:JQuery<HTMLElement> = null;  // 当前需要冻结的对象
+        $el:JQuery<HTMLElement> = null;
         template = { // 模板
             "routerTemp":"userListTemp",
             "detail":"userListDetail"
         };
-        $currentForzen:JQuery<HTMLElement> = null;  // 当前需要冻结的对象
-        $el:JQuery<HTMLElement> = null;
-
+        
         constructor(props:any) {
             super(props);
         }
@@ -1583,7 +1588,9 @@
          */
         search(query:string) {
             query = query.replace(/\s/g,"");
-            if(query){
+            if(!/^\d*$/.test(query)) {
+                (<any>window).layer.msg("请填写正确的用户编号");
+            } else if(query){
                 this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
@@ -1969,6 +1976,186 @@
                 this.$detail.hide();
                 (<any>window).layer.msg("请输入正确的用户编号");
             };
+        }
+    }
+
+    // 消息列表
+    class MessageList extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        $addMessage:JQuery<HTMLElement> = null;    // 增加消息
+        template = { // 模板
+            "routerTemp":"messageListTemp",
+            "detail":"messageListDetail"
+        };
+
+        constructor(props:any) {
+            super(props);
+        }
+
+        /**
+         * 获取数据
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         * @param {uid} string [用户编号]
+         */
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
+            let self:MessageList = this;
+                    // self.render({});
+            _load(true);
+            _resource.messageList(JSON.stringify({
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "uid":uid,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(!self.$el) {
+                    self.render({data});
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
+        }
+
+        /**
+         * 页面渲染
+         * @param {Object} data [数据]
+         */
+        render(data:any) {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu(true);
+            header.setPlaceHolder("请输入用户编号");
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-messageList");
+            this.$addMessage = this.$el.find(".addMessage");
+
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+            let self:MessageList = this;
+
+            // 增加消息确定按钮
+            this.$addMessage.find(".btn-submit").on("click",function(){
+                let option:any = {
+                    "uid":0,    // 用户编号,0表示全服
+                    "content":"",   // 消息内容
+                    "send_time":1533225600,  // 发送时间
+                    "token":self.mainView.mainView.token
+                };
+                if(!self.addMessageCheck()) {
+                    return;
+                };
+
+                // 获取用户编号
+                switch(self.$addMessage.find(".operation:checked").val()) {
+                    case "0":
+                        option.uid = 0;
+                    break;
+                    case "1":
+                        option.uid = parseInt(<string>self.$addMessage.find(".uid").val());
+                    break;
+                };
+
+                // 获取消息内容
+                option.content = self.$addMessage.find(".reason").val();
+                
+                (<any>window).layer.confirm("是否确认增加消息",function(e){
+                    _load(true);
+                    _resource.addMessage(JSON.stringify(option),function(data){
+                        (<any>window).layer.msg("增加成功");
+                        (<any>window).layer.close(e);
+                    })
+                });
+            });
+
+            // 发送对象选择
+            this.$addMessage.find(".operation").on("change",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                switch($this.val()) {
+                    case "0":
+                        self.$addMessage.find(".inputUid").hide().find(".uid").val("");
+                    break;
+                    case "1":
+                        self.$addMessage.find(".inputUid").show().find(".uid").focus();
+                    break;
+                };
+            });
+
+            // 删除
+            this.$el.find(".detail").on("click",".btn-delete",function(){
+                let $this:JQuery<HTMLElement> = $(this),
+                mid:number = parseInt($this.attr("mid"));
+                (<any>window).layer.confirm(`确认删除编号为${mid}的消息么？`,function(e){
+                    _resource.deleteMessage(JSON.stringify({
+                        "id":mid,
+                        "token":self.mainView.mainView.token
+                    }),function(data){
+                        $this.prop("disabled",true);
+                        (<any>window).layer.msg("删除成功");
+                        (<any>window).layer.close(e);
+                    });
+                });
+            });
+        }
+
+        /**
+         * 增加消息数据校验
+         * @return {Boolean} bool [校验是否通过,true为通过,false为失败]
+         */
+        addMessageCheck() {
+            let tip:string = "",
+            $addMessage:JQuery<HTMLElement> = this.$addMessage,
+            uid:any = (<string>$addMessage.find(".uid").val()).replace(/\s/g,"");
+
+            if($addMessage.find(".operation:checked").val() == "1" && (!uid || !/^\d*$/.test(uid))){
+                // 发送对象为个人且用户编号未填写或者填写的用户编号不为正整数
+                if(!uid) {
+                    tip = "请输入用户编号";
+                } else if(!/^\d*$/.test(uid)) {
+                    tip = "请填写正确的用户编号"
+                };
+            } else if(!(<string>this.$addMessage.find(".reason").val()).replace(/\s/g,"")) {
+                // 消息内容为空
+                tip = "请填写消息内容";
+            };
+
+            if(tip) {
+                (<any>window).layer.msg(tip);
+            };
+
+            return true;
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+            this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
+    }
+
+    // 系统公告
+    class SystemNotice extends ChartBase {
+        constructor(props:any) {
+            super(props);
         }
     }
 

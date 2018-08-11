@@ -4,7 +4,9 @@ var _domain = "http://39.108.151.200:9999", _router = {
     "payStatistical": "PayStatistical",
     "diamond": "Diamond",
     "freezeList": "FreezeList",
-    "infoQuery": "InfoQuery"
+    "infoQuery": "InfoQuery",
+    "messageList": "MessageList",
+    "systemNotice": "SystemNotice"
 }, _pageSize = 10;
 var _loadObject = null, _resource = {
     "login": {
@@ -42,6 +44,30 @@ var _loadObject = null, _resource = {
     },
     "updateFrozen": {
         "url": _domain + "/v1/backend/run/frozen/update-frozen-user"
+    },
+    "messageList": {
+        "url": _domain + "/v1/backend/run/msg/list-msg-im"
+    },
+    "addMessage": {
+        "url": _domain + "/v1/backend/run/msg/add-msg-im"
+    },
+    "deleteMessage": {
+        "url": _domain + "/v1/backend/run/msg/delete-msg-im"
+    },
+    "updateMeesage": {
+        "url": _domain + "/v1/backend/run/msg/update-msg-im"
+    },
+    "sNoticeList": {
+        "url": _domain + "/v1/backend/run/msg/list-msg-notice"
+    },
+    "addSNotice": {
+        "url": _domain + "/v1/backend/run/msg/list-msg-notice"
+    },
+    "deleteSNotice": {
+        "url": _domain + "/v1/backend/run/msg/delete-msg-notice"
+    },
+    "updateSNotice": {
+        "url": _domain + "/v1/backend/run/msg/update-msg-notice"
     }
 };
 function _load(isShow) {

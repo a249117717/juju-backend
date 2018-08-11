@@ -5,7 +5,9 @@ _router:any = {   // 路由器(key:hash值，value:对应调用的类)
     "payStatistical":"PayStatistical",  // 付费用户
     "diamond":"Diamond",  // 钻石流水
     "freezeList":"FreezeList",  // 冻结名单
-    "infoQuery":"InfoQuery"  // 信息查询
+    "infoQuery":"InfoQuery",  // 信息查询
+    "messageList":"MessageList", // 消息列表
+    "systemNotice":"SystemNotice" // 系统公告
 },
 _pageSize:number = 10;   // 默认每个详情页面的行数统一为10条
 
@@ -46,6 +48,30 @@ _resource:any = {  // 服务请求
     },
     "updateFrozen":{    // 更新玩家id进冻结名单
         "url":`${_domain}/v1/backend/run/frozen/update-frozen-user`
+    },
+    "messageList":{ // 消息列表
+        "url":`${_domain}/v1/backend/run/msg/list-msg-im`
+    },
+    "addMessage":{  // 增加消息
+        "url":`${_domain}/v1/backend/run/msg/add-msg-im`
+    },
+    "deleteMessage":{   // 删除消息
+        "url":`${_domain}/v1/backend/run/msg/delete-msg-im`
+    },
+    "updateMeesage":{ // 更新消息
+        "url":`${_domain}/v1/backend/run/msg/update-msg-im`
+    },
+    "sNoticeList":{ // 系统公告列表
+        "url":`${_domain}/v1/backend/run/msg/list-msg-notice`
+    },
+    "addSNotice":{   // 增加系统公告
+        "url":`${_domain}/v1/backend/run/msg/list-msg-notice`
+    },
+    "deleteSNotice":{   // 删除系统公告
+        "url":`${_domain}/v1/backend/run/msg/delete-msg-notice`
+    },
+    "updateSNotice":{ // 更新系统公告
+        "url":`${_domain}/v1/backend/run/msg/update-msg-notice`
     }
 };
 

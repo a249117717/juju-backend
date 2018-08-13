@@ -13,7 +13,13 @@ var __extends = (this && this.__extends) || (function () {
     window.template.helper('formatData', function (data, format) {
         var date = new Date();
         date.setTime(data * 1000);
-        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        return (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
+    });
+    window.template.helper('formatTime', function (data, format) {
+        var date = new Date();
+        date.setTime(data * 1000);
+        var dateD = (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2"), dateT = (" " + date.getHours() + ":" + date.getMinutes()).replace(/(?<=\s)([0-9])(?=:)|(?<=:)([0-9])$/g, "0$1$2");
+        return "" + dateD + dateT;
     });
     var IndexMain = (function () {
         function IndexMain() {
@@ -148,7 +154,7 @@ var __extends = (this && this.__extends) || (function () {
             });
             this.$el.find(".btn-search").on("click", function () {
                 var $this = $(this), query = $this.prev(".search").val();
-                self.mainView.detail.currentChart.search(query);
+                self.mainView.detail.currentChart.search(query.replace(/\s/g, ""));
             });
             this.$el.find(".date-out").on("click", function () {
                 var $this = $(this);
@@ -399,7 +405,7 @@ var __extends = (this && this.__extends) || (function () {
             });
             this.$el.find(".pageSize").on("close.mdui.select", function (e, value) {
                 var pageSize = parseInt(value.inst.value);
-                if (_this.pageSize == pageSize) {
+                if (_this.pageSize == pageSize || _this.total == 1) {
                     return;
                 }
                 ;
@@ -500,7 +506,6 @@ var __extends = (this && this.__extends) || (function () {
             this.$el.find(".pageNo").text(value);
         };
         Pading.prototype.setTotal = function (count) {
-            console.log(1);
             var total = 0;
             total = Math.ceil(count / this.pageSize);
             if (this.total == total) {
@@ -1113,7 +1118,6 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         UserList.prototype.search = function (query) {
-            query = query.replace(/\s/g, "");
             if (!/^\d*$/.test(query)) {
                 window.layer.msg("请填写正确的用户编号");
             }
@@ -1233,7 +1237,6 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         Diamond.prototype.search = function (query) {
-            query = query.replace(/\s/g, "");
             if (query) {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
@@ -1317,7 +1320,6 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         FreezeList.prototype.search = function (query) {
-            query = query.replace(/\s/g, "");
             if (query) {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
@@ -1361,7 +1363,6 @@ var __extends = (this && this.__extends) || (function () {
         };
         InfoQuery.prototype.search = function (query) {
             var self = this;
-            query = query.replace(/\s/g, "");
             if (/^\d*$/.test(query)) {
                 _load(true);
                 _resource.infoQuery(JSON.stringify({
@@ -1386,27 +1387,28 @@ var __extends = (this && this.__extends) || (function () {
         function MessageList(props) {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
-            _this.$addMessage = null;
+            _this.$add = null;
+            _this.$update = null;
+            _this.uid = 0;
             _this.template = {
                 "routerTemp": "messageListTemp",
                 "detail": "messageListDetail"
             };
             return _this;
         }
-        MessageList.prototype.fetch = function (pageNo, pageSize, uid) {
+        MessageList.prototype.fetch = function (pageNo, pageSize) {
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = _pageSize; }
-            if (uid === void 0) { uid = 0; }
             var self = this;
             _load(true);
             _resource.messageList(JSON.stringify({
                 "page_size": pageSize,
                 "page_index": pageNo,
-                "uid": uid,
+                "uid": this.uid,
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (!self.$el) {
-                    self.render({ data: data });
+                    self.render(data);
                 }
                 else {
                     self.pading.setTotal(data.count);
@@ -1422,48 +1424,39 @@ var __extends = (this && this.__extends) || (function () {
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-messageList");
-            this.$addMessage = this.$el.find(".addMessage");
+            this.$add = this.$el.find(".addMessage");
+            this.$update = this.$el.find(".updateMessage");
             this.bindEvent();
         };
         MessageList.prototype.bindEvent = function () {
+            var _this = this;
             var self = this;
-            this.$addMessage.find(".btn-submit").on("click", function () {
-                var option = {
-                    "uid": 0,
-                    "content": "",
-                    "send_time": 1533225600,
-                    "token": self.mainView.mainView.token
-                };
-                if (!self.addMessageCheck()) {
+            this.$add.find(".btn-reset").on("click", function () {
+                _this.initAddMeesage();
+            });
+            this.$add.find(".btn-submit").on("click", function () {
+                if (!self.messageCheck(self.$add)) {
                     return;
                 }
                 ;
-                switch (self.$addMessage.find(".operation:checked").val()) {
-                    case "0":
-                        option.uid = 0;
-                        break;
-                    case "1":
-                        option.uid = parseInt(self.$addMessage.find(".uid").val());
-                        break;
-                }
-                ;
-                option.content = self.$addMessage.find(".reason").val();
                 window.layer.confirm("是否确认增加消息", function (e) {
                     _load(true);
-                    _resource.addMessage(JSON.stringify(option), function (data) {
+                    _resource.addMessage(JSON.stringify(self.getMessage(self.$add)), function (data) {
+                        self.initAddMeesage(true);
                         window.layer.msg("增加成功");
                         window.layer.close(e);
+                        _load(false);
                     });
                 });
             });
-            this.$addMessage.find(".operation").on("change", function () {
+            this.$add.find(".operation").on("change", function () {
                 var $this = $(this);
                 switch ($this.val()) {
                     case "0":
-                        self.$addMessage.find(".inputUid").hide().find(".uid").val("");
+                        self.$add.find(".inputUid").hide().find(".uid").val("");
                         break;
                     case "1":
-                        self.$addMessage.find(".inputUid").show().find(".uid").focus();
+                        self.$add.find(".inputUid").show().find(".uid").focus();
                         break;
                 }
                 ;
@@ -1481,10 +1474,51 @@ var __extends = (this && this.__extends) || (function () {
                     });
                 });
             });
+            this.$el.find(".detail").on("click", ".btn-update", function () {
+                var $this = $(this), $tr = $this.parents("tr");
+                self.showUpdateMessage(parseInt($this.attr("mid")), parseInt($this.attr("uid")), $tr.find(".mtime").text(), $tr.find(".mcontent").text());
+            });
+            this.$update.find(".btn-cancel").on("click", function () {
+                _this.$update.removeClass("active");
+                setTimeout(function () {
+                    _this.$update.hide();
+                }, 200);
+            });
+            this.$update.find(".operation").on("change", function () {
+                var $this = $(this);
+                switch ($this.val()) {
+                    case "0":
+                        self.$update.find(".inputUid").hide().find(".uid").val("");
+                        break;
+                    case "1":
+                        self.$update.find(".inputUid").show().find(".uid").focus();
+                        break;
+                }
+                ;
+            });
+            this.$update.on("click", ".btn-submit", function () {
+                if (!self.messageCheck(self.$update)) {
+                    return;
+                }
+                ;
+                window.layer.confirm("确认更新消息么？", function (e) {
+                    _load(true);
+                    _resource.updateMeesage(JSON.stringify(self.getMessage(self.$update)), function (data) {
+                        self.$update.find(".btn-cancel").click();
+                        self.fetch(self.pading.pageNo, self.pading.pageSize);
+                        window.layer.msg("更新成功");
+                        window.layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
         };
-        MessageList.prototype.addMessageCheck = function () {
-            var tip = "", $addMessage = this.$addMessage, uid = $addMessage.find(".uid").val().replace(/\s/g, "");
-            if ($addMessage.find(".operation:checked").val() == "1" && (!uid || !/^\d*$/.test(uid))) {
+        MessageList.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        MessageList.prototype.messageCheck = function ($JQ) {
+            var tip = "", uid = $JQ.find(".uid").val().replace(/\s/g, "");
+            if ($JQ.find(".operation:checked").val() == "1" && (!uid || !/^\d*$/.test(uid))) {
                 if (!uid) {
                     tip = "请输入用户编号";
                 }
@@ -1493,29 +1527,321 @@ var __extends = (this && this.__extends) || (function () {
                 }
                 ;
             }
-            else if (!this.$addMessage.find(".reason").val().replace(/\s/g, "")) {
+            else if (!$JQ.find(".sendTime").val()) {
+                tip = "请选择发送时间";
+            }
+            else if (!$JQ.find(".reason").val().replace(/\s/g, "")) {
                 tip = "请填写消息内容";
             }
             ;
             if (tip) {
                 window.layer.msg(tip);
+                return false;
             }
             ;
             return true;
         };
-        MessageList.prototype.renderDetail = function (data) {
-            this.$el.find(".info").html(window.template(this.template.detail, data));
+        MessageList.prototype.getMessage = function ($JQ) {
+            var option = null;
+            if ($JQ.hasClass("addMessage")) {
+                option = {
+                    "uid": 0,
+                    "content": "",
+                    "send_time": 0,
+                    "token": this.mainView.mainView.token
+                };
+            }
+            else if ($JQ.hasClass("updateMessage")) {
+                option = {
+                    "id": parseInt($JQ.find(".mid").val()),
+                    "uid": 0,
+                    "content": "",
+                    "send_time": 0,
+                    "token": this.mainView.mainView.token
+                };
+            }
+            ;
+            switch ($JQ.find(".operation:checked").val()) {
+                case "0":
+                    option.uid = 0;
+                    break;
+                case "1":
+                    option.uid = parseInt($JQ.find(".uid").val());
+                    break;
+            }
+            ;
+            var date = new Date($JQ.find(".sendTime").val());
+            option.send_time = parseInt((date.getTime() / 1000));
+            option.content = $JQ.find(".reason").val();
+            return option;
+        };
+        MessageList.prototype.showUpdateMessage = function (mid, uid, send_time, content) {
+            var _this = this;
+            this.$update.show();
+            setTimeout(function () {
+                _this.$update.addClass("active");
+            }, 10);
+            this.initUpdateMessage(mid, uid, send_time, content);
+        };
+        MessageList.prototype.initUpdateMessage = function (mid, uid, send_time, content) {
+            var $update = this.$update;
+            $update.find(".mid").val(mid);
+            switch (uid) {
+                case 0:
+                    $update.find(".operation:eq(0)").prop("checked", true).trigger("change");
+                    break;
+                default:
+                    $update.find(".operation:eq(1)").prop("checked", true).trigger("change");
+                    $update.find(".uid").val(uid);
+                    break;
+            }
+            ;
+            $update.find(".sendTime").val(send_time);
+            $update.find(".reason").val(content);
+        };
+        ;
+        MessageList.prototype.initAddMeesage = function (isRender) {
+            if (isRender === void 0) { isRender = false; }
+            var $add = this.$add;
+            $add.find(".operation:eq(0)").prop("checked", true).trigger("change");
+            $add.find(".uid,.reason,.sendTime").val("");
+            if (isRender) {
+                this.fetch();
+            }
+            ;
         };
         MessageList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
+        };
+        MessageList.prototype.search = function (query) {
+            if (/^\d*$/.test(query)) {
+                this.uid = parseInt(query);
+                this.fetch(undefined, undefined);
+            }
+            else {
+                window.layer.msg("请输入正确的用户编号");
+            }
+            ;
         };
         return MessageList;
     }(ChartBase));
     var SystemNotice = (function (_super) {
         __extends(SystemNotice, _super);
         function SystemNotice(props) {
-            return _super.call(this, props) || this;
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.$add = null;
+            _this.$update = null;
+            _this.template = {
+                "routerTemp": "systemNoticeTemp",
+                "detail": "systemNoticeDetail"
+            };
+            return _this;
         }
+        SystemNotice.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            _load(true);
+            _resource.sNoticeList(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    self.render(data);
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
+        };
+        SystemNotice.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-systemNotice");
+            this.$add = this.$el.find(".addNotice");
+            this.$update = this.$el.find(".updateNotice");
+            this.bindEvent();
+        };
+        SystemNotice.prototype.bindEvent = function () {
+            var _this = this;
+            var self = this;
+            this.$add.find(".btn-reset").on("click", function () {
+                _this.initAddNotice();
+            });
+            this.$add.find(".btn-submit").on("click", function () {
+                if (!self.noticeCheck(self.$add)) {
+                    return;
+                }
+                ;
+                window.layer.confirm("是否确认增加公告", function (e) {
+                    _load(true);
+                    _resource.addSNotice(JSON.stringify(self.getNotice(self.$add)), function (data) {
+                        self.initAddNotice(true);
+                        window.layer.msg("增加成功");
+                        window.layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+            this.$add.find(".inter").on("input", function () {
+                var $this = $(this), val = $this.val();
+                if (/^\d*$/.test(val) && parseInt(val) > 0) {
+                    $this.attr("old", $this.val());
+                }
+                else {
+                    $this.val($this.attr("old"));
+                    window.layer.tips('请输入大于0的正整数', self.$add.find(".inter")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                }
+                ;
+            });
+            this.$el.find(".detail").on("click", ".btn-delete", function () {
+                var $this = $(this), nid = parseInt($this.attr("nid"));
+                window.layer.confirm("\u786E\u8BA4\u5220\u9664\u7F16\u53F7\u4E3A" + nid + "\u7684\u516C\u544A\u4E48\uFF1F", function (e) {
+                    _resource.deleteSNotice(JSON.stringify({
+                        "id": nid,
+                        "token": self.mainView.mainView.token
+                    }), function (data) {
+                        $this.prop("disabled", true);
+                        window.layer.msg("删除成功");
+                        window.layer.close(e);
+                    });
+                });
+            });
+            this.$el.find(".detail").on("click", ".btn-update", function () {
+                var $this = $(this), $tr = $this.parents("tr");
+                self.showUpdateNotice(parseInt($this.attr("nid")), $tr.find(".startDate").text(), $tr.find(".endDate").text(), parseInt($tr.find(".inter").text()), $tr.find(".ncontent").text());
+            });
+            this.$update.find(".btn-cancel").on("click", function () {
+                _this.$update.removeClass("active");
+                setTimeout(function () {
+                    _this.$update.hide();
+                }, 200);
+            });
+            this.$update.on("click", ".btn-submit", function () {
+                if (!self.noticeCheck(self.$update)) {
+                    return;
+                }
+                ;
+                window.layer.confirm("确认更新消息么？", function (e) {
+                    _load(true);
+                    _resource.updateSNotice(JSON.stringify(self.getNotice(self.$update)), function (data) {
+                        self.$update.find(".btn-cancel").click();
+                        self.fetch(self.pading.pageNo, self.pading.pageSize);
+                        window.layer.msg("更新成功");
+                        window.layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+            this.$update.find(".inter").on("input", function () {
+                var $this = $(this), val = $this.val();
+                if (/^\d*$/.test(val) && parseInt(val) > 0) {
+                    $this.attr("old", $this.val());
+                }
+                else {
+                    $this.val($this.attr("old"));
+                    window.layer.tips('请输入大于0的正整数', self.$update.find(".inter")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                }
+                ;
+            });
+        };
+        SystemNotice.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template(this.template.detail, data));
+        };
+        SystemNotice.prototype.noticeCheck = function ($JQ) {
+            var tip = "", startDate = $JQ.find(".startDate").val(), endDate = $JQ.find(".endDate").val();
+            if (!startDate) {
+                tip = "请选择开始时间";
+            }
+            else if (!endDate) {
+                tip = "请选择结束时间";
+            }
+            else if (startDate.replace(/\s|[-]|[:]/g, "") > endDate.replace(/\s|[-]|[:]/g, "")) {
+                tip = "开始时间不能大于结束时间，请重新选择";
+            }
+            else if (!$JQ.find(".inter").val()) {
+                tip = "请输入发送间隔";
+            }
+            else if (!$JQ.find(".reason").val().replace(/\s/g, "")) {
+                tip = "请填写消息内容";
+            }
+            ;
+            if (tip) {
+                window.layer.msg(tip);
+                return false;
+            }
+            ;
+            return true;
+        };
+        SystemNotice.prototype.initAddNotice = function (isRender) {
+            if (isRender === void 0) { isRender = false; }
+            this.$add.find(".startDate,.endDate,.inter,.reason").val("");
+            if (isRender) {
+                this.fetch();
+            }
+            ;
+        };
+        SystemNotice.prototype.getNotice = function ($JQ) {
+            var option = null;
+            if ($JQ.hasClass("addNotice")) {
+                option = {
+                    "start_time": 0,
+                    "end_time": "",
+                    "interval": parseInt($JQ.find(".inter").val()),
+                    "content": "",
+                    "token": this.mainView.mainView.token
+                };
+            }
+            else if ($JQ.hasClass("updateNotice")) {
+                option = {
+                    "id": parseInt($JQ.find(".nid").val()),
+                    "start_time": 0,
+                    "end_time": "",
+                    "interval": parseInt($JQ.find(".inter").val()),
+                    "content": "",
+                    "token": this.mainView.mainView.token
+                };
+            }
+            ;
+            var date = new Date($JQ.find(".startDate").val());
+            option.start_time = parseInt((date.getTime() / 1000));
+            date = new Date($JQ.find(".endDate").val());
+            option.end_time = parseInt((date.getTime() / 1000));
+            option.content = $JQ.find(".reason").val();
+            return option;
+        };
+        SystemNotice.prototype.showUpdateNotice = function (nid, startDate, endDate, inter, content) {
+            var _this = this;
+            this.$update.show();
+            setTimeout(function () {
+                _this.$update.addClass("active");
+            }, 10);
+            this.initUpdateMessage(nid, startDate, endDate, inter, content);
+        };
+        SystemNotice.prototype.initUpdateMessage = function (nid, startDate, endDate, inter, content) {
+            var $update = this.$update;
+            $update.find(".nid").val(nid);
+            $update.find(".startDate").val(startDate);
+            $update.find(".endDate").val(endDate);
+            $update.find(".inter").val(inter).attr("old", inter);
+            $update.find(".reason").val(content);
+        };
+        ;
+        SystemNotice.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
         return SystemNotice;
     }(ChartBase));
     _currentObject = new IndexMain();

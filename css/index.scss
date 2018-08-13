@@ -87,8 +87,7 @@ body{
             }
         }
 
-        .uid,
-        .nickname {
+        .defaultInput {
             padding:0 5px;
             float:left;
             margin:4px 0;
@@ -1069,41 +1068,135 @@ body{
     }
 }
 
-.m-messageList {
+@mixin addmessage {
+    position: relative;
+    left:0;
+    top:0;
+    margin:20px 0 40px 0;
+    padding:60px 20px 20px 20px;
+    min-width:540px;
+    background-color: #fff;
+    clear: both;
 
-    .addMessage {
-        position: relative;
+    .title {
+        position: absolute;
+        left:20px;
+        top:-20px;
+        background-color: #F44336;
+        color:#fff;
+        width:150px;
+        height:84px;
+        line-height: 84px;
+        font-size: 18px;
+        border-radius: 3px;
+        text-align: center;
+    }
+    
+    @include inputGroup;
+    .input-group,
+    .button-group {
+        margin:0 auto;
+        width:520px;
+    }
+
+    .inputUid {
+        display: none;
+    }
+
+    .button-group {
+        background-color: #fff;
+        overflow: hidden;
+        border-radius: 0 0 3px 3px;
+
+        .btn {
+            float: right;
+            margin:12px 10px;
+            padding:10px 30px;
+            border-radius: 5px;
+        }
+
+        .btn-reset {
+            color:#333;
+            background-color: #eee;
+
+            &:hover {
+                background-color: #E0E0E0;
+            }
+        }
+
+        .btn-submit {
+            color:#fff;
+            background-color: #42a5f5;
+
+            &:hover {
+                background-color: #2196F3;
+            }
+        }
+    }
+}
+
+@mixin updateMessage {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index: 10;
+    display: none;
+
+    .shade {
+        display: none;
+        position: fixed;
         left:0;
         top:0;
-        margin:20px 0 40px 0;
-        padding:60px 20px 20px 20px;
-        clear: both;
+        width:100%;
+        height:100%;
+        z-index:10;
+        background-color: #000;
+        opacity: 0.3;
+        z-index:10;
+    }
+
+    &.active {
+
+        .shade {
+            display: block;
+        } 
+        
+        .content {
+            opacity: 1;
+            -webkit-transform:scale(1,1);
+            transform:scale(1,1);
+            @include exit;
+        }
+    }
+
+    .content {
+        margin:-255px 0 0 -250px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        width:500px;
+        z-index: 11;
         background-color: #fff;
+        border-radius: 3px;
+        opacity: 0;
+        -webkit-transform:scale(0.3,0.3);
+        transform:scale(0.3,0.3);
+        @include come;
 
         .title {
-            position: absolute;
-            left:20px;
-            top:-20px;
-            background-color: #F44336;
+            padding-left:20px;
+            height:50px;
+            line-height: 50px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            background-color:#262524;
             color:#fff;
-            width:150px;
-            height:84px;
-            line-height: 84px;
-            font-size: 18px;
-            border-radius: 3px;
-            text-align: center;
-        }
-        
-        @include inputGroup;
-        .input-group,
-        .button-group {
-            margin:0 auto;
-            width:520px;
+            border-radius: 3px 3px 0 0;
         }
 
-        .inputUid {
-            display: none;
-        }
+        @include inputGroup;
 
         .button-group {
             background-color: #fff;
@@ -1135,5 +1228,27 @@ body{
                 }
             }
         }
+    }
+}
+
+.m-messageList {
+
+    .addMessage {
+        @include addmessage;
+    }
+
+    .updateMessage {
+        @include updateMessage;
+    }
+}
+
+.m-systemNotice {
+
+    .addNotice {
+        @include addmessage;
+    }
+
+    .updateNotice {
+        @include updateMessage;
     }
 }

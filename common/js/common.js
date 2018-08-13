@@ -61,7 +61,7 @@ var _loadObject = null, _resource = {
         "url": _domain + "/v1/backend/run/msg/list-msg-notice"
     },
     "addSNotice": {
-        "url": _domain + "/v1/backend/run/msg/list-msg-notice"
+        "url": _domain + "/v1/backend/run/msg/add-msg-notice"
     },
     "deleteSNotice": {
         "url": _domain + "/v1/backend/run/msg/delete-msg-notice"

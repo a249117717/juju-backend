@@ -723,8 +723,7 @@ body {
   margin-left: 10px;
 }
 
-.m-frozenInfo .content .input-group .uid,
-.m-frozenInfo .content .input-group .nickname {
+.m-frozenInfo .content .input-group .defaultInput {
   padding: 0 5px;
   float: left;
   margin: 4px 0;
@@ -1056,8 +1055,9 @@ body {
   top: 0;
   margin: 20px 0 40px 0;
   padding: 60px 20px 20px 20px;
-  clear: both;
+  min-width: 540px;
   background-color: #fff;
+  clear: both;
 }
 
 .m-messageList .addMessage .title {
@@ -1104,8 +1104,7 @@ body {
   margin-left: 10px;
 }
 
-.m-messageList .addMessage .input-group .uid,
-.m-messageList .addMessage .input-group .nickname {
+.m-messageList .addMessage .input-group .defaultInput {
   padding: 0 5px;
   float: left;
   margin: 4px 0;
@@ -1216,12 +1215,12 @@ body {
   border-radius: 5px;
 }
 
-.m-messageList .addMessage .button-group .btn-cancel {
+.m-messageList .addMessage .button-group .btn-reset {
   color: #333;
   background-color: #eee;
 }
 
-.m-messageList .addMessage .button-group .btn-cancel:hover {
+.m-messageList .addMessage .button-group .btn-reset:hover {
   background-color: #E0E0E0;
 }
 
@@ -1231,5 +1230,611 @@ body {
 }
 
 .m-messageList .addMessage .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
+.m-messageList .updateMessage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: none;
+}
+
+.m-messageList .updateMessage .shade {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #000;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+.m-messageList .updateMessage.active .shade {
+  display: block;
+}
+
+.m-messageList .updateMessage.active .content {
+  opacity: 1;
+  -webkit-transform: scale(1, 1);
+  transform: scale(1, 1);
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-messageList .updateMessage .content {
+  margin: -255px 0 0 -250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  z-index: 11;
+  background-color: #fff;
+  border-radius: 3px;
+  opacity: 0;
+  -webkit-transform: scale(0.3, 0.3);
+  transform: scale(0.3, 0.3);
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-messageList .updateMessage .content .title {
+  padding-left: 20px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  background-color: #262524;
+  color: #fff;
+  border-radius: 3px 3px 0 0;
+}
+
+.m-messageList .updateMessage .content .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-messageList .updateMessage .content .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-messageList .updateMessage .content .input-group .group.select {
+  display: none;
+}
+
+.m-messageList .updateMessage .content .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-messageList .updateMessage .content .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.m-messageList .updateMessage .content .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.m-messageList .updateMessage .content .input-group .defaultInput {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-messageList .updateMessage .content .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.m-messageList .updateMessage .content .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.m-messageList .updateMessage .content .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.m-messageList .updateMessage .content .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-messageList .updateMessage .content .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-messageList .updateMessage .content .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.m-messageList .updateMessage .content .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.m-messageList .updateMessage .content .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.m-messageList .updateMessage .content .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-messageList .updateMessage .content .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-messageList .updateMessage .content .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-messageList .updateMessage .content .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-messageList .updateMessage .content .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-messageList .updateMessage .content .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.m-messageList .updateMessage .content .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-messageList .updateMessage .content .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
+.m-systemNotice .addNotice {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin: 20px 0 40px 0;
+  padding: 60px 20px 20px 20px;
+  min-width: 540px;
+  background-color: #fff;
+  clear: both;
+}
+
+.m-systemNotice .addNotice .title {
+  position: absolute;
+  left: 20px;
+  top: -20px;
+  background-color: #F44336;
+  color: #fff;
+  width: 150px;
+  height: 84px;
+  line-height: 84px;
+  font-size: 18px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.m-systemNotice .addNotice .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-systemNotice .addNotice .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-systemNotice .addNotice .input-group .group.select {
+  display: none;
+}
+
+.m-systemNotice .addNotice .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-systemNotice .addNotice .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.m-systemNotice .addNotice .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.m-systemNotice .addNotice .input-group .defaultInput {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-systemNotice .addNotice .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.m-systemNotice .addNotice .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.m-systemNotice .addNotice .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.m-systemNotice .addNotice .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-systemNotice .addNotice .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-systemNotice .addNotice .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.m-systemNotice .addNotice .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.m-systemNotice .addNotice .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.m-systemNotice .addNotice .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-systemNotice .addNotice .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-systemNotice .addNotice .input-group,
+.m-systemNotice .addNotice .button-group {
+  margin: 0 auto;
+  width: 520px;
+}
+
+.m-systemNotice .addNotice .inputUid {
+  display: none;
+}
+
+.m-systemNotice .addNotice .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-systemNotice .addNotice .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-systemNotice .addNotice .button-group .btn-reset {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-systemNotice .addNotice .button-group .btn-reset:hover {
+  background-color: #E0E0E0;
+}
+
+.m-systemNotice .addNotice .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-systemNotice .addNotice .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
+.m-systemNotice .updateNotice {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: none;
+}
+
+.m-systemNotice .updateNotice .shade {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #000;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+.m-systemNotice .updateNotice.active .shade {
+  display: block;
+}
+
+.m-systemNotice .updateNotice.active .content {
+  opacity: 1;
+  -webkit-transform: scale(1, 1);
+  transform: scale(1, 1);
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-systemNotice .updateNotice .content {
+  margin: -255px 0 0 -250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  z-index: 11;
+  background-color: #fff;
+  border-radius: 3px;
+  opacity: 0;
+  -webkit-transform: scale(0.3, 0.3);
+  transform: scale(0.3, 0.3);
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-systemNotice .updateNotice .content .title {
+  padding-left: 20px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  background-color: #262524;
+  color: #fff;
+  border-radius: 3px 3px 0 0;
+}
+
+.m-systemNotice .updateNotice .content .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.m-systemNotice .updateNotice .content .input-group .group {
+  margin-bottom: 10px;
+}
+
+.m-systemNotice .updateNotice .content .input-group .group.select {
+  display: none;
+}
+
+.m-systemNotice .updateNotice .content .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.m-systemNotice .updateNotice .content .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.m-systemNotice .updateNotice .content .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.m-systemNotice .updateNotice .content .input-group .defaultInput {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.m-systemNotice .updateNotice .content .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.m-systemNotice .updateNotice .content .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.m-systemNotice .updateNotice .content .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.m-systemNotice .updateNotice .content .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.m-systemNotice .updateNotice .content .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.m-systemNotice .updateNotice .content .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.m-systemNotice .updateNotice .content .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.m-systemNotice .updateNotice .content .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.m-systemNotice .updateNotice .content .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  resize: none;
+}
+
+.m-systemNotice .updateNotice .content .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.m-systemNotice .updateNotice .content .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.m-systemNotice .updateNotice .content .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.m-systemNotice .updateNotice .content .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.m-systemNotice .updateNotice .content .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.m-systemNotice .updateNotice .content .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.m-systemNotice .updateNotice .content .button-group .btn-submit:hover {
   background-color: #2196F3;
 }

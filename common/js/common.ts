@@ -65,7 +65,7 @@ _resource:any = {  // 服务请求
         "url":`${_domain}/v1/backend/run/msg/list-msg-notice`
     },
     "addSNotice":{   // 增加系统公告
-        "url":`${_domain}/v1/backend/run/msg/list-msg-notice`
+        "url":`${_domain}/v1/backend/run/msg/add-msg-notice`
     },
     "deleteSNotice":{   // 删除系统公告
         "url":`${_domain}/v1/backend/run/msg/delete-msg-notice`

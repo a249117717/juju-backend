@@ -96,13 +96,13 @@
                 <div class="group">
                     <div class="tip">用户编号</div>
                     <div class="descript">
-                        <input class="uid" type="text" disabled>
+                        <input class="uid defaultInput" type="text" disabled>
                     </div>
                 </div>
                 <div class="group">
                     <div class="tip">用户昵称</div>
                     <div class="descript">
-                        <input class="nickname" type="text" disabled>
+                        <input class="nickname defaultInput" type="text" disabled>
                     </div>
                 </div>
                 <div class="group mdui-theme-accent-blue">
@@ -158,7 +158,7 @@
                 <div class="group">
                     <div class="tip">用户编号</div>
                     <div class="descript">
-                        <input class="uid" type="text" disabled>
+                        <input class="uid defaultInput" type="text" disabled>
                     </div>
                 </div>
                 <div class="group">
@@ -476,6 +476,58 @@
     <!-- 消息列表模板 -->
     <script id="messageListTemp" type="text/html">
         <div class="m-messageList defaultTable">
+            <!-- 更新消息 -->
+            <div class="updateMessage">
+                <div class="content">
+                    <div class="title">更新消息</div>
+                    <div class="input-group">
+                        <div class="group">
+                            <div class="tip">消息编号</div>
+                            <div class="descript">
+                                <input class="mid defaultInput" disabled>
+                            </div>
+                        </div>
+                        <div class="group mdui-theme-accent-blue">
+                            <div class="tip">发送对象</div>
+                            <div class="descript">
+                                <label class="mdui-radio">
+                                    <input class="operation" type="radio" name="updateMessage" checked value="0"/>
+                                    <i class="mdui-radio-icon"></i>
+                                    <span>全服</span>
+                                </label>
+                                <label class="mdui-radio">
+                                    <input class="operation" type="radio" name="updateMessage" value="1"/>
+                                    <i class="mdui-radio-icon"></i>
+                                    <span>个人</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="group inputUid">
+                            <div class="tip">用户编号</div>
+                            <div class="descript">
+                                <input class="uid defaultInput" type="text">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">发送时间</div>
+                            <div class="descript">
+                                <input class="sendTime defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择发送时间">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">消息内容</div>
+                            <div class="descript">
+                                <textarea class="reason" placeholder="请输入消息内容"></textarea>    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                        <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+                    </div>
+                </div>
+                <div class="shade"></div>
+            </div>
             <!-- 增加消息 -->
             <div class="addMessage">
                 <div class="title">增加消息</div>
@@ -484,12 +536,12 @@
                         <div class="tip">发送对象</div>
                         <div class="descript">
                             <label class="mdui-radio">
-                                <input class="operation" type="radio" name="frozenOperation" checked value="0"/>
+                                <input class="operation" type="radio" name="addMessage" checked value="0"/>
                                 <i class="mdui-radio-icon"></i>
                                 <span>全服</span>
                             </label>
                             <label class="mdui-radio">
-                                <input class="operation" type="radio" name="frozenOperation" value="1"/>
+                                <input class="operation" type="radio" name="addMessage" value="1"/>
                                 <i class="mdui-radio-icon"></i>
                                 <span>个人</span>
                             </label>
@@ -498,13 +550,13 @@
                     <div class="group inputUid">
                         <div class="tip">用户编号</div>
                         <div class="descript">
-                            <input class="uid" type="text">
+                            <input class="uid defaultInput" type="text">
                         </div>
                     </div>
                     <div class="group">
                         <div class="tip">发送时间</div>
                         <div class="descript">
-                            <input class="uid" type="text">
+                            <input class="sendTime defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择发送时间">
                         </div>
                     </div>
                     <div class="group">
@@ -516,6 +568,7 @@
                 </div>
                 <div class="button-group">
                     <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                    <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
                 </div>
             </div>
             <div class="detail">
@@ -548,12 +601,133 @@
                     <td>{{ en.id }}</td>
                     <td>{{ formatData(en.create_time) }}</td>
                     <td>{{ en.uid == "0"?"全服":en.uid }}</td>
-                    <td>{{ en.name?"无":en.name }}</td>
-                    <td>{{ formatData(en.send_time) }}</td>
-                    <td>{{ en.content }}</td>
+                    <td>{{ en.name?en.name:"无" }}</td>
+                    <td class="mtime">{{ formatTime(en.send_time) }}</td>
+                    <td class="mcontent">{{ en.content }}</td>
                     <td>
                         <button class="btn btn-delete mdui-ripple mdui-ripple-grey" mid="{{ en.id }}">删除</button>
-                        <button class="btn btn-update mdui-ripple mdui-ripple-grey" mid="{{ en.id }}">更新</button>
+                        <button class="btn btn-update mdui-ripple mdui-ripple-grey" mid="{{ en.id }}" uid="{{ en.uid }}">更新</button>
+                    </td>
+                </tr>
+            {{ /each }}
+        </tbody>
+    </script>
+    <!-- 系统公告模板 -->
+    <script id="systemNoticeTemp" type="text/html">
+        <div class="m-systemNotice defaultTable">
+            <!-- 更新公告 -->
+            <div class="updateNotice">
+                <div class="content">
+                    <div class="title">更新公告</div>
+                    <div class="input-group">
+                        <div class="group">
+                            <div class="tip">公告编号</div>
+                            <div class="descript">
+                                <input class="nid defaultInput" disabled>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">开始时间</div>
+                            <div class="descript">
+                                <input class="startDate defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择开始时间">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">结束时间</div>
+                            <div class="descript">
+                                <input class="endDate defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择结束时间">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">发送间隔</div>
+                            <div class="descript">
+                                <input old="0" class="inter defaultInput" type="text" placeholder="请输入发送间隔(s)">
+                            </div>
+                        </div>
+                        <div class="group">
+                            <div class="tip">公告内容</div>
+                            <div class="descript">
+                                <textarea class="reason" placeholder="请输入公告内容"></textarea>    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                        <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+                    </div>
+                </div>
+                <div class="shade"></div>
+            </div>
+            <!-- 增加公告 -->
+            <div class="addNotice">
+                <div class="title">增加系统公告</div>
+                <div class="input-group">
+                    <div class="group">
+                        <div class="tip">开始时间</div>
+                        <div class="descript">
+                            <input class="startDate defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择开始时间">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="tip">结束时间</div>
+                        <div class="descript">
+                            <input class="endDate defaultInput" type="text" readonly onclick="laydate({istime: true,format:'YYYY-MM-DD hh:mm'})" placeholder="请点击选择结束时间">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="tip">发送间隔</div>
+                        <div class="descript">
+                            <input class="inter defaultInput" old="0" type="text" placeholder="请输入发送间隔(s)">
+                        </div>
+                    </div>
+                    <div class="group">
+                        <div class="tip">公告内容</div>
+                        <div class="descript">
+                            <textarea class="reason" placeholder="请输入公告内容"></textarea>    
+                        </div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                    <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
+                </div>
+            </div>
+            <div class="detail">
+                <div class="title-out">
+                    <div class="title">详情</div>
+                    <div class="subtitle">Detail</div>
+                </div>
+                <table class="info" border="0">
+                </table>
+                <pading count="{{ count }}"></pading>
+            </div>
+        </div>
+    </script>
+    <!-- 系统公告详情 -->
+    <script id="systemNoticeDetail" type="text/html">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>创建时间</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>发送间隔(s)</th>
+                <th>内容</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ each data as en }}
+                <tr>
+                    <td>{{ en.id }}</td>
+                    <td>{{ formatData(en.create_time) }}</td>
+                    <td class="startDate">{{ formatTime(en.start_time) }}</td>
+                    <td class="endDate">{{ formatTime(en.end_time) }}</td>
+                    <td class="inter">{{ en.interval }}</td>
+                    <td class="ncontent">{{ en.content }}</td>
+                    <td>
+                        <button class="btn btn-delete mdui-ripple mdui-ripple-grey" nid="{{ en.id }}">删除</button>
+                        <button class="btn btn-update mdui-ripple mdui-ripple-grey" nid="{{ en.id }}">更新</button>
                     </td>
                 </tr>
             {{ /each }}
@@ -592,6 +766,7 @@
         </div>
     </script>
     <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/laydate/laydate.js"></script>
     <script src="common/js/common.js"></script>
     <script src="lib/g2/g2.min.js"></script>
     <script src="lib/mdui/js/mdui.min.js"></script>

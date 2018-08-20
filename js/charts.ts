@@ -862,7 +862,7 @@
             if(this.check()) {
                 _load(true);
                 // 变更密码
-                _resource.changePwd(JSON.stringify({
+                (<Function>_resource.changePwd)(JSON.stringify({
                     "username":this.$el.find(".user").val(),
                     "old_password":this.$el.find(".oldPwd").val(),
                     "new_password":this.$el.find(".newPwd").val(),
@@ -996,7 +996,7 @@
 
                 _load(true);
                 if(self.sTime != null) {    // 更新
-                    _resource.updateFrozen(JSON.stringify(option),function(data){
+                    (<Function>_resource.updateFrozen)(JSON.stringify(option),function(data){
                         (<any>window).layer.msg("更新成功！");
                         // 调用相应详情的冻结函数
                         self.currentDetail.frozen();
@@ -1005,7 +1005,7 @@
                         _load(false);
                     });
                 } else {    // 新增
-                    _resource.addFrozen(JSON.stringify(option),function(data){
+                    (<Function>_resource.addFrozen)(JSON.stringify(option),function(data){
                         (<any>window).layer.msg("冻结成功！");
                         // 调用相应详情的冻结函数
                         self.currentDetail.frozen();
@@ -1163,7 +1163,7 @@
                 };
 
                 _load(true);
-                _resource.addDiamond(JSON.stringify({
+                (<Function>_resource.addDiamond)(JSON.stringify({
                     "uid":parseInt(<string>self.$el.find(".uid").val()),
                     "num":parseInt(<string>self.$el.find(".diamondNumber").val()),
                     "reason":self.$el.find(".reason").val(),
@@ -1345,7 +1345,7 @@
             };
 
             _load(true);
-            _resource.statisticalUser(JSON.stringify({
+            (<Function>_resource.statisticalUser)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "start_time":start,
@@ -1524,7 +1524,7 @@
             let self:UserList = this;
             
             _load(true);
-            _resource.userList(JSON.stringify({
+            (<Function>_resource.userList)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":uid,
@@ -1635,7 +1635,7 @@
             let self:PayStatistical = this;
 
             _load(true);
-            _resource.payStatistical(JSON.stringify({
+            (<Function>_resource.payStatistical)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "day":0,
@@ -1722,7 +1722,7 @@
             let self:Diamond = this;
 
             _load(true);
-            _resource.diamond(JSON.stringify({
+            (<Function>_resource.diamond)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":uid,
@@ -1811,7 +1811,7 @@
             let self:FreezeList = this;
 
             _load(true);
-            _resource.freezeList(JSON.stringify({
+            (<Function>_resource.freezeList)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":uid,
@@ -1858,7 +1858,7 @@
                     btn:['确定','取消']
                 },function(e){
                     _load(true);
-                    _resource.delFrozen(JSON.stringify({
+                    (<Function>_resource.delFrozen)(JSON.stringify({
                         "uid":parseInt(uid),
                         "token":self.mainView.mainView.token
                     }),function(data:any){
@@ -1971,7 +1971,7 @@
 
             if(/^\d*$/.test(query)){
                 _load(true);
-                _resource.infoQuery(JSON.stringify({
+                (<Function>_resource.infoQuery)(JSON.stringify({
                     "uid":parseInt(query),
                     "token":this.mainView.mainView.token
                 }),function(data:any){
@@ -2011,7 +2011,7 @@
             let self:MessageList = this;
             // let data = {"code":0,"msg":"成功","count":3,"data":[{"content":"asd","create_time":"1534131180","id":"5","name":"lili","send_time":"1534176000","uid":"199980"},{"content":"发送怕敏感","create_time":"1534128138","id":"4","name":null,"send_time":"1534139220","uid":"0"},{"content":"asd","create_time":"1533992954","id":"1","name":null,"send_time":"1533225600","uid":"0"}]};
             _load(true);
-            _resource.messageList(JSON.stringify({
+            (<Function>_resource.messageList)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":this.uid,
@@ -2064,7 +2064,7 @@
                 
                 (<any>window).layer.confirm("是否确认增加消息",function(e){
                     _load(true);
-                    _resource.addMessage(JSON.stringify(self.getMessage(self.$add)),function(data){
+                    (<Function>_resource.addMessage)(JSON.stringify(self.getMessage(self.$add)),function(data){
                         self.initAddMeesage(true);
                         (<any>window).layer.msg("增加成功");
                         (<any>window).layer.close(e);
@@ -2092,7 +2092,7 @@
                 let $this:JQuery<HTMLElement> = $(this),
                 mid:number = parseInt($this.attr("mid"));
                 (<any>window).layer.confirm(`确认删除编号为${mid}的消息么？`,function(e){
-                    _resource.deleteMessage(JSON.stringify({
+                    (<Function>_resource.deleteMessage)(JSON.stringify({
                         "id":mid,
                         "token":self.mainView.mainView.token
                     }),function(data){
@@ -2141,7 +2141,7 @@
 
                 (<any>window).layer.confirm("确认更新消息么？",function(e){
                     _load(true);
-                    _resource.updateMeesage(JSON.stringify(self.getMessage(self.$update)),function(data){
+                    (<Function>_resource.updateMeesage)(JSON.stringify(self.getMessage(self.$update)),function(data){
                         self.$update.find(".btn-cancel").click();
                         self.fetch(self.pading.pageNo,self.pading.pageSize);
                         (<any>window).layer.msg("更新成功");
@@ -2345,7 +2345,7 @@
         fetch(pageNo:number = 1,pageSize:number = _pageSize) {
             let self:SystemNotice = this;
             _load(true);
-            _resource.sNoticeList(JSON.stringify({
+            (<Function>_resource.sNoticeList)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "token":this.mainView.mainView.token
@@ -2396,7 +2396,7 @@
                 
                 (<any>window).layer.confirm("是否确认增加公告",function(e){
                     _load(true);
-                    _resource.addSNotice(JSON.stringify(self.getNotice(self.$add)),function(data){
+                    (<Function>_resource.addSNotice)(JSON.stringify(self.getNotice(self.$add)),function(data){
                         self.initAddNotice(true);
                         (<any>window).layer.msg("增加成功");
                         (<any>window).layer.close(e);
@@ -2426,7 +2426,7 @@
                 let $this:JQuery<HTMLElement> = $(this),
                 nid:number = parseInt($this.attr("nid"));
                 (<any>window).layer.confirm(`确认删除编号为${nid}的公告么？`,function(e){
-                    _resource.deleteSNotice(JSON.stringify({
+                    (<Function>_resource.deleteSNotice)(JSON.stringify({
                         "id":nid,
                         "token":self.mainView.mainView.token
                     }),function(data){
@@ -2461,7 +2461,7 @@
 
                 (<any>window).layer.confirm("确认更新消息么？",function(e){
                     _load(true);
-                    _resource.updateSNotice(JSON.stringify(self.getNotice(self.$update)),function(data){
+                    (<Function>_resource.updateSNotice)(JSON.stringify(self.getNotice(self.$update)),function(data){
                         self.$update.find(".btn-cancel").click();
                         self.fetch(self.pading.pageNo,self.pading.pageSize);
                         (<any>window).layer.msg("更新成功");

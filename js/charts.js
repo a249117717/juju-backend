@@ -1327,6 +1327,54 @@ var __extends = (this && this.__extends) || (function () {
         };
         return FreezeList;
     }(ChartBase));
+    var OrderList = (function (_super) {
+        __extends(OrderList, _super);
+        function OrderList() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return OrderList;
+    }(ChartBase));
+    var MallList = (function (_super) {
+        __extends(MallList, _super);
+        function MallList() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return MallList;
+    }(ChartBase));
+    var RobotList = (function (_super) {
+        __extends(RobotList, _super);
+        function RobotList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.template = {
+                "routerTemp": "robotListTemp",
+                "detail": "robotDetail"
+            };
+            $.extend(_this, props);
+            return _this;
+        }
+        RobotList.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            self.render({});
+        };
+        RobotList.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-robotList");
+            this.bindEvent();
+        };
+        RobotList.prototype.bindEvent = function () {
+        };
+        RobotList.prototype.renderDetail = function (data) {
+        };
+        RobotList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        return RobotList;
+    }(ChartBase));
     var InfoQuery = (function (_super) {
         __extends(InfoQuery, _super);
         function InfoQuery(props) {

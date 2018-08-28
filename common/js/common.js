@@ -4,6 +4,9 @@ var _domain = "http://39.108.151.200:9999", _router = {
     "payStatistical": "PayStatistical",
     "diamond": "Diamond",
     "freezeList": "FreezeList",
+    "orderList": "OrderList",
+    "mallList": "MallList",
+    "robotList": "RobotList",
     "infoQuery": "InfoQuery",
     "messageList": "MessageList",
     "systemNotice": "SystemNotice"
@@ -68,6 +71,18 @@ var _loadObject = null, _resource = {
     },
     "updateSNotice": {
         "url": _domain + "/v1/backend/run/msg/update-msg-notice"
+    },
+    "robotList": {
+        "url": _domain + "/v1/backend/run/push/list-robot-push"
+    },
+    "addRobot": {
+        "url": _domain + "/v1/backend/run/push/add-robot-push"
+    },
+    "deleteRobot": {
+        "url": _domain + "/v1/backend/run/push/delete-robot-push"
+    },
+    "updateRobot": {
+        "url": _domain + "/v1/backend/run/push/update-robot-push"
     }
 };
 function _load(isShow) {
@@ -107,9 +122,8 @@ function _resourceError(code, msg) {
     _load(false);
 }
 !(function () {
-    var temp = {};
     for (var en in _resource) {
-        temp[en] = (function (url, type) {
+        _resource[en] = (function (url, type) {
             if (type === void 0) { type = "post"; }
             return function (data, success, error) {
                 ajax(url, type, data, success, error);
@@ -117,7 +131,6 @@ function _resourceError(code, msg) {
         }(_resource[en].url, _resource[en].type));
     }
     ;
-    _resource = temp;
     function ajax(url, type, data, success, error) {
         $.ajax({
             "url": url,

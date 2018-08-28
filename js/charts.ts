@@ -1907,6 +1907,91 @@
         }
     }
 
+    // 订单列表
+    class OrderList extends ChartBase {
+
+    }
+
+    // 商城商品
+    class MallList extends ChartBase {
+
+    }
+
+    // 机器人弹幕
+    class RobotList extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        template = { // 模板
+            "routerTemp":"robotListTemp",
+            "detail":"robotDetail"
+        };
+
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+            let self:FreezeList = this;
+            self.render({});
+
+            // _load(true);
+            // (<Function>_resource.robotList)(JSON.stringify({
+            //     "page_size":pageSize,
+            //     "page_index":pageNo,
+            //     "token":this.mainView.mainView.token
+            // }),function(data:any){
+            //     if(!self.$el) {
+                    // self.render(data);
+            //     } else {
+            //         // 设置总页数
+            //         self.pading.setTotal(data.count);
+            //     };
+            //     self.renderDetail(data)
+            //     _load(false);
+            // });
+        }
+
+        /**
+         * 页面渲染
+         * @param {object} data [数据]
+         */
+        render(data:any) {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-robotList");
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
+    }
+
     // 信息查询
     class InfoQuery extends ChartBase {
         $el:JQuery<HTMLElement> = null;

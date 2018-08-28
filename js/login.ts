@@ -60,7 +60,7 @@
             if(this.check()) {
                 _load(true);
                 
-                _resource.login(JSON.stringify({
+                (<Function>_resource.login)(JSON.stringify({
                     "username":this.$el.find(".user").val(),
                     "password":this.$el.find(".pwd").val()
                 }),function(data:any){

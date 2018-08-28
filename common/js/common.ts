@@ -7,6 +7,9 @@ _router:{
     "payStatistical":"PayStatistical",  // 付费用户
     "diamond":"Diamond",  // 钻石流水
     "freezeList":"FreezeList",  // 冻结名单
+    "orderList":"OrderList",    // 订单列表
+    "mallList":"MallList",  // 商城商品
+    "robotList":"RobotList",    // 机器人弹幕
     "infoQuery":"InfoQuery",  // 信息查询
     "messageList":"MessageList", // 消息列表
     "systemNotice":"SystemNotice" // 系统公告
@@ -74,6 +77,18 @@ _resource:resource = {  // 服务请求
     },
     "updateSNotice":{ // 更新系统公告
         "url":`${_domain}/v1/backend/run/msg/update-msg-notice`
+    },
+    "robotList":{   // 机器人弹幕列表
+        "url":`${_domain}/v1/backend/run/push/list-robot-push`
+    },
+    "addRobot":{    // 新增机器人弹幕
+        "url":`${_domain}/v1/backend/run/push/add-robot-push`
+    },
+    "deleteRobot":{ // 删除机器人弹幕
+        "url":`${_domain}/v1/backend/run/push/delete-robot-push`
+    },
+    "updateRobot":{ // 更新机器人弹幕
+        "url":`${_domain}/v1/backend/run/push/update-robot-push`
     }
 };
 
@@ -161,6 +176,22 @@ interface resource {
      * 更新系统公告
      */
     "updateSNotice":postUrl|Function
+    /**
+     * 机器人弹幕列表
+     */
+    "robotList":postUrl|Function
+    /**
+     * 新增机器人弹幕
+     */
+    "addRobot":postUrl|Function
+    /**
+     * 删除机器人弹幕
+     */
+    "deleteRobot":postUrl|Function
+    /**
+     * 更新机器人弹幕
+     */
+    "updateRobot":postUrl|Function
 }
 
 /**

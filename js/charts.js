@@ -13,13 +13,15 @@ var __extends = (this && this.__extends) || (function () {
     window.template.helper('formatData', function (data, format) {
         var date = new Date();
         date.setTime(data * 1000);
-        return (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
-    });
-    window.template.helper('formatTime', function (data, format) {
-        var date = new Date();
-        date.setTime(data * 1000);
-        var dateD = (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2"), dateT = (" " + date.getHours() + ":" + date.getMinutes()).replace(/(?<=\s)([0-9])(?=:)|(?<=:)([0-9])$/g, "0$1$2");
-        return "" + dateD + dateT;
+        var dateD = (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
+        switch (format) {
+            case 1:
+                var dateT = (" " + date.getHours() + ":" + date.getMinutes()).replace(/(?<=\s)([0-9])(?=:)|(?<=:)([0-9])$/g, "0$1$2");
+                return "" + dateD + dateT;
+            default:
+                return dateD;
+        }
+        ;
     });
     var IndexMain = (function () {
         function IndexMain() {
@@ -1242,7 +1244,10 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         Diamond.prototype.search = function (query) {
-            if (query) {
+            if (!/^\d*$/.test(query)) {
+                window.layer.msg("请填写正确的用户编号");
+            }
+            else {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
@@ -1325,7 +1330,10 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         FreezeList.prototype.search = function (query) {
-            if (query) {
+            if (!/^\d*$/.test(query)) {
+                window.layer.msg("请填写正确的用户编号");
+            }
+            else {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
@@ -1731,12 +1739,18 @@ var __extends = (this && this.__extends) || (function () {
             this.fetch(pageNo, pageSize);
         };
         MessageList.prototype.search = function (query) {
-            if (/^\d*$/.test(query)) {
-                this.uid = parseInt(query);
-                this.fetch(undefined, undefined);
+            if (!/^\d*$/.test(query)) {
+                window.layer.msg("请填写正确的用户编号");
             }
             else {
-                window.layer.msg("请输入正确的用户编号");
+                if (query) {
+                    this.uid = parseInt(query);
+                }
+                else {
+                    this.uid = 0;
+                }
+                ;
+                this.fetch(undefined, undefined);
             }
             ;
         };

@@ -5,19 +5,16 @@
     (<any>window).template.helper('formatData',function(data,format){
         let date:Date = new Date();
         date.setTime(data*1000);
-        
-        return `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
-    });
 
-    // 注册过滤器,转换时间戳到分
-    (<any>window).template.helper('formatTime',function(data,format){
-        let date:Date = new Date();
-        date.setTime(data*1000);
+        let dateD:string = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
         
-        let dateD:string = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2"),
-        dateT:string = ` ${date.getHours()}:${date.getMinutes()}`.replace(/(?<=\s)([0-9])(?=:)|(?<=:)([0-9])$/g,"0$1$2");
-        
-        return `${dateD}${dateT}`;
+        switch(format) {
+            case 1: // 转换时间戳到分
+                let dateT:string = ` ${date.getHours()}:${date.getMinutes()}`.replace(/(?<=\s)([0-9])(?=:)|(?<=:)([0-9])$/g,"0$1$2");
+                return `${dateD}${dateT}`;
+            default:
+                return dateD;
+        };
     });
 
     // 主体
@@ -1795,7 +1792,9 @@
          * @param {string} query [搜索关键字]
          */
         search(query:string) {
-            if(query){
+            if(!/^\d*$/.test(query)) {
+                (<any>window).layer.msg("请填写正确的用户编号");
+            } else {
                 this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
@@ -1914,7 +1913,9 @@
          * @param {string} query [搜索关键字]
          */
         search(query:string) {
-            if(query){
+            if(!/^\d*$/.test(query)) {
+                (<any>window).layer.msg("请填写正确的用户编号");
+            } else {
                 this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
@@ -2260,7 +2261,6 @@
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize) {
             let self:MessageList = this;
-            // let data = {"code":0,"msg":"成功","count":3,"data":[{"content":"asd","create_time":"1534131180","id":"5","name":"lili","send_time":"1534176000","uid":"199980"},{"content":"发送怕敏感","create_time":"1534128138","id":"4","name":null,"send_time":"1534139220","uid":"0"},{"content":"asd","create_time":"1533992954","id":"1","name":null,"send_time":"1533225600","uid":"0"}]};
             _load(true);
             (<Function>_resource.messageList)(JSON.stringify({
                 "page_size":pageSize,
@@ -2563,11 +2563,15 @@
          * @param {string} query [搜索关键字]
          */
         search(query:string) {
-            if(/^\d*$/.test(query)) {
-                this.uid = parseInt(query);
-                this.fetch(undefined,undefined);
+            if(!/^\d*$/.test(query)) {
+                (<any>window).layer.msg("请填写正确的用户编号");
             } else {
-                (<any>window).layer.msg("请输入正确的用户编号");
+                if(query) {
+                    this.uid = parseInt(query);
+                } else {
+                    this.uid = 0;
+                };
+                this.fetch(undefined,undefined);
             };
         }
     }

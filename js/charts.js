@@ -41,7 +41,11 @@ var __extends = (this && this.__extends) || (function () {
             this.bindEvent();
         };
         IndexMain.prototype.bindEvent = function () {
+            var self = this;
             this.windowEvent();
+            $("#formReturn").on("load", function () {
+                self.detail.currentChart.getFormReturn(this);
+            });
         };
         IndexMain.prototype.initMethod = function () {
             var options = {
@@ -917,6 +921,7 @@ var __extends = (this && this.__extends) || (function () {
         ChartBase.prototype.changeDate = function (start, end) { };
         ChartBase.prototype.changePading = function (pageNo, pageSize) { };
         ChartBase.prototype.frozen = function () { };
+        ChartBase.prototype.getFormReturn = function (e) { };
         return ChartBase;
     }());
     var StatisticalUser = (function (_super) {
@@ -1121,7 +1126,7 @@ var __extends = (this && this.__extends) || (function () {
             if (!/^\d*$/.test(query)) {
                 window.layer.msg("请填写正确的用户编号");
             }
-            else if (query) {
+            else {
                 this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
             }
             ;
@@ -1329,16 +1334,70 @@ var __extends = (this && this.__extends) || (function () {
     }(ChartBase));
     var OrderList = (function (_super) {
         __extends(OrderList, _super);
-        function OrderList() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        function OrderList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.template = {
+                "routerTemp": "mallListTemp",
+                "detail": "mallListDetail"
+            };
+            $.extend(_this, props);
+            return _this;
         }
+        OrderList.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            self.render({});
+        };
+        OrderList.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-orderList");
+            this.bindEvent();
+        };
+        OrderList.prototype.bindEvent = function () {
+        };
+        OrderList.prototype.renderDetail = function (data) {
+        };
+        OrderList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
         return OrderList;
     }(ChartBase));
     var MallList = (function (_super) {
         __extends(MallList, _super);
-        function MallList() {
-            return _super !== null && _super.apply(this, arguments) || this;
+        function MallList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.template = {
+                "routerTemp": "mallListTemp",
+                "detail": "mallListDetail"
+            };
+            $.extend(_this, props);
+            return _this;
         }
+        MallList.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            self.render({});
+        };
+        MallList.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+            this.$el = $(".m-mallList");
+            this.bindEvent();
+        };
+        MallList.prototype.bindEvent = function () {
+        };
+        MallList.prototype.renderDetail = function (data) {
+        };
+        MallList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
         return MallList;
     }(ChartBase));
     var RobotList = (function (_super) {
@@ -1348,7 +1407,7 @@ var __extends = (this && this.__extends) || (function () {
             _this.$el = null;
             _this.template = {
                 "routerTemp": "robotListTemp",
-                "detail": "robotDetail"
+                "detail": "robotListDetail"
             };
             $.extend(_this, props);
             return _this;
@@ -1372,6 +1431,16 @@ var __extends = (this && this.__extends) || (function () {
         };
         RobotList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
+        };
+        RobotList.prototype.getFormReturn = function (e) {
+            var data = e[0].contentWindow.document.body.innerText;
+            if (data) {
+                data = JSON.parse(data);
+            }
+            else {
+                window.layer.msg("提交失败!");
+            }
+            ;
         };
         return RobotList;
     }(ChartBase));

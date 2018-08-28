@@ -54,7 +54,14 @@
          * 事件绑定
          */
         bindEvent() {
+            let self:IndexMain = this;
+
             this.windowEvent();
+
+            // 绑定iframe表单的加载事件
+            $("#formReturn").on("load",function(){
+                self.detail.currentChart.getFormReturn(this);
+            });
         }
         
         /**
@@ -1312,6 +1319,12 @@
          * 冻结用户
          */
         frozen(){}
+
+        /**
+         * 获取表单提交的返回信息
+         * @param {HTMLElement} e [表单元素]
+         */
+        getFormReturn(e:HTMLElement){}
     }
 
     // 统计用户
@@ -1600,7 +1613,7 @@
         search(query:string) {
             if(!/^\d*$/.test(query)) {
                 (<any>window).layer.msg("请填写正确的用户编号");
-            } else if(query){
+            } else {
                 this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
             };
         }
@@ -1909,12 +1922,152 @@
 
     // 订单列表
     class OrderList extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        template = { // 模板
+            "routerTemp":"mallListTemp",
+            "detail":"mallListDetail"
+        };
 
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+            let self:FreezeList = this;
+            self.render({});
+
+            // _load(true);
+            // (<Function>_resource.robotList)(JSON.stringify({
+            //     "page_size":pageSize,
+            //     "page_index":pageNo,
+            //     "token":this.mainView.mainView.token
+            // }),function(data:any){
+            //     if(!self.$el) {
+                    // self.render(data);
+            //     } else {
+            //         // 设置总页数
+            //         self.pading.setTotal(data.count);
+            //     };
+            //     self.renderDetail(data)
+            //     _load(false);
+            // });
+        }
+
+        /**
+         * 页面渲染
+         * @param {object} data [数据]
+         */
+        render(data:any) {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-orderList");
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
     }
 
     // 商城商品
     class MallList extends ChartBase {
+        $el:JQuery<HTMLElement> = null;
+        template = { // 模板
+            "routerTemp":"mallListTemp",
+            "detail":"mallListDetail"
+        };
 
+        constructor(props:any) {
+            super(props);
+            $.extend(this,props);
+        }
+
+        /**
+         * 数据获取
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+            let self:FreezeList = this;
+            self.render({});
+
+            // _load(true);
+            // (<Function>_resource.robotList)(JSON.stringify({
+            //     "page_size":pageSize,
+            //     "page_index":pageNo,
+            //     "token":this.mainView.mainView.token
+            // }),function(data:any){
+            //     if(!self.$el) {
+                    // self.render(data);
+            //     } else {
+            //         // 设置总页数
+            //         self.pading.setTotal(data.count);
+            //     };
+            //     self.renderDetail(data)
+            //     _load(false);
+            // });
+        }
+
+        /**
+         * 页面渲染
+         * @param {object} data [数据]
+         */
+        render(data:any) {
+            let header:CHeader = this.mainView.mainView.header;
+            header.showMenu();
+
+            this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+            this.$el = $(".m-mallList");
+            this.bindEvent();
+        }
+
+        /**
+         * 事件绑定
+         */
+        bindEvent() {
+        }
+
+        /**
+         * 渲染详情
+         * @param {Object} data [数据]
+         */
+        renderDetail(data:any) {
+        }
+
+        /**
+         * 页码变更
+         * @param {number} pageNo [页码]
+         * @param {number} pageSize [每页条数]
+         */
+        changePading(pageNo:number,pageSize:number) {
+            this.fetch(pageNo,pageSize);
+        }
     }
 
     // 机器人弹幕
@@ -1922,7 +2075,7 @@
         $el:JQuery<HTMLElement> = null;
         template = { // 模板
             "routerTemp":"robotListTemp",
-            "detail":"robotDetail"
+            "detail":"robotListDetail"
         };
 
         constructor(props:any) {
@@ -1989,6 +2142,19 @@
          */
         changePading(pageNo:number,pageSize:number) {
             this.fetch(pageNo,pageSize);
+        }
+
+        /**
+         * 获取表单提交的返回信息
+         * @param {HTMLElement} e [表单元素]
+         */
+        getFormReturn(e:HTMLElement) {
+            var data = e[0].contentWindow.document.body.innerText;
+            if(data) {
+                data = JSON.parse(data);
+            } else {
+                (<any>window).layer.msg("提交失败!");
+            };
         }
     }
 

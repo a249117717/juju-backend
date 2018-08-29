@@ -1,16 +1,16 @@
-var _domain = "http://39.108.151.200:9999", _router = {
-    "statisticalUser": "StatisticalUser",
-    "userList": "UserList",
-    "payStatistical": "PayStatistical",
-    "diamond": "Diamond",
-    "freezeList": "FreezeList",
-    "orderList": "OrderList",
-    "mallList": "MallList",
-    "robotList": "RobotList",
-    "infoQuery": "InfoQuery",
-    "messageList": "MessageList",
-    "systemNotice": "SystemNotice"
-}, _pageSize = 10;
+var _domain = "http://39.108.151.200:9999", _router = [
+    "statisticalUser",
+    "userList",
+    "payStatistical",
+    "diamond",
+    "freezeList",
+    "orderList",
+    "mallList",
+    "robotList",
+    "infoQuery",
+    "messageList",
+    "systemNotice"
+], _pageSize = 10;
 var _loadObject = null, _resource = {
     "login": {
         "url": _domain + "/v1/backend/public/login"

@@ -193,49 +193,6 @@
     <!-- 提交表单后服务器返回的信息 -->
     <iframe id="formReturn" name="formReturn" class="hide"></iframe>
 
-    <!-- 统计用户模板 -->
-    <script id="statisticalTemp" type="text/html">
-        <div class="m-statisticalUser defaultTable">
-                <div id="diagram"></div>
-            <div class="detail">
-                <div class="title-out">
-                    <div class="title">详情</div>
-                    <div class="subtitle">图表详情</div>
-                </div>
-                <table class="info" border="0">
-                </table>
-            </div>
-        </div>
-    </script>
-    <!-- 统计用户详情 -->
-    <script id="statisticalDetail" type="text/html">
-        <thead>
-            <tr>
-                <th>创建时间</th>
-                <th>日活跃</th>
-                <th>日注册人数</th>
-                <th>月活跃</th>
-                <th>七日</th>
-                <th>三日</th>
-                <th>两日</th>
-                <th>总注册人数</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{ each data as en }}
-                <tr>
-                    <td>{{ formatData(en.create_time) }}</td>
-                    <td>{{ en.dau }}</td>
-                    <td>{{ en.day_register }}</td>
-                    <td>{{ en.mau }}</td>
-                    <td>{{ en.seven_day }}</td>
-                    <td>{{ en.three_day }}</td>
-                    <td>{{ en.two_day }}</td>
-                    <td>{{ en.total_register }}</td>
-                </tr>
-            {{ /each }}
-        </tbody>
-    </script>
     <!-- 用户列表模板 -->
     <script id="userListTemp" type="text/html">
         <div class="m-userList defaultTable">

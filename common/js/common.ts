@@ -1,19 +1,17 @@
 const _domain:string = "http://39.108.151.200:9999",
-_router:{
-    [index:string]:string
-} = {   // 路由器(key:hash值，value:对应调用的类)
-    "statisticalUser":"StatisticalUser", // 统计用户
-    "userList":"UserList",  // 用户列表
-    "payStatistical":"PayStatistical",  // 付费用户
-    "diamond":"Diamond",  // 钻石流水
-    "freezeList":"FreezeList",  // 冻结名单
-    "orderList":"OrderList",    // 订单列表
-    "mallList":"MallList",  // 商城商品
-    "robotList":"RobotList",    // 机器人弹幕
-    "infoQuery":"InfoQuery",  // 信息查询
-    "messageList":"MessageList", // 消息列表
-    "systemNotice":"SystemNotice" // 系统公告
-},
+_router:Array<string> = [   // 路由器(key:hash值，value:对应调用的类)
+    "statisticalUser", // 统计用户
+    "userList",  // 用户列表
+    "payStatistical",  // 付费用户
+    "diamond",  // 钻石流水
+    "freezeList",  // 冻结名单
+    "orderList",    // 订单列表
+    "mallList",  // 商城商品
+    "robotList",    // 机器人弹幕
+    "infoQuery",  // 信息查询
+    "messageList", // 消息列表
+    "systemNotice" // 系统公告
+],
 _pageSize:number = 10;   // 默认每个详情页面的行数统一为10条
 
 let _loadObject:any = null, // 存储load对象

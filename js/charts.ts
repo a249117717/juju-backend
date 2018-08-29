@@ -2074,6 +2074,7 @@
     // 机器人弹幕
     class RobotList extends ChartBase {
         $el:JQuery<HTMLElement> = null;
+        $add:JQuery<HTMLElement> = null;
         template = { // 模板
             "routerTemp":"robotListTemp",
             "detail":"robotListDetail"
@@ -2120,6 +2121,7 @@
 
             this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
             this.$el = $(".m-robotList");
+            this.$add = this.$el.find(".addCurtain")
             this.bindEvent();
         }
 
@@ -2127,6 +2129,40 @@
          * 事件绑定
          */
         bindEvent() {
+            let self:RobotList = this;
+
+            // 新增弹幕的重置按钮
+            this.$add.find(".btn-reset").on("click",() => {
+                (<HTMLFormElement>this.$add.find("form")[0]).reset();
+            });
+
+            // 新增弹幕的确定按钮
+            this.$add.find(".btn-submit").on("click",function() {
+                if(!self.messageCheck(self.$add)) {
+                    return;
+                };
+
+                (<any>window).layer.confirm("是否确认增加机器人弹幕",function(e){
+                    _load(true);
+                    (<Function>_resource.addRobot)(JSON.stringify(self.getMessage(self.$add)),function(data){
+                        // 重置新增框
+                        self.$add.find(".btn-reset").click();
+                        // 刷新数据列表
+                        self.fetch();
+                        (<any>window).layer.msg("增加成功");
+                        (<any>window).layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+
+            // 增加消息生日日期
+            (<any>window).laydate.render({
+                elem: '.m-addContent .birthday',
+                type: 'date',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
         }
 
         /**
@@ -2134,6 +2170,63 @@
          * @param {Object} data [数据]
          */
         renderDetail(data:any) {
+        }
+
+        /**
+         * 消息数据校验
+         * @param {JQuery<HTMLElement>} $JQ [JQuery对象]
+         * @return {Boolean} bool [校验是否通过,true为通过,false为失败]
+         */
+        messageCheck($JQ:JQuery<HTMLElement>) : boolean {
+            let tip:string = "",
+            phone:string = <string>$JQ.find(".phone").val();
+
+            if(!$JQ.find(".nickname").val()) {
+                tip = "请输入昵称";
+            } else if(!$JQ.find(".sign").val()) {
+                tip = "请输入签名";
+            } else if(!phone) {
+                if(/^\d*$/.test(phone)) {
+                    tip = "请输入正确的手机号";
+                } else {
+                    tip = "请输入手机号";
+                };  
+            } else if(!$JQ.find(".birthday").val()) {
+                tip = "请选择生日日期";
+            } else if(!$JQ.find(".reason").val()) {
+                tip = "请输入推送内容";
+            };
+
+            if(tip) {
+                (<any>window).layer.msg(tip);
+                return false;
+            };
+
+            return true;
+        };
+
+        /**
+         * 获取需要提交的消息数据
+         * @param {JQuery<HTMLElement>} $JQ [JQuery对象]
+         * @return {object} option {提交数据}
+         */
+        getMessage($JQ:JQuery<HTMLElement>) : any {
+            let option:any = {
+                "name":$JQ.find(".nickname").val(), // 昵称
+                "sign":$JQ.find(".sign").val(), // 签名
+                "sex":parseInt(<string>$JQ.find(".operation").val()),    // 性别
+                "text":$JQ.find(".reason").val(),   // 推送内容
+                "head_img":"",  // 头像url
+                "phone":parseInt(<string>$JQ.find(".phone").val()),   // 手机
+                "birthday":0,  // 生日日期
+                "token":this.mainView.mainView.token
+            };
+
+            // 获取生日日期
+            let date:Date = new Date(<string>$JQ.find(".birthday").val());
+            option.birthday = parseInt(<any>(date.getTime()/1000));
+
+            return option;
         }
 
         /**
@@ -2304,7 +2397,7 @@
 
             // 重置增加消息框
             this.$add.find(".btn-reset").on("click",() => {
-                this.initAddMeesage();
+                (<HTMLFormElement>this.$add.find("form")[0]).reset();
             });
 
             // 增加消息确定按钮
@@ -2316,12 +2409,31 @@
                 (<any>window).layer.confirm("是否确认增加消息",function(e){
                     _load(true);
                     (<Function>_resource.addMessage)(JSON.stringify(self.getMessage(self.$add)),function(data){
-                        self.initAddMeesage(true);
+                        // 重置新增框
+                        self.$add.find(".btn-reset").click();
+                        // 刷新数据列表
+                        self.fetch();
                         (<any>window).layer.msg("增加成功");
                         (<any>window).layer.close(e);
                         _load(false);
                     })
                 });
+            });
+
+            // 增加消息发送时间
+            (<any>window).laydate.render({
+                elem: '.m-addContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+
+            // 更新消息发送时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
             });
 
             // 发送对象选择(增加消息)
@@ -2533,23 +2645,6 @@
         };
 
         /**
-         * 初始化增加消息框
-         * @param {boolean} isRender [是否渲染列表，默认为false]
-         */
-        initAddMeesage(isRender:boolean = false) {
-            let $add:JQuery<HTMLElement> = this.$add;
-
-            // 重置发送对象
-            $add.find(".operation:eq(0)").prop("checked",true).trigger("change");
-            // 重置用户编号，消息内容和发送时间
-            $add.find(".uid,.reason,.sendTime").val("");
-
-            if(isRender) {
-                this.fetch();
-            };
-        }
-
-        /**
          * 页码变更
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数]
@@ -2640,7 +2735,7 @@
 
             // 重置增加消息框
             this.$add.find(".btn-reset").on("click",() => {
-                this.initAddNotice();
+                (<HTMLFormElement>this.$add.find("form")[0]).reset();
             });
 
             // 增加消息确定按钮
@@ -2652,12 +2747,47 @@
                 (<any>window).layer.confirm("是否确认增加公告",function(e){
                     _load(true);
                     (<Function>_resource.addSNotice)(JSON.stringify(self.getNotice(self.$add)),function(data){
-                        self.initAddNotice(true);
+                        // 重置新增框
+                        self.$add.find(".btn-reset").click();
+                        // 刷新数据列表
+                        self.fetch();
                         (<any>window).layer.msg("增加成功");
                         (<any>window).layer.close(e);
                         _load(false);
                     })
                 });
+            });
+
+            // 增加消息开始时间
+            (<any>window).laydate.render({
+                elem: '.m-addContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+
+            // 增加消息结束时间
+            (<any>window).laydate.render({
+                elem: '.m-addContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+
+            // 更新消息开始时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+
+            // 更新消息结束时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
             });
 
             // 发送间隔输入

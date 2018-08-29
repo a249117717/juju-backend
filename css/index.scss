@@ -171,6 +171,7 @@ body{
             padding:5px;
             width:320px;
             height:100px;
+            border:1px solid #ebebeb;
             resize: none;
         }
 
@@ -1235,24 +1236,15 @@ body{
     }
 }
 
-.m-messageList {
+.m-messageList,
+.m-systemNotice,
+.m-robotList {
 
-    .addMessage {
+    .m-addContent {
         @include addmessage;
     }
 
-    .updateMessage {
-        @include updateMessage;
-    }
-}
-
-.m-systemNotice {
-
-    .addNotice {
-        @include addmessage;
-    }
-
-    .updateNotice {
+    .m-updateContent {
         @include updateMessage;
     }
 }

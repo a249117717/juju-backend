@@ -1413,6 +1413,7 @@ var __extends = (this && this.__extends) || (function () {
         function RobotList(props) {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
+            _this.$add = null;
             _this.template = {
                 "routerTemp": "robotListTemp",
                 "detail": "robotListDetail"
@@ -1431,11 +1432,86 @@ var __extends = (this && this.__extends) || (function () {
             header.showMenu();
             this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
             this.$el = $(".m-robotList");
+            this.$add = this.$el.find(".addCurtain");
             this.bindEvent();
         };
         RobotList.prototype.bindEvent = function () {
+            var _this = this;
+            var self = this;
+            this.$add.find(".btn-reset").on("click", function () {
+                _this.$add.find("form")[0].reset();
+            });
+            this.$add.find(".btn-submit").on("click", function () {
+                if (!self.messageCheck(self.$add)) {
+                    return;
+                }
+                ;
+                window.layer.confirm("是否确认增加机器人弹幕", function (e) {
+                    _load(true);
+                    _resource.addRobot(JSON.stringify(self.getMessage(self.$add)), function (data) {
+                        self.$add.find(".btn-reset").click();
+                        self.fetch();
+                        window.layer.msg("增加成功");
+                        window.layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
+            window.laydate.render({
+                elem: '.m-addContent .birthday',
+                type: 'date',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
         };
         RobotList.prototype.renderDetail = function (data) {
+        };
+        RobotList.prototype.messageCheck = function ($JQ) {
+            var tip = "", phone = $JQ.find(".phone").val();
+            if (!$JQ.find(".nickname").val()) {
+                tip = "请输入昵称";
+            }
+            else if (!$JQ.find(".sign").val()) {
+                tip = "请输入签名";
+            }
+            else if (!phone) {
+                if (/^\d*$/.test(phone)) {
+                    tip = "请输入正确的手机号";
+                }
+                else {
+                    tip = "请输入手机号";
+                }
+                ;
+            }
+            else if (!$JQ.find(".birthday").val()) {
+                tip = "请选择生日日期";
+            }
+            else if (!$JQ.find(".reason").val()) {
+                tip = "请输入推送内容";
+            }
+            ;
+            if (tip) {
+                window.layer.msg(tip);
+                return false;
+            }
+            ;
+            return true;
+        };
+        ;
+        RobotList.prototype.getMessage = function ($JQ) {
+            var option = {
+                "name": $JQ.find(".nickname").val(),
+                "sign": $JQ.find(".sign").val(),
+                "sex": parseInt($JQ.find(".operation").val()),
+                "text": $JQ.find(".reason").val(),
+                "head_img": "",
+                "phone": parseInt($JQ.find(".phone").val()),
+                "birthday": 0,
+                "token": this.mainView.mainView.token
+            };
+            var date = new Date($JQ.find(".birthday").val());
+            option.birthday = parseInt((date.getTime() / 1000));
+            return option;
         };
         RobotList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
@@ -1557,7 +1633,7 @@ var __extends = (this && this.__extends) || (function () {
             var _this = this;
             var self = this;
             this.$add.find(".btn-reset").on("click", function () {
-                _this.initAddMeesage();
+                _this.$add.find("form")[0].reset();
             });
             this.$add.find(".btn-submit").on("click", function () {
                 if (!self.messageCheck(self.$add)) {
@@ -1567,12 +1643,25 @@ var __extends = (this && this.__extends) || (function () {
                 window.layer.confirm("是否确认增加消息", function (e) {
                     _load(true);
                     _resource.addMessage(JSON.stringify(self.getMessage(self.$add)), function (data) {
-                        self.initAddMeesage(true);
+                        self.$add.find(".btn-reset").click();
+                        self.fetch();
                         window.layer.msg("增加成功");
                         window.layer.close(e);
                         _load(false);
                     });
                 });
+            });
+            window.laydate.render({
+                elem: '.m-addContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
             });
             this.$add.find(".operation").on("change", function () {
                 var $this = $(this);
@@ -1725,16 +1814,6 @@ var __extends = (this && this.__extends) || (function () {
             $update.find(".reason").val(content);
         };
         ;
-        MessageList.prototype.initAddMeesage = function (isRender) {
-            if (isRender === void 0) { isRender = false; }
-            var $add = this.$add;
-            $add.find(".operation:eq(0)").prop("checked", true).trigger("change");
-            $add.find(".uid,.reason,.sendTime").val("");
-            if (isRender) {
-                this.fetch();
-            }
-            ;
-        };
         MessageList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
         };
@@ -1803,7 +1882,7 @@ var __extends = (this && this.__extends) || (function () {
             var _this = this;
             var self = this;
             this.$add.find(".btn-reset").on("click", function () {
-                _this.initAddNotice();
+                _this.$add.find("form")[0].reset();
             });
             this.$add.find(".btn-submit").on("click", function () {
                 if (!self.noticeCheck(self.$add)) {
@@ -1813,12 +1892,37 @@ var __extends = (this && this.__extends) || (function () {
                 window.layer.confirm("是否确认增加公告", function (e) {
                     _load(true);
                     _resource.addSNotice(JSON.stringify(self.getNotice(self.$add)), function (data) {
-                        self.initAddNotice(true);
+                        self.$add.find(".btn-reset").click();
+                        self.fetch();
                         window.layer.msg("增加成功");
                         window.layer.close(e);
                         _load(false);
                     });
                 });
+            });
+            window.laydate.render({
+                elem: '.m-addContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+            window.laydate.render({
+                elem: '.m-addContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm'
             });
             this.$add.find(".inter").on("input", function () {
                 var $this = $(this), val = $this.val();

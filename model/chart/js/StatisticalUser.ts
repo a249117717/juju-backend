@@ -38,7 +38,7 @@ class StatisticalUser extends ChartBase {
             "end_time":end,
             "token":this.mainView.mainView.token
         }),function(data:any){
-            if(!self.$el) {
+            if(!this.activation) {
                 self.render(data);
             };
             self.renderDetail(data)
@@ -54,7 +54,7 @@ class StatisticalUser extends ChartBase {
         header.showMenu(false,true,false,this.maxDate);
         
 
-        this.mainView.renderByChildren((<any>window).template(this.template.routerTemp,data));
+        this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
         this.$el = $(".m-statisticalUser");
 
         this.chart = new (<any>window).G2.Chart({
@@ -80,7 +80,7 @@ class StatisticalUser extends ChartBase {
      * @param {Object} data [数据]
      */
     renderDetail(data:any) {
-        this.$el.find(".info").html((<any>window).template(this.template.detail,data));
+        this.$el.find(".info").html((<any>window).template.compile(this.template.detail)(data));
         this.renderChart(data);
     }
 

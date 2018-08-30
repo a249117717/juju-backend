@@ -40,7 +40,7 @@ var StatisticalUser = (function (_super) {
             "end_time": end,
             "token": this.mainView.mainView.token
         }), function (data) {
-            if (!self.$el) {
+            if (!this.activation) {
                 self.render(data);
             }
             ;
@@ -51,7 +51,7 @@ var StatisticalUser = (function (_super) {
     StatisticalUser.prototype.render = function (data) {
         var header = this.mainView.mainView.header;
         header.showMenu(false, true, false, this.maxDate);
-        this.mainView.renderByChildren(window.template(this.template.routerTemp, data));
+        this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
         this.$el = $(".m-statisticalUser");
         this.chart = new window.G2.Chart({
             container: 'diagram',
@@ -66,7 +66,7 @@ var StatisticalUser = (function (_super) {
     };
     StatisticalUser.prototype.bindEvent = function () { };
     StatisticalUser.prototype.renderDetail = function (data) {
-        this.$el.find(".info").html(window.template(this.template.detail, data));
+        this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
         this.renderChart(data);
     };
     StatisticalUser.prototype.renderChart = function (data) {
@@ -146,4 +146,4 @@ var StatisticalUser = (function (_super) {
     return StatisticalUser;
 }(ChartBase));
 window["Process"] = StatisticalUser;
-//# sourceMappingURL=StatisticalUser.js.map
+//# sourceMappingURL=statisticalUser.js.map

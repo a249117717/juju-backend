@@ -1,0 +1,19 @@
+<!-- 钻石流水详情 -->
+<thead>
+    <tr>
+        <th>创建时间</th>
+        <th>编号</th>
+        <th>姓名</th>
+        <th>钻石数</th>
+    </tr>
+</thead>
+<tbody>
+    {{ each data as en }}
+        <tr>
+            <td>{{ formatData(en.create_time) }}</td>
+            <td>{{ en.uid }}</td>
+            <td>{{ en.name }}</td>
+            <td>{{ en.bean }}</td>
+        </tr>
+    {{ /each }}
+</tbody>

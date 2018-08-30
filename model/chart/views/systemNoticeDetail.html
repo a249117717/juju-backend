@@ -1,0 +1,28 @@
+<!-- 系统公告详情 -->
+<thead>
+    <tr>
+        <th>编号</th>
+        <th>创建时间</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>发送间隔(s)</th>
+        <th>内容</th>
+        <th>操作</th>
+    </tr>
+</thead>
+<tbody>
+    {{ each data as en }}
+        <tr>
+            <td>{{ en.id }}</td>
+            <td>{{ formatData(en.create_time) }}</td>
+            <td class="startDate">{{ formatData(en.start_time,1) }}</td>
+            <td class="endDate">{{ formatData(en.end_time,1) }}</td>
+            <td class="inter">{{ en.interval }}</td>
+            <td class="ncontent">{{ en.content }}</td>
+            <td>
+                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" nid="{{ en.id }}">删除</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey" nid="{{ en.id }}">更新</button>
+            </td>
+        </tr>
+    {{ /each }}
+</tbody>

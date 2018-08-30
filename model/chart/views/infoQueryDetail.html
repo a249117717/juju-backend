@@ -1,0 +1,49 @@
+<!-- 信息查询详情 -->
+<table class="info" border="0">
+    <tr>
+        <td>用户编号</td>
+        <td>{{ data.uid }}</td>
+    </tr>
+    <tr>
+        <td>姓名</td>
+        <td>{{ data.name }}</td>
+    </tr>
+    <tr>
+        <td>性别</td>
+        <td>{{ data.sex == "1"?"男":"女" }}</td>
+    </tr>
+    <tr>
+        <td>生日</td>
+        <td>{{ formatData(data.birthday) }}</td>
+    </tr>
+    <tr>
+        <td>星座</td>
+        <td>{{ data.constellation }}</td>
+    </tr>
+    <tr>
+        <td>游戏时间</td>
+        <td>{{ data.game_time }}</td>
+    </tr>
+    <tr>
+        <td>邀请码</td>
+        <td>{{ data.invite_code }}</td>
+    </tr>
+    <tr>
+        <td>积分</td>
+        <td>{{ data.score }}</td>
+    </tr>
+    <tr>
+        <td>vip</td>
+        <td>{{ data.vip }}</td>
+    </tr>
+    <tr>
+        <td>vip到期时间</td>
+        <td>{{ data.vip_expire_time }}</td>
+    </tr>
+    <tr>
+        <td>头像</td>
+        <td>
+            <img class="pic" src="{{ data.head_img }}">
+        </td>
+    </tr>
+</table>

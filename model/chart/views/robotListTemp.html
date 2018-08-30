@@ -1,0 +1,80 @@
+<!-- 机器人弹幕模板 -->
+<div class="m-robotList defaultTable">
+    <!-- 新增弹幕 -->
+    <div class="m-addContent addCurtain">
+        <form onsubmit="return false;">
+            <div class="title">新增弹幕</div>
+            <div class="input-group">
+                <div class="group">
+                    <div class="tip">昵称</div>
+                    <div class="descript">
+                        <input class="nickname defaultInput" type="text" placeholder="请输入机器用户昵称">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">头像url</div>
+                    <div class="descript">
+                        <input class="avatarUrl defaultInput" type="text" placeholder="请输入机器人头像的url">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">签名</div>
+                    <div class="descript">
+                        <input class="sign defaultInput" type="text" placeholder="请输入签名">
+                    </div>
+                </div>
+                <div class="group mdui-theme-accent-blue">
+                    <div class="tip">性别</div>
+                    <div class="descript">
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="sex" checked value="1"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>男</span>
+                        </label>
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="sex" value="2"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>女</span>
+                        </label>
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="sex" value="0"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>未知</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">手机号</div>
+                    <div class="descript">
+                        <input class="phone defaultInput" type="text" placeholder="请输入手机号">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">生日日期</div>
+                    <div class="descript">
+                        <input class="birthday defaultInput" type="text" readonly placeholder="请点击选择生日日期">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">推送内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入推送内容"></textarea>    
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
+            </div>
+        </form>
+    </div>
+    <div class="detail">
+        <div class="title-out">
+            <div class="title">详情</div>
+            <div class="subtitle">Detail</div>
+        </div>
+        <table class="info" border="0">
+        </table>
+        <pading count="{{ count }}"></pading>
+    </div>
+</div>

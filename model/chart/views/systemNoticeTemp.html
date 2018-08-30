@@ -1,0 +1,91 @@
+<!-- 系统公告模板 -->
+<div class="m-systemNotice defaultTable">
+    <!-- 更新公告 -->
+    <div class="m-updateContent updateNotice">
+        <div class="content">
+            <div class="title">更新公告</div>
+            <div class="input-group">
+                <div class="group">
+                    <div class="tip">公告编号</div>
+                    <div class="descript">
+                        <input class="nid defaultInput" disabled>
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">开始时间</div>
+                    <div class="descript">
+                        <input class="startDate defaultInput" type="text" readonly placeholder="请点击选择开始时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">结束时间</div>
+                    <div class="descript">
+                        <input class="endDate defaultInput" type="text" readonly placeholder="请点击选择结束时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">发送间隔</div>
+                    <div class="descript">
+                        <input old="0" class="inter defaultInput" type="text" placeholder="请输入发送间隔(s)">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">公告内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入公告内容"></textarea>    
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
+    <!-- 新增公告 -->
+    <div class="m-addContent addNotice">
+        <form onsubmit="return false;">
+            <div class="title">新增公告</div>
+            <div class="input-group">
+                <div class="group">
+                    <div class="tip">开始时间</div>
+                    <div class="descript">
+                        <input class="startDate defaultInput" type="text" readonly placeholder="请点击选择开始时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">结束时间</div>
+                    <div class="descript">
+                        <input class="endDate defaultInput" type="text" readonly placeholder="请点击选择结束时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">发送间隔</div>
+                    <div class="descript">
+                        <input class="inter defaultInput" old="0" type="text" placeholder="请输入发送间隔(s)">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">公告内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入公告内容"></textarea>    
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="title-out">
+                <div class="title">详情</div>
+                <div class="subtitle">Detail</div>
+            </div>
+            <table class="info" border="0">
+            </table>
+            <pading count="{{ count }}"></pading>
+        </div>
+    </form>
+</div>

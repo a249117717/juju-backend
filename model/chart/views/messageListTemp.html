@@ -1,0 +1,109 @@
+<!-- 消息列表模板 -->
+<div class="m-messageList defaultTable">
+    <!-- 更新消息 -->
+    <div class="m-updateContent updateMessage">
+        <div class="content">
+            <div class="title">更新消息</div>
+            <div class="input-group">
+                <div class="group">
+                    <div class="tip">消息编号</div>
+                    <div class="descript">
+                        <input class="mid defaultInput" disabled>
+                    </div>
+                </div>
+                <div class="group mdui-theme-accent-blue">
+                    <div class="tip">发送对象</div>
+                    <div class="descript">
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="updateMessage" checked value="0"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>全服</span>
+                        </label>
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="updateMessage" value="1"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>个人</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="group inputUid">
+                    <div class="tip">用户编号</div>
+                    <div class="descript">
+                        <input class="uid defaultInput" type="text">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">发送时间</div>
+                    <div class="descript">
+                        <input class="sendTime defaultInput" type="text" readonly placeholder="请点击选择发送时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">消息内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入消息内容"></textarea>    
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
+    <!-- 新增消息 -->
+    <div class="m-addContent addMessage">
+        <form onsubmit="return false;">
+            <div class="title">新增消息</div>
+            <div class="input-group">
+                <div class="group mdui-theme-accent-blue">
+                    <div class="tip">发送对象</div>
+                    <div class="descript">
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="addMessage" checked value="0"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>全服</span>
+                        </label>
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="addMessage" value="1"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>个人</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="group inputUid">
+                    <div class="tip">用户编号</div>
+                    <div class="descript">
+                        <input class="uid defaultInput" type="text">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">发送时间</div>
+                    <div class="descript">
+                        <input class="add sendTime defaultInput" type="text" readonly placeholder="请点击选择发送时间">
+                    </div>
+                </div>
+                <div class="group">
+                    <div class="tip">消息内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入消息内容"></textarea>    
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
+            </div>
+        </form>
+    </div>
+    <div class="detail">
+        <div class="title-out">
+            <div class="title">详情</div>
+            <div class="subtitle">Detail</div>
+        </div>
+        <table class="info" border="0">
+        </table>
+        <pading count="{{ count }}"></pading>
+    </div>
+</div>

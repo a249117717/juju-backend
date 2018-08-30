@@ -17,7 +17,6 @@ img{vertical-align:top} /* 图片在当前行内的垂直位置 */
 /* 页面设置 */
 /* 取消a标签点击后的虚线框 */
 a {outline:none;}
-a:active {star:expression(this.onFocus=this.blur());}
 /* 设置页面文字等在拖动鼠标选中情况下的背景色与文字颜色 */
 /*
 ::selection {color: #fff;background-color: #4C6E78;}

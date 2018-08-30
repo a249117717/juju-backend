@@ -8,39 +8,41 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var OrderList = (function (_super) {
-    __extends(OrderList, _super);
-    function OrderList(props) {
-        var _this = _super.call(this, props) || this;
-        _this.$el = null;
-        _this.template = {
-            "routerTemp": "mallListTemp",
-            "detail": "mallListDetail"
+define(["text!model/chart/views/mallListTemp.html", "text!model/chart/views/mallListDetail.html"], function (mallListTemp, mallListDetail) {
+    var OrderList = (function (_super) {
+        __extends(OrderList, _super);
+        function OrderList(props) {
+            var _this = _super.call(this, props) || this;
+            _this.$el = null;
+            _this.template = {
+                "routerTemp": mallListTemp,
+                "detail": mallListDetail
+            };
+            $.extend(_this, props);
+            return _this;
+        }
+        OrderList.prototype.fetch = function (pageNo, pageSize) {
+            if (pageNo === void 0) { pageNo = 1; }
+            if (pageSize === void 0) { pageSize = _pageSize; }
+            var self = this;
+            self.render({});
         };
-        $.extend(_this, props);
-        return _this;
-    }
-    OrderList.prototype.fetch = function (pageNo, pageSize) {
-        if (pageNo === void 0) { pageNo = 1; }
-        if (pageSize === void 0) { pageSize = _pageSize; }
-        var self = this;
-        self.render({});
-    };
-    OrderList.prototype.render = function (data) {
-        var header = this.mainView.mainView.header;
-        header.showMenu();
-        this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
-        this.$el = $(".m-orderList");
-        this.bindEvent();
-    };
-    OrderList.prototype.bindEvent = function () {
-    };
-    OrderList.prototype.renderDetail = function (data) {
-    };
-    OrderList.prototype.changePading = function (pageNo, pageSize) {
-        this.fetch(pageNo, pageSize);
-    };
+        OrderList.prototype.render = function (data) {
+            var header = this.mainView.mainView.header;
+            header.showMenu();
+            this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
+            this.$el = $(".m-orderList");
+            this.bindEvent();
+        };
+        OrderList.prototype.bindEvent = function () {
+        };
+        OrderList.prototype.renderDetail = function (data) {
+        };
+        OrderList.prototype.changePading = function (pageNo, pageSize) {
+            this.fetch(pageNo, pageSize);
+        };
+        return OrderList;
+    }(ChartBase));
     return OrderList;
-}(ChartBase));
-window["Process"] = OrderList;
+});
 //# sourceMappingURL=orderList.js.map

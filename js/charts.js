@@ -301,19 +301,14 @@ var CDetail = (function () {
         }
     };
     CDetail.prototype.callChartBySide = function (fileName) {
-        if (this.moduleObject[fileName]) {
-            if (this.currentChart) {
-                this.currentChart.activation = false;
-            }
-            ;
-            this.moduleObject[fileName].fetch();
-            this.moduleObject[fileName].activation = true;
-            this.currentChart = this.moduleObject[fileName];
-        }
-        else {
-            this.introductionJS(fileName);
-        }
-        ;
+        var _this = this;
+        require([fileName], function (obj) {
+            var currentChart = new obj({
+                mainView: _this
+            });
+            currentChart.fetch();
+            _this.currentChart = currentChart;
+        });
         this.mainView.header.setTitle(this.mainView.side.$el.find(".active").text());
     };
     CDetail.prototype.component = function (componentClass) {
@@ -323,60 +318,6 @@ var CDetail = (function () {
             mainView: this.currentChart
         });
         this.currentChart[className].fetch();
-    };
-    CDetail.prototype.introductionJS = function (fileName) {
-        var script = document.createElement("script");
-        script.setAttribute("type", "text/javascript");
-        script.setAttribute("src", "model/chart/js/" + fileName + ".js");
-        document.body.appendChild(script);
-        if (script.readyState) {
-            script.onreadystatechange = function () {
-                if (script.readyState == 'complete' || script.readyState == 'loaded') {
-                    script.onreadystatechange = null;
-                    initObject(this);
-                }
-                ;
-            }.bind(this);
-        }
-        else {
-            script.onload = function () {
-                initObject(this);
-            }.bind(this);
-        }
-        ;
-        function initObject(obj) {
-            obj.moduleObject[fileName] = new window["Process"]({
-                mainView: obj
-            });
-            obj.currentChart = obj.moduleObject[fileName];
-            obj.introductionHtml(obj.moduleObject[fileName]);
-            window["Process"] = null;
-        }
-        ;
-    };
-    CDetail.prototype.introductionHtml = function (obj) {
-        var self = this, en = "";
-        for (en in obj.template) {
-            !(function (obj, name) {
-                $(document).queue("charts", function () {
-                    self.ajax.open('get', "model/chart/views/" + obj.template[name] + ".html");
-                    self.ajax.send();
-                    self.ajax.onreadystatechange = function () {
-                        if (self.ajax.readyState == 4) {
-                            obj.template[name] = self.ajax.responseText;
-                            $(document).dequeue("charts");
-                        }
-                    };
-                });
-            }(obj, en));
-        }
-        ;
-        $(document).queue("charts", function () {
-            obj.fetch();
-            obj.activation = true;
-            $(document).clearQueue("charts");
-        });
-        $(document).dequeue("charts");
     };
     return CDetail;
 }());
@@ -956,7 +897,6 @@ var ChartBase = (function () {
         this.mainView = null;
         this.$el = null;
         this.pading = null;
-        this.activation = false;
         this.completeHtml = false;
         var parent = null;
         $.extend(this, props);

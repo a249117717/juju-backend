@@ -470,21 +470,30 @@ class CDetail {
      * @param {string} fileName [文件名]
      */
     callChartBySide(fileName:string) {
-        if(this.moduleObject[fileName]) {
-            // 将上一个激活对象设置为非激活
-            if(this.currentChart) {
-                this.currentChart.activation = false;
-            };
-            // 如果目录对象存在，则直接调用fetch
-            this.moduleObject[fileName].fetch();
-            // 设置当前对象为激活状态
-            this.moduleObject[fileName].activation = true;
-            // 变更当前激活对象
-            this.currentChart = this.moduleObject[fileName];
-        } else {
-            // 如果目录对象不存在，则先请求相应的js，然后实例化对象
-            this.introductionJS(fileName);
-        };
+        // 实例化相应的目录对象
+        require([fileName],(obj) => {
+            var currentChart = new obj({
+                mainView:this
+            });
+            currentChart.fetch();
+            this.currentChart = currentChart;
+        });
+
+        // if(this.moduleObject[fileName]) {
+        //     // 将上一个激活对象设置为非激活
+        //     if(this.currentChart) {
+        //         this.currentChart.activation = false;
+        //     };
+        //     // 如果目录对象存在，则直接调用fetch
+        //     this.moduleObject[fileName].fetch();
+        //     // 设置当前对象为激活状态
+        //     this.moduleObject[fileName].activation = true;
+        //     // 变更当前激活对象
+        //     this.currentChart = this.moduleObject[fileName];
+        // } else {
+        //     // 如果目录对象不存在，则先请求相应的js，然后实例化对象
+        //     this.introductionJS(fileName);
+        // };
 
         // 设置详情内容的左侧标题
         this.mainView.header.setTitle(this.mainView.side.$el.find(".active").text());
@@ -502,77 +511,6 @@ class CDetail {
             mainView:this.currentChart
         });
         this.currentChart[className].fetch();
-    }
-
-    /**
-     * 引入模板的js文件
-     * @param {String} fileName [js文件名]
-     */
-    introductionJS(fileName:string) {
-        let script:any = document.createElement("script"); 
-        script.setAttribute("type","text/javascript"); 
-        script.setAttribute("src",`model/chart/js/${fileName}.js`);
-        document.body.appendChild(script);
-
-        // 判断js文件是否加载完毕
-        if(script.readyState){  // IE
-            script.onreadystatechange = function(){
-                if(script.readyState=='complete'||script.readyState=='loaded'){
-                    script.onreadystatechange=null;
-                    initObject(this);
-                };
-            }.bind(this);
-        } else {    // 非IE
-            script.onload=function(){
-                initObject(this);
-            }.bind(this);
-        };
-
-        // 初始化对象
-        function initObject(obj:CDetail) {
-            // 实例化对象
-            obj.moduleObject[fileName] = new window["Process"]({
-                mainView:obj
-            });
-            // 变更当前激活对象
-            obj.currentChart = obj.moduleObject[fileName];
-            // 引入相应的html
-            obj.introductionHtml(obj.moduleObject[fileName]);
-            // 清空缓存
-            window["Process"] = null;
-        };
-    }
-
-    /**
-     * 引入html文件
-     * @param {ChartBase} obj [ChartBase对象]
-     */
-    introductionHtml(obj:ChartBase) {
-        let self:CDetail = this,
-        en:string = "";
-
-        for(en in obj.template) {
-            !(function(obj:ChartBase,name:string){
-                $(document).queue("charts",function(){
-                    // 读取模板
-                    self.ajax.open('get',`model/chart/views/${obj.template[name]}.html`);
-                    self.ajax.send();
-                    self.ajax.onreadystatechange = function () {
-                        if (self.ajax.readyState == 4) {
-                            obj.template[name] = self.ajax.responseText;
-                            $(document).dequeue("charts");
-                    　　}
-                    };
-                });
-            }(obj,en));
-        };
-
-        $(document).queue("charts",function(){
-            obj.fetch();
-            obj.activation = true;
-            $(document).clearQueue("charts");
-        });
-        $(document).dequeue("charts");
     }
 }
 
@@ -1344,10 +1282,6 @@ class ChartBase {
     mainView:CDetail = null;
     $el:JQuery<HTMLElement> = null;
     pading:Pading = null;   // 翻页控件
-    template:{  // 模板
-        [index:string]:string
-    };
-    activation:boolean = false; // 当前对象是否处于激活状态，默认为false
     completeHtml:boolean = false; // 是否载入html完成，默认为false
 
     constructor(props:any) {

@@ -1,15 +1,16 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/messageListDetail.html"],function(messageListTemp,messageListDetail){
+define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/messageListDetail.html","text!model/chart/views/messageListUpdate.html"],function(messageListTemp,messageListDetail,messageListUpdate){
     // 消息列表
     class MessageList extends ChartBase {
         $el:JQuery<HTMLElement> = null;
-        $add:JQuery<HTMLElement> = null;    // 增加消息
+        $add:JQuery<HTMLElement> = null;    // 新增消息
         $update:JQuery<HTMLElement> = null;    // 更新消息
         uid:number = 0; // 用户编号
         template = { // 模板
             "routerTemp":messageListTemp,
-            "detail":messageListDetail
+            "detail":messageListDetail,
+            "update":messageListUpdate
         };
 
         constructor(props:any) {
@@ -65,32 +66,32 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
         bindEvent() {
             let self:MessageList = this;
 
-            // 重置增加消息框
+            // 重置新增消息框
             this.$add.find(".btn-reset").on("click",() => {
                 (<HTMLFormElement>this.$add.find("form")[0]).reset();
             });
 
-            // 增加消息确定按钮
+            // 新增消息确定按钮
             this.$add.find(".btn-submit").on("click",function(){
                 if(!self.messageCheck(self.$add)) {
                     return;
                 };
                 
-                (<any>window).layer.confirm("是否确认增加消息",function(e){
+                (<any>window).layer.confirm("是否确认新增消息",function(e){
                     _load(true);
                     (<Function>_resource.addMessage)(JSON.stringify(self.getMessage(self.$add)),function(data){
                         // 重置新增框
                         self.$add.find(".btn-reset").click();
                         // 刷新数据列表
                         self.fetch();
-                        (<any>window).layer.msg("增加成功");
+                        (<any>window).layer.msg("新增成功");
                         (<any>window).layer.close(e);
                         _load(false);
                     })
                 });
             });
 
-            // 增加消息发送时间
+            // 新增消息发送时间
             (<any>window).laydate.render({
                 elem: '.m-addContent .sendTime',
                 type: 'datetime',
@@ -98,15 +99,7 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
                 format: 'yyyy-MM-dd HH:mm'
             });
 
-            // 更新消息发送时间
-            (<any>window).laydate.render({
-                elem: '.m-updateContent .sendTime',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-
-            // 发送对象选择(增加消息)
+            // 发送对象选择(新增消息)
             this.$add.find(".operation").on("change",function(){
                 let $this:JQuery<HTMLElement> = $(this);
 
@@ -147,20 +140,6 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
                 setTimeout(() => {
                     this.$update.hide()
                 },200);
-            });
-
-            // 发送对象选择(更新消息)
-            this.$update.find(".operation").on("change",function(){
-                let $this:JQuery<HTMLElement> = $(this);
-
-                switch($this.val()) {
-                    case "0":
-                        self.$update.find(".inputUid").hide().find(".uid").val("");
-                    break;
-                    case "1":
-                        self.$update.find(".inputUid").show().find(".uid").focus();
-                    break;
-                };
             });
 
             // 更新消息确定按钮
@@ -230,7 +209,7 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
         getMessage($JQ:JQuery<HTMLElement>) : any {
             let option:any = null;
 
-            if($JQ.hasClass("addMessage")) {    // 增加消息
+            if($JQ.hasClass("addMessage")) {    // 新增消息
                 option =  {
                     "uid":0,    // 用户编号,0表示全服
                     "content":"",   // 消息内容
@@ -279,36 +258,62 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
                 this.$update.addClass("active");
             },10);
 
-            this.initUpdate(parseInt($obj.attr("mid")),parseInt($obj.attr("uid")),<string>$tr.find(".mtime").text(),<string>$tr.find(".mcontent").text());
+            this.initUpdate({
+                "mid":parseInt($obj.attr("mid")),
+                "uid":parseInt($obj.attr("uid")),
+                "send_time":<string>$tr.find(".mtime").text(),
+                "content":<string>$tr.find(".mcontent").text()
+            });
         }
 
         /**
          * 初始化更新消息框
-         * @param {number} mid [消息编号]
-         * @param {number} uid [用户编号,0表示全服,非0表示具体玩家]
-         * @param {string} send_time [发送时间]
-         * @param {string} content [消息内容]
+         * @param {JSON} initData [数据]
          */
-        initUpdate(mid:number,uid:number,send_time:string,content:string) {
-            let $update:JQuery<HTMLElement> = this.$update;
-
-            // 消息编号
-            $update.find(".mid").val(mid);
+        initUpdate(initData:UpdateInitData) {
+            this.$update.find(".input-group").html((<any>window).template.compile(this.template.update)(initData));
+            this.updateBindEvent();
             // 操作对象
-            switch(uid) {
+            switch(initData.uid) {
                 case 0:
-                    $update.find(".operation:eq(0)").prop("checked",true).trigger("change");
+                    this.$update.find(".operation:eq(0)").prop("checked",true).trigger("change");
                 break;
                 default:
-                    $update.find(".operation:eq(1)").prop("checked",true).trigger("change");
-                    $update.find(".uid").val(uid);
+                    this.$update.find(".operation:eq(1)").prop("checked",true).trigger("change");
+                    this.$update.find(".uid").val(initData.uid);
                 break;
             };
-            // 发送时间
-            $update.find(".sendTime").val(send_time);
-            // 发送内容
-            $update.find(".reason").val(content);
         };
+
+        /**
+         * 更新框的事件绑定
+         */
+        updateBindEvent() {
+            let self:MessageList = this;
+
+            // 发送对象选择(更新消息)
+            this.$update.find(".operation").on("change",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                switch($this.val()) {
+                    case "0":
+                        self.$update.find(".inputUid").hide().find(".uid").val("");
+                    break;
+                    case "1":
+                        self.$update.find(".inputUid").show().find(".uid").focus();
+                    break;
+                };
+            });
+
+            // 更新消息发送时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".sendTime").val()
+            });
+        }
 
         /**
          * 页码变更
@@ -335,6 +340,28 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
                 this.fetch(undefined,undefined);
             };
         }
+    }
+
+    /**
+     * 更新框的初始化数据格式
+     */
+    interface UpdateInitData {
+        /**
+         * 消息编号
+         */
+        mid:number,
+        /**
+         * 用户编号,0表示全服,非0表示具体玩家
+         */
+        uid:number,
+        /**
+         * 发送时间
+         */
+        send_time:string,
+        /**
+         * 消息内容
+         */
+        content:string
     }
 
     return MessageList;

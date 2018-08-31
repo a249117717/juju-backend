@@ -1,15 +1,15 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/systemNoticeDetail.html"],function(systemNoticeTemp,systemNoticeDetail){
+define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/systemNoticeDetail.html","text!model/chart/views/systemNoticeUpdate.html"],function(systemNoticeTemp,systemNoticeDetail,systemNoticeUpdate){
     // 系统公告
     class SystemNotice extends ChartBase {
         $el:JQuery<HTMLElement> = null;
-        $add:JQuery<HTMLElement> = null;    // 增加公告
+        $add:JQuery<HTMLElement> = null;    // 新增公告
         $update:JQuery<HTMLElement> = null;    // 更新公告
-        
         template = { // 模板
             "routerTemp":systemNoticeTemp,
-            "detail":systemNoticeDetail
+            "detail":systemNoticeDetail,
+            "update":systemNoticeUpdate
         };
 
         constructor(props:any) {
@@ -63,32 +63,32 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
         bindEvent() {
             let self:SystemNotice = this;
 
-            // 重置增加消息框
+            // 重置新增消息框
             this.$add.find(".btn-reset").on("click",() => {
                 (<HTMLFormElement>this.$add.find("form")[0]).reset();
             });
 
-            // 增加消息确定按钮
+            // 新增消息确定按钮
             this.$add.find(".btn-submit").on("click",function(){
                 if(!self.noticeCheck(self.$add)) {
                     return;
                 };
                 
-                (<any>window).layer.confirm("是否确认增加公告",function(e){
+                (<any>window).layer.confirm("是否确认新增公告",function(e){
                     _load(true);
                     (<Function>_resource.addSNotice)(JSON.stringify(self.getNotice(self.$add)),function(data){
                         // 重置新增框
                         self.$add.find(".btn-reset").click();
                         // 刷新数据列表
                         self.fetch();
-                        (<any>window).layer.msg("增加成功");
+                        (<any>window).layer.msg("新增成功");
                         (<any>window).layer.close(e);
                         _load(false);
                     })
                 });
             });
 
-            // 增加消息开始时间
+            // 新增消息开始时间
             (<any>window).laydate.render({
                 elem: '.m-addContent .startDate',
                 type: 'datetime',
@@ -96,25 +96,9 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
                 format: 'yyyy-MM-dd HH:mm'
             });
 
-            // 增加消息结束时间
+            // 新增消息结束时间
             (<any>window).laydate.render({
                 elem: '.m-addContent .endDate',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-
-            // 更新消息开始时间
-            (<any>window).laydate.render({
-                elem: '.m-updateContent .startDate',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-
-            // 更新消息结束时间
-            (<any>window).laydate.render({
-                elem: '.m-updateContent .endDate',
                 type: 'datetime',
                 theme: '#42a5f5',
                 format: 'yyyy-MM-dd HH:mm'
@@ -182,22 +166,6 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
                     });
                 });
             });
-
-            // 发送间隔输入
-            this.$update.find(".inter").on("input",function(){
-                let $this:JQuery<HTMLElement> = $(this),
-                val:string = <string>$this.val();
-
-                if(/^\d*$/.test(val) && parseInt(val) > 0) {
-                    $this.attr("old",<string>$this.val());
-                } else {
-                    $this.val($this.attr("old"));
-                    (<any>window).layer.tips('请输入大于0的正整数', self.$update.find(".inter")[0], {
-                        tips: [1, '#FF9800'],
-                        time: 2000
-                    });
-                };
-            });
         }
 
         /**
@@ -244,7 +212,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
         }
 
         /**
-         * 初始化增加公告框
+         * 初始化新增公告框
          * @param {boolean} isRender [是否渲染列表，默认为false]
          */
         initAddNotice(isRender:boolean = false) {
@@ -264,7 +232,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
         getNotice($JQ:JQuery<HTMLElement>) {
             let option:any = null;
 
-            if($JQ.hasClass("addNotice")) {    // 增加消息
+            if($JQ.hasClass("addNotice")) {    // 新增消息
                 option =  {
                     "start_time":0,    // 开始时间
                     "end_time":"",   // 结束时间
@@ -309,30 +277,63 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
                 this.$update.addClass("active");
             },10);
 
-            this.initUpdate(parseInt($obj.attr("nid")),<string>$tr.find(".startDate").text(),<string>$tr.find(".endDate").text(),parseInt(<string>$tr.find(".inter").text()),<string>$tr.find(".ncontent").text());
+            this.initUpdate({
+                "nid":parseInt($obj.attr("nid")),
+                "startDate":<string>$tr.find(".startDate").text(),
+                "endDate":<string>$tr.find(".endDate").text(),
+                "inter":parseInt(<string>$tr.find(".inter").text()),
+                "content":<string>$tr.find(".ncontent").text()
+            });
         }
 
         /**
          * 初始化更新公告框
-         * @param {number} nid [消息编号]
-         * @param {string} startDate [开始时间]
-         * @param {string} endDate [结束时间]
-         * @param {number} inter [发送间隔]
-         * @param {string} content [消息内容]
+         * @param {JSON} initData [数据]
          */
-        initUpdate(nid:number,startDate:string,endDate:string,inter:number,content:string) {
-            let $update:JQuery<HTMLElement> = this.$update;
+        initUpdate(initData:UpdateInitData) {
+            this.$update.find(".input-group").html((<any>window).template.compile(this.template.update)(initData));
+            this.updateBindEvent();
+        }
 
-            // 消息编号
-            $update.find(".nid").val(nid);
-            // 开始时间
-            $update.find(".startDate").val(startDate);
-            // 结束时间
-            $update.find(".endDate").val(endDate);
-            // 发送间隔
-            $update.find(".inter").val(inter).attr("old",inter);
-            // 发送内容
-            $update.find(".reason").val(content);
+        /**
+         * 更新框的事件绑定
+         */
+        updateBindEvent() {
+            let self:SystemNotice = this;
+            
+            // 发送间隔输入
+            this.$update.find(".inter").on("input",function(){
+                let $this:JQuery<HTMLElement> = $(this),
+                val:string = <string>$this.val();
+
+                if(/^\d*$/.test(val) && parseInt(val) > 0) {
+                    $this.attr("old",<string>$this.val());
+                } else {
+                    $this.val($this.attr("old"));
+                    (<any>window).layer.tips('请输入大于0的正整数', self.$update.find(".inter")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                };
+            });
+            
+            // 更新消息开始时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".startDate").val()
+            });
+
+            // 更新消息结束时间
+            (<any>window).laydate.render({
+                elem: '.m-updateContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".endDate").val()
+            });
         }
 
         /**
@@ -343,6 +344,32 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
         changePading(pageNo:number,pageSize:number) {
             this.fetch(pageNo,pageSize);
         }
+    }
+
+    /**
+     * 更新框的初始化数据格式
+     */
+    interface UpdateInitData {
+        /**
+         * 消息编号
+         */
+        nid:number,
+        /**
+         * 开始时间
+         */
+        startDate:string,
+        /**
+         * 结束时间
+         */
+        endDate:string,
+        /**
+         * 发送间隔
+         */
+        inter:number,
+        /**
+         * 消息内容
+         */
+        content:string
     }
 
     return SystemNotice;

@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/systemNoticeDetail.html"], function (systemNoticeTemp, systemNoticeDetail) {
+define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/systemNoticeDetail.html", "text!model/chart/views/systemNoticeUpdate.html"], function (systemNoticeTemp, systemNoticeDetail, systemNoticeUpdate) {
     var SystemNotice = (function (_super) {
         __extends(SystemNotice, _super);
         function SystemNotice(props) {
@@ -18,7 +18,8 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
             _this.$update = null;
             _this.template = {
                 "routerTemp": systemNoticeTemp,
-                "detail": systemNoticeDetail
+                "detail": systemNoticeDetail,
+                "update": systemNoticeUpdate
             };
             return _this;
         }
@@ -63,12 +64,12 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
                     return;
                 }
                 ;
-                window.layer.confirm("是否确认增加公告", function (e) {
+                window.layer.confirm("是否确认新增公告", function (e) {
                     _load(true);
                     _resource.addSNotice(JSON.stringify(self.getNotice(self.$add)), function (data) {
                         self.$add.find(".btn-reset").click();
                         self.fetch();
-                        window.layer.msg("增加成功");
+                        window.layer.msg("新增成功");
                         window.layer.close(e);
                         _load(false);
                     });
@@ -82,18 +83,6 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
             });
             window.laydate.render({
                 elem: '.m-addContent .endDate',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-            window.laydate.render({
-                elem: '.m-updateContent .startDate',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-            window.laydate.render({
-                elem: '.m-updateContent .endDate',
                 type: 'datetime',
                 theme: '#42a5f5',
                 format: 'yyyy-MM-dd HH:mm'
@@ -149,20 +138,6 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
                         _load(false);
                     });
                 });
-            });
-            this.$update.find(".inter").on("input", function () {
-                var $this = $(this), val = $this.val();
-                if (/^\d*$/.test(val) && parseInt(val) > 0) {
-                    $this.attr("old", $this.val());
-                }
-                else {
-                    $this.val($this.attr("old"));
-                    window.layer.tips('请输入大于0的正整数', self.$update.find(".inter")[0], {
-                        tips: [1, '#FF9800'],
-                        time: 2000
-                    });
-                }
-                ;
             });
         };
         SystemNotice.prototype.renderDetail = function (data) {
@@ -237,15 +212,48 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
             setTimeout(function () {
                 _this.$update.addClass("active");
             }, 10);
-            this.initUpdate(parseInt($obj.attr("nid")), $tr.find(".startDate").text(), $tr.find(".endDate").text(), parseInt($tr.find(".inter").text()), $tr.find(".ncontent").text());
+            this.initUpdate({
+                "nid": parseInt($obj.attr("nid")),
+                "startDate": $tr.find(".startDate").text(),
+                "endDate": $tr.find(".endDate").text(),
+                "inter": parseInt($tr.find(".inter").text()),
+                "content": $tr.find(".ncontent").text()
+            });
         };
-        SystemNotice.prototype.initUpdate = function (nid, startDate, endDate, inter, content) {
-            var $update = this.$update;
-            $update.find(".nid").val(nid);
-            $update.find(".startDate").val(startDate);
-            $update.find(".endDate").val(endDate);
-            $update.find(".inter").val(inter).attr("old", inter);
-            $update.find(".reason").val(content);
+        SystemNotice.prototype.initUpdate = function (initData) {
+            this.$update.find(".input-group").html(window.template.compile(this.template.update)(initData));
+            this.updateBindEvent();
+        };
+        SystemNotice.prototype.updateBindEvent = function () {
+            var self = this;
+            this.$update.find(".inter").on("input", function () {
+                var $this = $(this), val = $this.val();
+                if (/^\d*$/.test(val) && parseInt(val) > 0) {
+                    $this.attr("old", $this.val());
+                }
+                else {
+                    $this.val($this.attr("old"));
+                    window.layer.tips('请输入大于0的正整数', self.$update.find(".inter")[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                }
+                ;
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .startDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".startDate").val()
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .endDate',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".endDate").val()
+            });
         };
         SystemNotice.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);

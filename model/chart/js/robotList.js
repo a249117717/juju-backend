@@ -65,12 +65,12 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                     return;
                 }
                 ;
-                window.layer.confirm("是否确认增加机器人弹幕", function (e) {
+                window.layer.confirm("是否确认新增机器人弹幕", function (e) {
                     _load(true);
                     _resource.addRobot(JSON.stringify(self.getSubmitData(self.$add)), function (data) {
                         self.$add.find(".btn-reset").click();
                         self.fetch();
-                        window.layer.msg("增加成功");
+                        window.layer.msg("新增成功");
                         window.layer.close(e);
                         _load(false);
                     });

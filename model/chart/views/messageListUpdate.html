@@ -1,0 +1,40 @@
+<!-- 消息列表更新框内容 -->
+<div class="group">
+    <div class="tip">消息编号</div>
+    <div class="descript">
+        <input class="mid defaultInput" disabled value="{{ mid }}">
+    </div>
+</div>
+<div class="group mdui-theme-accent-blue">
+    <div class="tip">发送对象</div>
+    <div class="descript">
+        <label class="mdui-radio">
+            <input class="operation" type="radio" name="updateMessage" checked value="0"/>
+            <i class="mdui-radio-icon"></i>
+            <span>全服</span>
+        </label>
+        <label class="mdui-radio">
+            <input class="operation" type="radio" name="updateMessage" value="1"/>
+            <i class="mdui-radio-icon"></i>
+            <span>个人</span>
+        </label>
+    </div>
+</div>
+<div class="group inputUid">
+    <div class="tip">用户编号</div>
+    <div class="descript">
+        <input class="uid defaultInput" type="text" value="{{ uid }}">
+    </div>
+</div>
+<div class="group">
+    <div class="tip">发送时间</div>
+    <div class="descript">
+        <input class="sendTime defaultInput" value="{{ send_time }}" type="text" readonly placeholder="请点击选择发送时间">
+    </div>
+</div>
+<div class="group">
+    <div class="tip">消息内容</div>
+    <div class="descript">
+        <textarea class="reason" placeholder="请输入消息内容">{{ content }}</textarea>    
+    </div>
+</div>

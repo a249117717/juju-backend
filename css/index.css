@@ -527,6 +527,403 @@ body {
   background-color: #42A5F5;
 }
 
+.defaultTable .m-addContent {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin: 20px 0 40px 0;
+  padding: 60px 20px 20px 20px;
+  min-width: 540px;
+  background-color: #fff;
+  clear: both;
+}
+
+.defaultTable .m-addContent .title {
+  position: absolute;
+  left: 20px;
+  top: -20px;
+  background-color: #F44336;
+  color: #fff;
+  width: 150px;
+  height: 84px;
+  line-height: 84px;
+  font-size: 18px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.defaultTable .m-addContent .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.defaultTable .m-addContent .input-group .group {
+  margin-bottom: 10px;
+}
+
+.defaultTable .m-addContent .input-group .group.select {
+  display: none;
+}
+
+.defaultTable .m-addContent .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.defaultTable .m-addContent .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.defaultTable .m-addContent .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.defaultTable .m-addContent .input-group .defaultInput {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.defaultTable .m-addContent .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.defaultTable .m-addContent .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.defaultTable .m-addContent .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.defaultTable .m-addContent .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.defaultTable .m-addContent .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.defaultTable .m-addContent .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.defaultTable .m-addContent .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.defaultTable .m-addContent .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.defaultTable .m-addContent .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  border: 1px solid #ebebeb;
+  resize: none;
+}
+
+.defaultTable .m-addContent .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.defaultTable .m-addContent .input-group,
+.defaultTable .m-addContent .button-group {
+  margin: 0 auto;
+  width: 520px;
+}
+
+.defaultTable .m-addContent .inputUid {
+  display: none;
+}
+
+.defaultTable .m-addContent .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.defaultTable .m-addContent .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.defaultTable .m-addContent .button-group .btn-reset {
+  color: #333;
+  background-color: #eee;
+}
+
+.defaultTable .m-addContent .button-group .btn-reset:hover {
+  background-color: #E0E0E0;
+}
+
+.defaultTable .m-addContent .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.defaultTable .m-addContent .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
+.defaultTable .m-updateContent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: none;
+}
+
+.defaultTable .m-updateContent .shade {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: #000;
+  opacity: 0.3;
+  z-index: 10;
+}
+
+.defaultTable .m-updateContent.active .shade {
+  display: block;
+}
+
+.defaultTable .m-updateContent.active .content {
+  opacity: 1;
+  -webkit-transform: scale(1, 1);
+  transform: scale(1, 1);
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.defaultTable .m-updateContent .content {
+  margin: -255px 0 0 -250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  z-index: 11;
+  background-color: #fff;
+  border-radius: 3px;
+  opacity: 0;
+  -webkit-transform: scale(0.3, 0.3);
+  transform: scale(0.3, 0.3);
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.defaultTable .m-updateContent .content .title {
+  padding-left: 20px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  letter-spacing: 3px;
+  background-color: #262524;
+  color: #fff;
+  border-radius: 3px 3px 0 0;
+}
+
+.defaultTable .m-updateContent .content .input-group {
+  padding: 20px;
+  clear: both;
+}
+
+.defaultTable .m-updateContent .content .input-group .group {
+  margin-bottom: 10px;
+}
+
+.defaultTable .m-updateContent .content .input-group .group.select {
+  display: none;
+}
+
+.defaultTable .m-updateContent .content .input-group .tip {
+  padding: 9px 15px;
+  float: left;
+  width: 110px;
+  height: 38px;
+  line-height: 20px;
+  text-align: right;
+}
+
+.defaultTable .m-updateContent .content .input-group .mdui-radio {
+  padding-left: 25px;
+}
+
+.defaultTable .m-updateContent .content .input-group .mdui-radio:not(:first-child) {
+  margin-left: 10px;
+}
+
+.defaultTable .m-updateContent .content .input-group .defaultInput {
+  padding: 0 5px;
+  float: left;
+  margin: 4px 0;
+  display: block;
+  width: 320px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid #ebebeb;
+}
+
+.defaultTable .m-updateContent .content .input-group .choice {
+  padding-left: 10px;
+  width: 320px;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.defaultTable .m-updateContent .content .input-group .choice:hover {
+  border-color: #bdbdbd;
+}
+
+.defaultTable .m-updateContent .content .input-group .edge {
+  margin-top: -3px;
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  border-width: 6px 7px 0;
+  border-style: solid;
+  border-color: #bdbdbd transparent transparent;
+  cursor: pointer;
+  z-index: -1;
+}
+
+.defaultTable .m-updateContent .content .input-group .list {
+  display: none;
+  position: absolute;
+  left: 110px;
+  top: 100px;
+  background-color: #fff;
+  z-index: 12;
+  border: 1px solid #d2d2d2;
+  max-height: 255px;
+  overflow: auto;
+  opacity: 0;
+  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
+}
+
+.defaultTable .m-updateContent .content .input-group .list.active {
+  opacity: 1;
+  top: 39px;
+  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
+}
+
+.defaultTable .m-updateContent .content .input-group .list > li {
+  padding: 0 10px;
+  height: 36px;
+  line-height: 36px;
+  width: 320px;
+  cursor: pointer;
+}
+
+.defaultTable .m-updateContent .content .input-group .list > li:hover {
+  background-color: #eee;
+}
+
+.defaultTable .m-updateContent .content .input-group .list > li.active {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+.defaultTable .m-updateContent .content .input-group .reason {
+  padding: 5px;
+  width: 320px;
+  height: 100px;
+  border: 1px solid #ebebeb;
+  resize: none;
+}
+
+.defaultTable .m-updateContent .content .input-group .descript {
+  padding-left: 110px;
+  min-height: 38px;
+}
+
+.defaultTable .m-updateContent .content .button-group {
+  background-color: #fff;
+  overflow: hidden;
+  border-radius: 0 0 3px 3px;
+}
+
+.defaultTable .m-updateContent .content .button-group .btn {
+  float: right;
+  margin: 12px 10px;
+  padding: 10px 30px;
+  border-radius: 5px;
+}
+
+.defaultTable .m-updateContent .content .button-group .btn-cancel {
+  color: #333;
+  background-color: #eee;
+}
+
+.defaultTable .m-updateContent .content .button-group .btn-cancel:hover {
+  background-color: #E0E0E0;
+}
+
+.defaultTable .m-updateContent .content .button-group .btn-submit {
+  color: #fff;
+  background-color: #42a5f5;
+}
+
+.defaultTable .m-updateContent .content .button-group .btn-submit:hover {
+  background-color: #2196F3;
+}
+
 .defaultTable .detail {
   margin-top: 20px;
   min-height: 100px;
@@ -1057,515 +1454,4 @@ body {
 
 .m-statisticalUser #diagram {
   margin: 20px 0 40px 0;
-}
-
-.m-messageList .m-addContent,
-.m-systemNotice .m-addContent,
-.m-robotList .m-addContent {
-  position: relative;
-  left: 0;
-  top: 0;
-  margin: 20px 0 40px 0;
-  padding: 60px 20px 20px 20px;
-  min-width: 540px;
-  background-color: #fff;
-  clear: both;
-}
-
-.m-messageList .m-addContent .title,
-.m-systemNotice .m-addContent .title,
-.m-robotList .m-addContent .title {
-  position: absolute;
-  left: 20px;
-  top: -20px;
-  background-color: #F44336;
-  color: #fff;
-  width: 150px;
-  height: 84px;
-  line-height: 84px;
-  font-size: 18px;
-  border-radius: 3px;
-  text-align: center;
-}
-
-.m-messageList .m-addContent .input-group,
-.m-systemNotice .m-addContent .input-group,
-.m-robotList .m-addContent .input-group {
-  padding: 20px;
-  clear: both;
-}
-
-.m-messageList .m-addContent .input-group .group,
-.m-systemNotice .m-addContent .input-group .group,
-.m-robotList .m-addContent .input-group .group {
-  margin-bottom: 10px;
-}
-
-.m-messageList .m-addContent .input-group .group.select,
-.m-systemNotice .m-addContent .input-group .group.select,
-.m-robotList .m-addContent .input-group .group.select {
-  display: none;
-}
-
-.m-messageList .m-addContent .input-group .tip,
-.m-systemNotice .m-addContent .input-group .tip,
-.m-robotList .m-addContent .input-group .tip {
-  padding: 9px 15px;
-  float: left;
-  width: 110px;
-  height: 38px;
-  line-height: 20px;
-  text-align: right;
-}
-
-.m-messageList .m-addContent .input-group .mdui-radio,
-.m-systemNotice .m-addContent .input-group .mdui-radio,
-.m-robotList .m-addContent .input-group .mdui-radio {
-  padding-left: 25px;
-}
-
-.m-messageList .m-addContent .input-group .mdui-radio:not(:first-child),
-.m-systemNotice .m-addContent .input-group .mdui-radio:not(:first-child),
-.m-robotList .m-addContent .input-group .mdui-radio:not(:first-child) {
-  margin-left: 10px;
-}
-
-.m-messageList .m-addContent .input-group .defaultInput,
-.m-systemNotice .m-addContent .input-group .defaultInput,
-.m-robotList .m-addContent .input-group .defaultInput {
-  padding: 0 5px;
-  float: left;
-  margin: 4px 0;
-  display: block;
-  width: 320px;
-  height: 30px;
-  line-height: 30px;
-  border: 1px solid #ebebeb;
-}
-
-.m-messageList .m-addContent .input-group .choice,
-.m-systemNotice .m-addContent .input-group .choice,
-.m-robotList .m-addContent .input-group .choice {
-  padding-left: 10px;
-  width: 320px;
-  height: 38px;
-  line-height: 38px;
-  border-radius: 3px;
-  cursor: pointer;
-  border: 1px solid #eee;
-}
-
-.m-messageList .m-addContent .input-group .choice:hover,
-.m-systemNotice .m-addContent .input-group .choice:hover,
-.m-robotList .m-addContent .input-group .choice:hover {
-  border-color: #bdbdbd;
-}
-
-.m-messageList .m-addContent .input-group .edge,
-.m-systemNotice .m-addContent .input-group .edge,
-.m-robotList .m-addContent .input-group .edge {
-  margin-top: -3px;
-  position: absolute;
-  top: 50%;
-  right: 40px;
-  border-width: 6px 7px 0;
-  border-style: solid;
-  border-color: #bdbdbd transparent transparent;
-  cursor: pointer;
-  z-index: -1;
-}
-
-.m-messageList .m-addContent .input-group .list,
-.m-systemNotice .m-addContent .input-group .list,
-.m-robotList .m-addContent .input-group .list {
-  display: none;
-  position: absolute;
-  left: 110px;
-  top: 100px;
-  background-color: #fff;
-  z-index: 12;
-  border: 1px solid #d2d2d2;
-  max-height: 255px;
-  overflow: auto;
-  opacity: 0;
-  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-}
-
-.m-messageList .m-addContent .input-group .list.active,
-.m-systemNotice .m-addContent .input-group .list.active,
-.m-robotList .m-addContent .input-group .list.active {
-  opacity: 1;
-  top: 39px;
-  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-}
-
-.m-messageList .m-addContent .input-group .list > li,
-.m-systemNotice .m-addContent .input-group .list > li,
-.m-robotList .m-addContent .input-group .list > li {
-  padding: 0 10px;
-  height: 36px;
-  line-height: 36px;
-  width: 320px;
-  cursor: pointer;
-}
-
-.m-messageList .m-addContent .input-group .list > li:hover,
-.m-systemNotice .m-addContent .input-group .list > li:hover,
-.m-robotList .m-addContent .input-group .list > li:hover {
-  background-color: #eee;
-}
-
-.m-messageList .m-addContent .input-group .list > li.active,
-.m-systemNotice .m-addContent .input-group .list > li.active,
-.m-robotList .m-addContent .input-group .list > li.active {
-  background-color: #2196F3;
-  color: #fff;
-}
-
-.m-messageList .m-addContent .input-group .reason,
-.m-systemNotice .m-addContent .input-group .reason,
-.m-robotList .m-addContent .input-group .reason {
-  padding: 5px;
-  width: 320px;
-  height: 100px;
-  border: 1px solid #ebebeb;
-  resize: none;
-}
-
-.m-messageList .m-addContent .input-group .descript,
-.m-systemNotice .m-addContent .input-group .descript,
-.m-robotList .m-addContent .input-group .descript {
-  padding-left: 110px;
-  min-height: 38px;
-}
-
-.m-messageList .m-addContent .input-group,
-.m-messageList .m-addContent .button-group,
-.m-systemNotice .m-addContent .input-group,
-.m-systemNotice .m-addContent .button-group,
-.m-robotList .m-addContent .input-group,
-.m-robotList .m-addContent .button-group {
-  margin: 0 auto;
-  width: 520px;
-}
-
-.m-messageList .m-addContent .inputUid,
-.m-systemNotice .m-addContent .inputUid,
-.m-robotList .m-addContent .inputUid {
-  display: none;
-}
-
-.m-messageList .m-addContent .button-group,
-.m-systemNotice .m-addContent .button-group,
-.m-robotList .m-addContent .button-group {
-  background-color: #fff;
-  overflow: hidden;
-  border-radius: 0 0 3px 3px;
-}
-
-.m-messageList .m-addContent .button-group .btn,
-.m-systemNotice .m-addContent .button-group .btn,
-.m-robotList .m-addContent .button-group .btn {
-  float: right;
-  margin: 12px 10px;
-  padding: 10px 30px;
-  border-radius: 5px;
-}
-
-.m-messageList .m-addContent .button-group .btn-reset,
-.m-systemNotice .m-addContent .button-group .btn-reset,
-.m-robotList .m-addContent .button-group .btn-reset {
-  color: #333;
-  background-color: #eee;
-}
-
-.m-messageList .m-addContent .button-group .btn-reset:hover,
-.m-systemNotice .m-addContent .button-group .btn-reset:hover,
-.m-robotList .m-addContent .button-group .btn-reset:hover {
-  background-color: #E0E0E0;
-}
-
-.m-messageList .m-addContent .button-group .btn-submit,
-.m-systemNotice .m-addContent .button-group .btn-submit,
-.m-robotList .m-addContent .button-group .btn-submit {
-  color: #fff;
-  background-color: #42a5f5;
-}
-
-.m-messageList .m-addContent .button-group .btn-submit:hover,
-.m-systemNotice .m-addContent .button-group .btn-submit:hover,
-.m-robotList .m-addContent .button-group .btn-submit:hover {
-  background-color: #2196F3;
-}
-
-.m-messageList .m-updateContent,
-.m-systemNotice .m-updateContent,
-.m-robotList .m-updateContent {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  display: none;
-}
-
-.m-messageList .m-updateContent .shade,
-.m-systemNotice .m-updateContent .shade,
-.m-robotList .m-updateContent .shade {
-  display: none;
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10;
-  background-color: #000;
-  opacity: 0.3;
-  z-index: 10;
-}
-
-.m-messageList .m-updateContent.active .shade,
-.m-systemNotice .m-updateContent.active .shade,
-.m-robotList .m-updateContent.active .shade {
-  display: block;
-}
-
-.m-messageList .m-updateContent.active .content,
-.m-systemNotice .m-updateContent.active .content,
-.m-robotList .m-updateContent.active .content {
-  opacity: 1;
-  -webkit-transform: scale(1, 1);
-  transform: scale(1, 1);
-  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-}
-
-.m-messageList .m-updateContent .content,
-.m-systemNotice .m-updateContent .content,
-.m-robotList .m-updateContent .content {
-  margin: -255px 0 0 -250px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 500px;
-  z-index: 11;
-  background-color: #fff;
-  border-radius: 3px;
-  opacity: 0;
-  -webkit-transform: scale(0.3, 0.3);
-  transform: scale(0.3, 0.3);
-  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-}
-
-.m-messageList .m-updateContent .content .title,
-.m-systemNotice .m-updateContent .content .title,
-.m-robotList .m-updateContent .content .title {
-  padding-left: 20px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 14px;
-  letter-spacing: 3px;
-  background-color: #262524;
-  color: #fff;
-  border-radius: 3px 3px 0 0;
-}
-
-.m-messageList .m-updateContent .content .input-group,
-.m-systemNotice .m-updateContent .content .input-group,
-.m-robotList .m-updateContent .content .input-group {
-  padding: 20px;
-  clear: both;
-}
-
-.m-messageList .m-updateContent .content .input-group .group,
-.m-systemNotice .m-updateContent .content .input-group .group,
-.m-robotList .m-updateContent .content .input-group .group {
-  margin-bottom: 10px;
-}
-
-.m-messageList .m-updateContent .content .input-group .group.select,
-.m-systemNotice .m-updateContent .content .input-group .group.select,
-.m-robotList .m-updateContent .content .input-group .group.select {
-  display: none;
-}
-
-.m-messageList .m-updateContent .content .input-group .tip,
-.m-systemNotice .m-updateContent .content .input-group .tip,
-.m-robotList .m-updateContent .content .input-group .tip {
-  padding: 9px 15px;
-  float: left;
-  width: 110px;
-  height: 38px;
-  line-height: 20px;
-  text-align: right;
-}
-
-.m-messageList .m-updateContent .content .input-group .mdui-radio,
-.m-systemNotice .m-updateContent .content .input-group .mdui-radio,
-.m-robotList .m-updateContent .content .input-group .mdui-radio {
-  padding-left: 25px;
-}
-
-.m-messageList .m-updateContent .content .input-group .mdui-radio:not(:first-child),
-.m-systemNotice .m-updateContent .content .input-group .mdui-radio:not(:first-child),
-.m-robotList .m-updateContent .content .input-group .mdui-radio:not(:first-child) {
-  margin-left: 10px;
-}
-
-.m-messageList .m-updateContent .content .input-group .defaultInput,
-.m-systemNotice .m-updateContent .content .input-group .defaultInput,
-.m-robotList .m-updateContent .content .input-group .defaultInput {
-  padding: 0 5px;
-  float: left;
-  margin: 4px 0;
-  display: block;
-  width: 320px;
-  height: 30px;
-  line-height: 30px;
-  border: 1px solid #ebebeb;
-}
-
-.m-messageList .m-updateContent .content .input-group .choice,
-.m-systemNotice .m-updateContent .content .input-group .choice,
-.m-robotList .m-updateContent .content .input-group .choice {
-  padding-left: 10px;
-  width: 320px;
-  height: 38px;
-  line-height: 38px;
-  border-radius: 3px;
-  cursor: pointer;
-  border: 1px solid #eee;
-}
-
-.m-messageList .m-updateContent .content .input-group .choice:hover,
-.m-systemNotice .m-updateContent .content .input-group .choice:hover,
-.m-robotList .m-updateContent .content .input-group .choice:hover {
-  border-color: #bdbdbd;
-}
-
-.m-messageList .m-updateContent .content .input-group .edge,
-.m-systemNotice .m-updateContent .content .input-group .edge,
-.m-robotList .m-updateContent .content .input-group .edge {
-  margin-top: -3px;
-  position: absolute;
-  top: 50%;
-  right: 40px;
-  border-width: 6px 7px 0;
-  border-style: solid;
-  border-color: #bdbdbd transparent transparent;
-  cursor: pointer;
-  z-index: -1;
-}
-
-.m-messageList .m-updateContent .content .input-group .list,
-.m-systemNotice .m-updateContent .content .input-group .list,
-.m-robotList .m-updateContent .content .input-group .list {
-  display: none;
-  position: absolute;
-  left: 110px;
-  top: 100px;
-  background-color: #fff;
-  z-index: 12;
-  border: 1px solid #d2d2d2;
-  max-height: 255px;
-  overflow: auto;
-  opacity: 0;
-  -webkit-transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-  transition: all cubic-bezier(0.4, 0, 0.6, 1) 0.2s;
-}
-
-.m-messageList .m-updateContent .content .input-group .list.active,
-.m-systemNotice .m-updateContent .content .input-group .list.active,
-.m-robotList .m-updateContent .content .input-group .list.active {
-  opacity: 1;
-  top: 39px;
-  -webkit-transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-  transition: all cubic-bezier(0, 0, 0.2, 1) 0.2s;
-}
-
-.m-messageList .m-updateContent .content .input-group .list > li,
-.m-systemNotice .m-updateContent .content .input-group .list > li,
-.m-robotList .m-updateContent .content .input-group .list > li {
-  padding: 0 10px;
-  height: 36px;
-  line-height: 36px;
-  width: 320px;
-  cursor: pointer;
-}
-
-.m-messageList .m-updateContent .content .input-group .list > li:hover,
-.m-systemNotice .m-updateContent .content .input-group .list > li:hover,
-.m-robotList .m-updateContent .content .input-group .list > li:hover {
-  background-color: #eee;
-}
-
-.m-messageList .m-updateContent .content .input-group .list > li.active,
-.m-systemNotice .m-updateContent .content .input-group .list > li.active,
-.m-robotList .m-updateContent .content .input-group .list > li.active {
-  background-color: #2196F3;
-  color: #fff;
-}
-
-.m-messageList .m-updateContent .content .input-group .reason,
-.m-systemNotice .m-updateContent .content .input-group .reason,
-.m-robotList .m-updateContent .content .input-group .reason {
-  padding: 5px;
-  width: 320px;
-  height: 100px;
-  border: 1px solid #ebebeb;
-  resize: none;
-}
-
-.m-messageList .m-updateContent .content .input-group .descript,
-.m-systemNotice .m-updateContent .content .input-group .descript,
-.m-robotList .m-updateContent .content .input-group .descript {
-  padding-left: 110px;
-  min-height: 38px;
-}
-
-.m-messageList .m-updateContent .content .button-group,
-.m-systemNotice .m-updateContent .content .button-group,
-.m-robotList .m-updateContent .content .button-group {
-  background-color: #fff;
-  overflow: hidden;
-  border-radius: 0 0 3px 3px;
-}
-
-.m-messageList .m-updateContent .content .button-group .btn,
-.m-systemNotice .m-updateContent .content .button-group .btn,
-.m-robotList .m-updateContent .content .button-group .btn {
-  float: right;
-  margin: 12px 10px;
-  padding: 10px 30px;
-  border-radius: 5px;
-}
-
-.m-messageList .m-updateContent .content .button-group .btn-cancel,
-.m-systemNotice .m-updateContent .content .button-group .btn-cancel,
-.m-robotList .m-updateContent .content .button-group .btn-cancel {
-  color: #333;
-  background-color: #eee;
-}
-
-.m-messageList .m-updateContent .content .button-group .btn-cancel:hover,
-.m-systemNotice .m-updateContent .content .button-group .btn-cancel:hover,
-.m-robotList .m-updateContent .content .button-group .btn-cancel:hover {
-  background-color: #E0E0E0;
-}
-
-.m-messageList .m-updateContent .content .button-group .btn-submit,
-.m-systemNotice .m-updateContent .content .button-group .btn-submit,
-.m-robotList .m-updateContent .content .button-group .btn-submit {
-  color: #fff;
-  background-color: #42a5f5;
-}
-
-.m-messageList .m-updateContent .content .button-group .btn-submit:hover,
-.m-systemNotice .m-updateContent .content .button-group .btn-submit:hover,
-.m-robotList .m-updateContent .content .button-group .btn-submit:hover {
-  background-color: #2196F3;
 }

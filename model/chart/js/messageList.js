@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/messageListDetail.html"], function (messageListTemp, messageListDetail) {
+define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/messageListDetail.html", "text!model/chart/views/messageListUpdate.html"], function (messageListTemp, messageListDetail, messageListUpdate) {
     var MessageList = (function (_super) {
         __extends(MessageList, _super);
         function MessageList(props) {
@@ -19,7 +19,8 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
             _this.uid = 0;
             _this.template = {
                 "routerTemp": messageListTemp,
-                "detail": messageListDetail
+                "detail": messageListDetail,
+                "update": messageListUpdate
             };
             return _this;
         }
@@ -66,12 +67,12 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
                     return;
                 }
                 ;
-                window.layer.confirm("是否确认增加消息", function (e) {
+                window.layer.confirm("是否确认新增消息", function (e) {
                     _load(true);
                     _resource.addMessage(JSON.stringify(self.getMessage(self.$add)), function (data) {
                         self.$add.find(".btn-reset").click();
                         self.fetch();
-                        window.layer.msg("增加成功");
+                        window.layer.msg("新增成功");
                         window.layer.close(e);
                         _load(false);
                     });
@@ -79,12 +80,6 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
             });
             window.laydate.render({
                 elem: '.m-addContent .sendTime',
-                type: 'datetime',
-                theme: '#42a5f5',
-                format: 'yyyy-MM-dd HH:mm'
-            });
-            window.laydate.render({
-                elem: '.m-updateContent .sendTime',
                 type: 'datetime',
                 theme: '#42a5f5',
                 format: 'yyyy-MM-dd HH:mm'
@@ -122,18 +117,6 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
                 setTimeout(function () {
                     _this.$update.hide();
                 }, 200);
-            });
-            this.$update.find(".operation").on("change", function () {
-                var $this = $(this);
-                switch ($this.val()) {
-                    case "0":
-                        self.$update.find(".inputUid").hide().find(".uid").val("");
-                        break;
-                    case "1":
-                        self.$update.find(".inputUid").show().find(".uid").focus();
-                        break;
-                }
-                ;
             });
             this.$update.on("click", ".btn-submit", function () {
                 if (!self.messageCheck(self.$update)) {
@@ -221,25 +204,50 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
             setTimeout(function () {
                 _this.$update.addClass("active");
             }, 10);
-            this.initUpdate(parseInt($obj.attr("mid")), parseInt($obj.attr("uid")), $tr.find(".mtime").text(), $tr.find(".mcontent").text());
+            this.initUpdate({
+                "mid": parseInt($obj.attr("mid")),
+                "uid": parseInt($obj.attr("uid")),
+                "send_time": $tr.find(".mtime").text(),
+                "content": $tr.find(".mcontent").text()
+            });
         };
-        MessageList.prototype.initUpdate = function (mid, uid, send_time, content) {
-            var $update = this.$update;
-            $update.find(".mid").val(mid);
-            switch (uid) {
+        MessageList.prototype.initUpdate = function (initData) {
+            this.$update.find(".input-group").html(window.template.compile(this.template.update)(initData));
+            this.updateBindEvent();
+            switch (initData.uid) {
                 case 0:
-                    $update.find(".operation:eq(0)").prop("checked", true).trigger("change");
+                    this.$update.find(".operation:eq(0)").prop("checked", true).trigger("change");
                     break;
                 default:
-                    $update.find(".operation:eq(1)").prop("checked", true).trigger("change");
-                    $update.find(".uid").val(uid);
+                    this.$update.find(".operation:eq(1)").prop("checked", true).trigger("change");
+                    this.$update.find(".uid").val(initData.uid);
                     break;
             }
             ;
-            $update.find(".sendTime").val(send_time);
-            $update.find(".reason").val(content);
         };
         ;
+        MessageList.prototype.updateBindEvent = function () {
+            var self = this;
+            this.$update.find(".operation").on("change", function () {
+                var $this = $(this);
+                switch ($this.val()) {
+                    case "0":
+                        self.$update.find(".inputUid").hide().find(".uid").val("");
+                        break;
+                    case "1":
+                        self.$update.find(".inputUid").show().find(".uid").focus();
+                        break;
+                }
+                ;
+            });
+            window.laydate.render({
+                elem: '.m-updateContent .sendTime',
+                type: 'datetime',
+                theme: '#42a5f5',
+                format: 'yyyy-MM-dd HH:mm',
+                value: this.$update.find(".sendTime").val()
+            });
+        };
         MessageList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
         };

@@ -75,21 +75,21 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                     return;
                 };
 
-                (<any>window).layer.confirm("是否确认增加机器人弹幕",function(e){
+                (<any>window).layer.confirm("是否确认新增机器人弹幕",function(e){
                     _load(true);
                     (<Function>_resource.addRobot)(JSON.stringify(self.getSubmitData(self.$add)),function(data){
                         // 重置新增框
                         self.$add.find(".btn-reset").click();
                         // 刷新数据列表
                         self.fetch();
-                        (<any>window).layer.msg("增加成功");
+                        (<any>window).layer.msg("新增成功");
                         (<any>window).layer.close(e);
                         _load(false);
                     });
                 });
             });
 
-            // 增加消息生日日期
+            // 新增消息生日日期
             (<any>window).laydate.render({
                 elem: '.m-addContent .birthday',
                 type: 'date',
@@ -251,7 +251,7 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
          * 更新框的事件绑定
          */
         updateBindEvent() {
-            // 增加消息生日日期
+            // 生日日期
             (<any>window).laydate.render({
                 elem: '.m-updateContent .birthday',
                 type: 'date',

@@ -14,11 +14,11 @@
 <tbody>
     {{ each data as en }}
         <tr>
-            <td>{{ formatData(en.create_time) }}</td>
+            <td>{{ formatDate(en.create_time) }}</td>
             <td>{{ en.uid }}</td>
             <td>{{ en.name }}</td>
-            <td>{{ formatData(en.start_time) }}</td>
-            <td>{{ en.end_time=="0"?"永久":formatData(en.end_time) }}</td>
+            <td>{{ formatDate(en.start_time) }}</td>
+            <td>{{ en.end_time=="0"?"永久":formatDate(en.end_time) }}</td>
             <td>{{ en.operator_uid }}</td>
             <td class="reason">{{ en.reason }}</td>
             <td>

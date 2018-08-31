@@ -2,7 +2,33 @@
 <thead>
     <tr>
         <th>创建时间</th>
+        <th>头像</th>
+        <th>昵称</th>
+        <th>性别</th>
+        <th>签名</th>
+        <th>手机号</th>
+        <th>出生日期</th>
+        <th>推送内容</th>
+        <th>操作</th>
     </tr>
 </thead>
 <tbody>
+    {{ each data as en }}
+        <tr>
+            <td class="create" createTime="{{ en.create_time }}">{{ formatDate(en.create_time) }}</td>
+            <td class="head">
+                <img class="pho" src="{{ en.head_img?en.head_img:'common/images/defaultUser.png' }}">
+            </td>
+            <td class="nickname">{{ en.name }}</td>
+            <td class="sex" sex="{{ en.sex }}">{{ en.sex == 0?'未知':(en.sex == 1?'男':'女') }}</td>
+            <td class="sign">{{ en.sign }}</td>
+            <td class="phone">{{ en.phone }}</td>
+            <td class="birthday">{{ formatDate(en.birthday) }}</td>
+            <td class="reason">{{ en.text }}</td>
+            <td>
+                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}" uname="{{ en.name }}">删除</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}">更新</button>
+            </td>
+        </tr>
+    {{ /each }}
 </tbody>

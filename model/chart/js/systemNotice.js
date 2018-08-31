@@ -126,8 +126,7 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
                 });
             });
             this.$el.find(".detail").on("click", ".btn-update", function () {
-                var $this = $(this), $tr = $this.parents("tr");
-                self.showUpdateNotice(parseInt($this.attr("nid")), $tr.find(".startDate").text(), $tr.find(".endDate").text(), parseInt($tr.find(".inter").text()), $tr.find(".ncontent").text());
+                self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
                 _this.$update.removeClass("active");
@@ -231,15 +230,16 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
             option.content = $JQ.find(".reason").val();
             return option;
         };
-        SystemNotice.prototype.showUpdateNotice = function (nid, startDate, endDate, inter, content) {
+        SystemNotice.prototype.showUpdate = function ($obj) {
             var _this = this;
+            var $tr = $obj.parents("tr");
             this.$update.show();
             setTimeout(function () {
                 _this.$update.addClass("active");
             }, 10);
-            this.initUpdateMessage(nid, startDate, endDate, inter, content);
+            this.initUpdate(parseInt($obj.attr("nid")), $tr.find(".startDate").text(), $tr.find(".endDate").text(), parseInt($tr.find(".inter").text()), $tr.find(".ncontent").text());
         };
-        SystemNotice.prototype.initUpdateMessage = function (nid, startDate, endDate, inter, content) {
+        SystemNotice.prototype.initUpdate = function (nid, startDate, endDate, inter, content) {
             var $update = this.$update;
             $update.find(".nid").val(nid);
             $update.find(".startDate").val(startDate);
@@ -247,7 +247,6 @@ define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/
             $update.find(".inter").val(inter).attr("old", inter);
             $update.find(".reason").val(content);
         };
-        ;
         SystemNotice.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
         };

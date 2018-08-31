@@ -1,4 +1,4 @@
-window.template.helper('formatData', function (data, format) {
+window.template.helper('formatDate', function (data, format) {
     var date = new Date();
     date.setTime(data * 1000);
     var dateD = (date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()).replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
@@ -58,15 +58,12 @@ var IndexMain = (function () {
         }
         ;
         window.onhashchange = function () {
-            var active = "", hash = window.location.hash.substr(1);
-            if (~_router.indexOf(hash)) {
-                active = "." + hash;
-            }
-            else {
-                active = "." + _router[0];
+            var hash = window.location.hash.substr(1);
+            if (!~_router.indexOf(hash)) {
+                hash = _router[0];
             }
             ;
-            self.side.setActive(active);
+            self.side.setActive("." + hash);
             self.detail.callChartBySide(hash);
         };
         window.onhashchange(null);
@@ -306,8 +303,8 @@ var CDetail = (function () {
             var currentChart = new obj({
                 mainView: _this
             });
-            currentChart.fetch();
             _this.currentChart = currentChart;
+            currentChart.fetch();
         });
         this.mainView.header.setTitle(this.mainView.side.$el.find(".active").text());
     };
@@ -898,7 +895,6 @@ var ChartBase = (function () {
         this.$el = null;
         this.pading = null;
         this.completeHtml = false;
-        var parent = null;
         $.extend(this, props);
     }
     ChartBase.prototype.fetch = function (data) {
@@ -914,5 +910,4 @@ var ChartBase = (function () {
     ChartBase.prototype.getFormReturn = function (e) { };
     return ChartBase;
 }());
-(new IndexMain()).fetch();
 //# sourceMappingURL=charts.js.map

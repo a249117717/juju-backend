@@ -505,6 +505,11 @@ body {
   height: 40px;
 }
 
+.defaultTable .info .pho {
+  width: 40px;
+  height: 40px;
+}
+
 .defaultTable .info .btn {
   margin: 5px;
   padding: 9px 16px;

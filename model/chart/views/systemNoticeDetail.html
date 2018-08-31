@@ -14,9 +14,9 @@
     {{ each data as en }}
         <tr>
             <td>{{ en.id }}</td>
-            <td>{{ formatData(en.create_time) }}</td>
-            <td class="startDate">{{ formatData(en.start_time,1) }}</td>
-            <td class="endDate">{{ formatData(en.end_time,1) }}</td>
+            <td>{{ formatDate(en.create_time) }}</td>
+            <td class="startDate">{{ formatDate(en.start_time,1) }}</td>
+            <td class="endDate">{{ formatDate(en.end_time,1) }}</td>
             <td class="inter">{{ en.interval }}</td>
             <td class="ncontent">{{ en.content }}</td>
             <td>

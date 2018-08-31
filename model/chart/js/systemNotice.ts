@@ -154,10 +154,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
 
             // 更新
             this.$el.find(".detail").on("click",".btn-update",function(){
-                let $this:JQuery<HTMLElement> = $(this),
-                $tr:JQuery<HTMLElement> = $this.parents("tr");
-
-                self.showUpdateNotice(parseInt($this.attr("nid")),<string>$tr.find(".startDate").text(),<string>$tr.find(".endDate").text(),parseInt(<string>$tr.find(".inter").text()),<string>$tr.find(".ncontent").text())
+                self.showUpdate($(this));
             });
 
             // 取消
@@ -302,19 +299,17 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
 
         /**
          * 打开更新公告框
-         * @param {number} nid [消息编号]
-         * @param {string} startDate [开始时间]
-         * @param {string} endDate [结束时间]
-         * @param {number} inter [发送间隔]
-         * @param {string} content [消息内容]
+         * @param {JQuery<HTMLElement>} $obj [点击的JQ对象]
          */
-        showUpdateNotice(nid:number,startDate:string,endDate:string,inter:number,content:string) {
+        showUpdate($obj:JQuery<HTMLElement>) {
+            let $tr:JQuery<HTMLElement> = $obj.parents("tr");
+
             this.$update.show();
             setTimeout(() => {
                 this.$update.addClass("active");
             },10);
 
-            this.initUpdateMessage(nid,startDate,endDate,inter,content);
+            this.initUpdate(parseInt($obj.attr("nid")),<string>$tr.find(".startDate").text(),<string>$tr.find(".endDate").text(),parseInt(<string>$tr.find(".inter").text()),<string>$tr.find(".ncontent").text());
         }
 
         /**
@@ -325,7 +320,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
          * @param {number} inter [发送间隔]
          * @param {string} content [消息内容]
          */
-        initUpdateMessage(nid:number,startDate:string,endDate:string,inter:number,content:string) {
+        initUpdate(nid:number,startDate:string,endDate:string,inter:number,content:string) {
             let $update:JQuery<HTMLElement> = this.$update;
 
             // 消息编号
@@ -338,7 +333,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
             $update.find(".inter").val(inter).attr("old",inter);
             // 发送内容
             $update.find(".reason").val(content);
-        };
+        }
 
         /**
          * 页码变更

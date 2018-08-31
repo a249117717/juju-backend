@@ -83,6 +83,24 @@ var _loadObject = null, _resource = {
     },
     "updateRobot": {
         "url": _domain + "/v1/backend/run/push/update-robot-push"
+    },
+    "mallList": {
+        "url": _domain + "/v1/backend/finance/product/list-product"
+    },
+    "addMall": {
+        "url": _domain + "/v1/backend/finance/product/new-product"
+    },
+    "updateMall": {
+        "url": _domain + "/v1/backend/finance/product/update-product"
+    },
+    "DeleteMall": {
+        "url": _domain + "/v1/backend/finance/product/delete-product"
+    },
+    "orderList": {
+        "url": _domain + "/v1/backend/finance/order/list-order"
+    },
+    "deleteOrder": {
+        "url": _domain + "/v1/backend/finance/order/delivery"
     }
 };
 function _load(isShow) {

@@ -87,6 +87,24 @@ _resource:resource = {  // 服务请求
     },
     "updateRobot":{ // 更新机器人弹幕
         "url":`${_domain}/v1/backend/run/push/update-robot-push`
+    },
+    "mallList":{    // 商城商品列表
+        "url":`${_domain}/v1/backend/finance/product/list-product`
+    },
+    "addMall":{    // 增加商城商品售卖数量及价格
+        "url":`${_domain}/v1/backend/finance/product/new-product`
+    },
+    "updateMall":{    // 更新商城商品售卖数量及价格
+        "url":`${_domain}/v1/backend/finance/product/update-product`
+    },
+    "DeleteMall":{    // 删除商城商品售卖数量及价格
+        "url":`${_domain}/v1/backend/finance/product/delete-product`
+    },
+    "orderList":{   // 订单列表
+        "url":`${_domain}/v1/backend/finance/order/list-order`
+    },
+    "deleteOrder":{   // 删除订单
+        "url":`${_domain}/v1/backend/finance/order/delivery`
     }
 };
 
@@ -190,6 +208,30 @@ interface resource {
      * 更新机器人弹幕
      */
     "updateRobot":postUrl|Function
+    /**
+     * 商城商品列表
+     */
+    "mallList":postUrl|Function
+    /**
+     * 增加商城商品售卖数量及价格
+     */
+    "addMall":postUrl|Function
+    /**
+     * 更新商城商品售卖数量及价格
+     */
+    "updateMall":postUrl|Function
+    /**
+     * 删除商城商品售卖数量及价格
+     */
+    "DeleteMall":postUrl|Function
+    /**
+     * 订单列表
+     */
+    "orderList":postUrl|Function
+    /**
+     * 删除订单
+     */
+    "deleteOrder":postUrl|Function
 }
 
 /**

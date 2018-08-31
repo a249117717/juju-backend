@@ -1,5 +1,5 @@
 // 注册过滤器，转换时间戳
-(<any>window).template.helper('formatData',function(data,format){
+(<any>window).template.helper('formatDate',function(data,format){
     let date:Date = new Date();
     date.setTime(data*1000);
 
@@ -101,17 +101,14 @@ class IndexMain {
 
         // 监听onhashchange事件，地址栏变动
         window.onhashchange = function(){
-            let active:string = "",
-            hash:string = window.location.hash.substr(1);
+             let hash:string = window.location.hash.substr(1);
             
-            if(~_router.indexOf(hash)) {// 如果hash不存在，则访问json中的第一个
-                active = `.${hash}`;
-            } else {
-                active = `.${_router[0]}`;
+            if(!~_router.indexOf(hash)) {// 如果hash不存在，则访问路由中的第一个
+                hash = _router[0];
             };
             
             // 左侧菜单显示相应的目录
-            self.side.setActive(active);
+            self.side.setActive(`.${hash}`);
             // 实例化相应的类
             self.detail.callChartBySide(hash);
         };
@@ -475,8 +472,8 @@ class CDetail {
             var currentChart = new obj({
                 mainView:this
             });
-            currentChart.fetch();
             this.currentChart = currentChart;
+            currentChart.fetch();
         });
 
         // if(this.moduleObject[fileName]) {
@@ -1285,7 +1282,6 @@ class ChartBase {
     completeHtml:boolean = false; // 是否载入html完成，默认为false
 
     constructor(props:any) {
-        let parent:IndexMain = null;
         $.extend(this,props);
     }
 
@@ -1341,5 +1337,3 @@ class ChartBase {
      */
     getFormReturn(e:HTMLElement){}
 }
-
-(new IndexMain()).fetch();

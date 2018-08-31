@@ -115,8 +115,7 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
                 });
             });
             this.$el.find(".detail").on("click", ".btn-update", function () {
-                var $this = $(this), $tr = $this.parents("tr");
-                self.showUpdateMessage(parseInt($this.attr("mid")), parseInt($this.attr("uid")), $tr.find(".mtime").text(), $tr.find(".mcontent").text());
+                self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
                 _this.$update.removeClass("active");
@@ -215,15 +214,16 @@ define(["text!model/chart/views/messageListTemp.html", "text!model/chart/views/m
             option.content = $JQ.find(".reason").val();
             return option;
         };
-        MessageList.prototype.showUpdateMessage = function (mid, uid, send_time, content) {
+        MessageList.prototype.showUpdate = function ($obj) {
             var _this = this;
+            var $tr = $obj.parents("tr");
             this.$update.show();
             setTimeout(function () {
                 _this.$update.addClass("active");
             }, 10);
-            this.initUpdateMessage(mid, uid, send_time, content);
+            this.initUpdate(parseInt($obj.attr("mid")), parseInt($obj.attr("uid")), $tr.find(".mtime").text(), $tr.find(".mcontent").text());
         };
-        MessageList.prototype.initUpdateMessage = function (mid, uid, send_time, content) {
+        MessageList.prototype.initUpdate = function (mid, uid, send_time, content) {
             var $update = this.$update;
             $update.find(".mid").val(mid);
             switch (uid) {

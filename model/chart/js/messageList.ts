@@ -138,10 +138,7 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
 
             // 更新
             this.$el.find(".detail").on("click",".btn-update",function(){
-                let $this:JQuery<HTMLElement> = $(this),
-                $tr:JQuery<HTMLElement> = $this.parents("tr");
-
-                self.showUpdateMessage(parseInt($this.attr("mid")),parseInt($this.attr("uid")),<string>$tr.find(".mtime").text(),<string>$tr.find(".mcontent").text())
+                self.showUpdate($(this));
             });
 
             // 取消
@@ -272,18 +269,17 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
 
         /**
          * 打开更新消息框
-         * @param {number} mid [消息编号]
-         * @param {number} uid [用户编号,0表示全服,非0表示具体玩家]
-         * @param {string} content [消息内容]
-         * @param {string} send_time [发送时间]
+         * @param {JQuery<HTMLElement>} $obj [点击的JQ对象]
          */
-        showUpdateMessage(mid:number,uid:number,send_time:string,content:string) {
+        showUpdate($obj:JQuery<HTMLElement>) {
+            let $tr:JQuery<HTMLElement> = $obj.parents("tr");
+
             this.$update.show();
             setTimeout(() => {
                 this.$update.addClass("active");
             },10);
 
-            this.initUpdateMessage(mid,uid,send_time,content);
+            this.initUpdate(parseInt($obj.attr("mid")),parseInt($obj.attr("uid")),<string>$tr.find(".mtime").text(),<string>$tr.find(".mcontent").text());
         }
 
         /**
@@ -293,7 +289,7 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
          * @param {string} send_time [发送时间]
          * @param {string} content [消息内容]
          */
-        initUpdateMessage(mid:number,uid:number,send_time:string,content:string) {
+        initUpdate(mid:number,uid:number,send_time:string,content:string) {
             let $update:JQuery<HTMLElement> = this.$update;
 
             // 消息编号

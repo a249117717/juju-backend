@@ -18,5 +18,5 @@ requirejs.config({
 });
 
 require(["text","charts"],function(text,charts){
-    
+    (new IndexMain()).fetch();
 });

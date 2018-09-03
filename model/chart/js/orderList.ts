@@ -1,12 +1,12 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallListDetail.html"],function(mallListTemp,mallListDetail){
+define(["text!model/chart/views/orderListTemp.html","text!model/chart/views/orderListDetail.html"],function(orderListTemp,orderListDetail){
     // 订单列表
     class OrderList extends ChartBase {
         $el:JQuery<HTMLElement> = null;
         template = { // 模板
-            "routerTemp":mallListTemp,
-            "detail":mallListDetail
+            "routerTemp":orderListTemp,
+            "detail":orderListDetail
         };
 
         constructor(props:any) {
@@ -18,26 +18,29 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
          * 数据获取
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数]
+         * @param {number} start [开始时间戳，默认为0]
+         * @param {number} end [结束时间戳，默认为0]
          */
-        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,start?:number,end?:number) {
             let self:OrderList = this;
-            self.render({});
 
-            // _load(true);
-            // (<Function>_resource.robotList)(JSON.stringify({
-            //     "page_size":pageSize,
-            //     "page_index":pageNo,
-            //     "token":this.mainView.mainView.token
-            // }),function(data:any){
-            //     if(!self.$el) {
-                    // self.render(data);
-            //     } else {
-            //         // 设置总页数
-            //         self.pading.setTotal(data.count);
-            //     };
-            //     self.renderDetail(data)
-            //     _load(false);
-            // });
+            _load(true);
+            (<Function>_resource.orderList)(JSON.stringify({
+                "start_time":start,
+                "end_time":end,
+                "page_size":pageSize,
+                "page_index":pageNo,
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(!self.$el) {
+                    self.render(data);
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
         }
 
         /**
@@ -46,7 +49,7 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(false,true);
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-orderList");
@@ -57,6 +60,7 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
          * 事件绑定
          */
         bindEvent() {
+            
         }
 
         /**

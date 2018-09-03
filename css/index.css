@@ -1448,10 +1448,6 @@ body {
   color: #EEEEEE;
 }
 
-.m-statisticalUser {
-  padding-bottom: 20px;
-}
-
-.m-statisticalUser #diagram {
-  margin: 20px 0 40px 0;
+#diagram {
+  margin-bottom: 40px;
 }

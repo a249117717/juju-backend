@@ -1233,10 +1233,6 @@ body{
     @include detail;
 }
 
-.m-statisticalUser {
-    padding-bottom:20px;
-
-    #diagram {
-        margin:20px 0 40px 0;
-    }
+#diagram {
+    margin-bottom:40px;
 }

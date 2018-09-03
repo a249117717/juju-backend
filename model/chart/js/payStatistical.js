@@ -14,6 +14,7 @@ define(["text!model/chart/views/payStatisticalTemp.html", "text!model/chart/view
         function PayStatistical(props) {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
+            _this.chart = null;
             _this.template = {
                 "routerTemp": payStatisticalTemp,
                 "detail": payStatisticalDetail
@@ -48,10 +49,74 @@ define(["text!model/chart/views/payStatisticalTemp.html", "text!model/chart/view
             header.showMenu(false, false, true);
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-payStatistical");
+            this.chart = new window.G2.Chart({
+                container: 'diagram',
+                height: 400,
+                forceFit: true,
+                padding: ['auto', 50, 'auto', 'auto'],
+                background: {
+                    fill: "#fff"
+                }
+            });
             this.bindEvent();
         };
         PayStatistical.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
+            this.renderChart(data);
+        };
+        PayStatistical.prototype.renderChart = function (data) {
+            var chart = this.chart;
+            chart.clear();
+            chart.source(this.formatData(data));
+            chart.scale('value', {
+                min: 0
+            });
+            chart.tooltip(true, {
+                itemTpl: "<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            chart.axis('value', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.legend(true);
+            chart.line().position('create_time*value').color("type");
+            chart.point().position('create_time*value').color("type").size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            chart.render();
+        };
+        PayStatistical.prototype.formatData = function (data) {
+            var temp = [], date = new Date();
+            data.data.forEach(function (en) {
+                date.setTime(en.create_time * 1000);
+                en.create_time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "累计订单总额",
+                    "value": parseInt(en.total_cash)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "累计付费用户数",
+                    "value": parseInt(en.total_user)
+                });
+                temp.push({
+                    "create_time": en.create_time,
+                    "type": "累计购买钻石总额",
+                    "value": parseInt(en.total_diamond_cash)
+                });
+            });
+            return temp;
         };
         PayStatistical.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);

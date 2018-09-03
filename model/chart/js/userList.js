@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/userListTemp.html", "text!model/chart/views/systemNoticeDetail.html"], function (userListTemp, userListDetail) {
+define(["text!model/chart/views/userListTemp.html", "text!model/chart/views/userListDetail.html"], function (userListTemp, userListDetail) {
     var UserList = (function (_super) {
         __extends(UserList, _super);
         function UserList(props) {

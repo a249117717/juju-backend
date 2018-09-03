@@ -57,7 +57,6 @@ define(["text!model/chart/views/statisticalTemp.html","text!model/chart/views/st
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-statisticalUser");
-
             this.chart = new (<any>window).G2.Chart({
                 container: 'diagram', // 指定图表容器 ID
                 height : 400, // 指定图表高度

@@ -113,7 +113,7 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
                     $this.attr("old",<string>$this.val());
                 } else {
                     $this.val($this.attr("old"));
-                    (<any>window).layer.tips('请输入大于0的正整数', self.$add.find(".inter")[0], {
+                    (<any>window).layer.tips('请输入大于0的正整数', $this[0], {
                         tips: [1, '#FF9800'],
                         time: 2000
                     });

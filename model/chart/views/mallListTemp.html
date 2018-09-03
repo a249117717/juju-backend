@@ -1,7 +1,21 @@
 <!-- 商城商品模板 -->
 <div class="m-mallList defaultTable">
+    <!-- 更新商城商品 -->
+    <div class="m-updateContent updateProcude">
+        <div class="content">
+            <div class="title">更新商城商品</div>
+            <div class="input-group">
+                
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
     <!-- 新增商城商品 -->
-    <div class="m-addContent addCurtain">
+    <div class="m-addContent addProcude">
         <form onsubmit="return false;">
             <div class="title">新增商城商品</div>
             <div class="input-group">
@@ -23,31 +37,31 @@
                 <div class="group">
                     <div class="tip">钻石数量</div>
                     <div class="descript">
-                        <input class="diamonNumber defaultInput" type="text" placeholder="请输入钻石数量">
+                        <input class="diamonNumber defaultInput" old="0" type="text" placeholder="请输入钻石数量">
                     </div>
                 </div>
-                <div class="group">
+                <div class="group gitDiamon-out">
                     <div class="tip">赠送钻石</div>
                     <div class="descript">
-                        <input class="gitDiamon defaultInput" type="text" placeholder="请输入赠送钻石">
+                        <input class="gitDiamon defaultInput" old="0" type="text" placeholder="请输入赠送钻石数量">
                     </div>
                 </div>
-                <div class="group">
+                <div class="group reducePrice-out hide">
                     <div class="tip">立减价格</div>
                     <div class="descript">
-                        <input class="reducePrice defaultInput" type="text" placeholder="请输入立减价格">
+                        <input class="reducePrice defaultInput" old="0" type="text" placeholder="请输入立减价格">
                     </div>
                 </div>
                 <div class="group">
                     <div class="tip">苹果商品ID</div>
                     <div class="descript">
-                        <input class="produceId defaultInput" type="text" placeholder="请输入苹果商品ID">
+                        <input class="produceId defaultInput" old="0" type="text" placeholder="请输入苹果商品ID">
                     </div>
                 </div>
                 <div class="group">
                     <div class="tip">价格</div>
                     <div class="descript">
-                        <input class="price defaultInput" type="text" placeholder="请输入价格">
+                        <input class="price defaultInput" old="0" type="text" placeholder="请输入价格">
                     </div>
                 </div>
             </div>

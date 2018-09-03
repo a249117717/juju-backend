@@ -8,28 +8,45 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/mallListTemp.html", "text!model/chart/views/mallListDetail.html"], function (mallListTemp, mallListDetail) {
+define(["text!model/chart/views/orderListTemp.html", "text!model/chart/views/orderListDetail.html"], function (orderListTemp, orderListDetail) {
     var OrderList = (function (_super) {
         __extends(OrderList, _super);
         function OrderList(props) {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
             _this.template = {
-                "routerTemp": mallListTemp,
-                "detail": mallListDetail
+                "routerTemp": orderListTemp,
+                "detail": orderListDetail
             };
             $.extend(_this, props);
             return _this;
         }
-        OrderList.prototype.fetch = function (pageNo, pageSize) {
+        OrderList.prototype.fetch = function (pageNo, pageSize, start, end) {
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = _pageSize; }
             var self = this;
-            self.render({});
+            _load(true);
+            _resource.orderList(JSON.stringify({
+                "start_time": start,
+                "end_time": end,
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    self.render(data);
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
         };
         OrderList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu();
+            header.showMenu(false, true);
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-orderList");
             this.bindEvent();

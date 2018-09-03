@@ -286,7 +286,11 @@ function _error(code:number) : string {
 function _resourceError(code:number,msg:string) {
     switch(code) {
         case 401:
-            (<any>window).layer.alert(msg,function(){
+            (<any>window).layer.alert(msg,{
+                "cancel":function(){  // 点击关闭按钮也是返回首页
+                    window.location.replace("index.html");
+                }
+            },function(){   // 点击确定按钮返回首页
                 window.location.replace("index.html");
             });
         break;

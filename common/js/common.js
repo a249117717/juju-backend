@@ -128,7 +128,11 @@ function _error(code) {
 function _resourceError(code, msg) {
     switch (code) {
         case 401:
-            window.layer.alert(msg, function () {
+            window.layer.alert(msg, {
+                "cancel": function () {
+                    window.location.replace("index.html");
+                }
+            }, function () {
                 window.location.replace("index.html");
             });
             break;

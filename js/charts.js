@@ -32,11 +32,7 @@ var IndexMain = (function () {
         this.bindEvent();
     };
     IndexMain.prototype.bindEvent = function () {
-        var self = this;
         this.windowEvent();
-        $("#formReturn").on("load", function () {
-            self.detail.currentChart.getFormReturn(this);
-        });
     };
     IndexMain.prototype.initMethod = function () {
         var options = {
@@ -257,6 +253,9 @@ var CSide = (function () {
             if (!$this.hasClass("active")) {
                 $this.addClass("active").siblings(".active").removeClass("active");
             }
+            else {
+                window.location.reload();
+            }
             ;
         });
         this.$el.find(".header .changePwd").on("click", function () {
@@ -283,7 +282,12 @@ var CDetail = (function () {
     CDetail.prototype.render = function () {
         this.bindEvent();
     };
-    CDetail.prototype.bindEvent = function () { };
+    CDetail.prototype.bindEvent = function () {
+        var self = this;
+        $("#formReturn").on("load", function () {
+            self.currentChart.getFormReturn(this);
+        });
+    };
     CDetail.prototype.renderByChildren = function (html) {
         this.$el.html(html);
         this.renderComponent();
@@ -343,7 +347,14 @@ var Pading = (function () {
         var $pading = this.mainView.mainView.$el.find("pading");
         this.total = parseInt($pading.attr("total"));
         if (!this.total) {
-            this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            var count = $pading.attr("count");
+            if (count) {
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            }
+            else {
+                this.total = 1;
+            }
+            ;
             this.total = this.total ? this.total : 1;
         }
         ;

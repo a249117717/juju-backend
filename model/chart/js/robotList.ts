@@ -291,31 +291,31 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
         /**
          * 机器人编号
          */
-        uid?:number,
+        uid?:number
         /**
          * 昵称
          */
-        nickname:string,
+        nickname:string
         /**
          * 签名
          */
-        sign:string,
+        sign:string
         /**
          * 性别
          */
-        sex:number,
+        sex:number
         /**
          * 推送内容
          */
-        text:string,
+        text:string
         /**
          * 头像url
          */
-        head_img:string,
+        head_img:string
         /**
          * 手机号
          */
-        phone:string,
+        phone:string
         /**
          * 出生日期
          */

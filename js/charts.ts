@@ -51,14 +51,7 @@ class IndexMain {
      * 事件绑定
      */
     bindEvent() {
-        let self:IndexMain = this;
-
         this.windowEvent();
-
-        // 绑定iframe表单的加载事件
-        $("#formReturn").on("load",function(){
-            self.detail.currentChart.getFormReturn(this);
-        });
     }
     
     /**
@@ -388,7 +381,11 @@ class CSide {
             let $this:JQuery<HTMLElement> = $(this);
 
             if(!$this.hasClass("active")) {
+                // 如果当前点击的为未激活状态的侧栏，则将其激活
                 $this.addClass("active").siblings(".active").removeClass("active");
+            } else {
+                // 如果当前点击的为激活状态的侧栏，则刷新
+                window.location.reload();
             };
         });
 
@@ -438,7 +435,14 @@ class CDetail {
     /**
      * 事件绑定
      */
-    bindEvent(){}
+    bindEvent(){
+        let self:CDetail = this;
+
+        // 绑定iframe表单的加载事件
+        $("#formReturn").on("load",function(){
+            self.currentChart.getFormReturn(this);
+        });
+    }
 
     /**
      * 根据子对象渲染内容
@@ -542,8 +546,14 @@ class Pading {
         let $pading:JQuery<HTMLElement> = this.mainView.mainView.$el.find("pading");
         this.total = parseInt($pading.attr("total"));
         if(!this.total) {
-            // 允许用户传递总个数，当总页数不存在的时候
-            this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            let count:string = $pading.attr("count");
+            if(count) {
+                // 允许用户传递总个数，当总页数不存在的时候
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            } else {
+                // 如果两者都不存在，则默认为1
+                this.total = 1;
+            };
             // 如果总页数小于1，则设置为1
             this.total = this.total?this.total:1;
         };

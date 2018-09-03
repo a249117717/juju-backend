@@ -1,8 +1,28 @@
 <!-- 商城商品详情 -->
 <thead>
     <tr>
-        <th>创建时间</th>
+        <th>商品编号</th>
+        <th>类型</th>
+        <th>钻石数量</th>
+        <th>赠送钻石/立减价格</th>
+        <th>苹果商品ID</th>
+        <th>价格</th>
+        <th>操作</th>
     </tr>
 </thead>
 <tbody>
+    {{ each data as en }}
+        <tr>
+            <td>{{ en.id }}</td>
+            <td>{{ en.type == 1?"钻石":"会员" }}</td>
+            <td class="num">{{ en.num }}</td>
+            <td>{{ en.type == 1?"赠送":"立减" }}：<span class="giveNum">{{ en.give_num }}</span></td>
+            <td class="pid">{{ en.product_id }}</td>
+            <td class="price">{{ en.price }}</td>
+            <td>
+                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" mid="{{ en.id }}">删除</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey" mid="{{ en.id }}" mtype="{{ en.type }}">更新</button>
+            </td>
+        </tr>
+    {{ /each }}
 </tbody>

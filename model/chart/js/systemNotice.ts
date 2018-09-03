@@ -353,19 +353,19 @@ define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/s
         /**
          * 消息编号
          */
-        nid:number,
+        nid:number
         /**
          * 开始时间
          */
-        startDate:string,
+        startDate:string
         /**
          * 结束时间
          */
-        endDate:string,
+        endDate:string
         /**
          * 发送间隔
          */
-        inter:number,
+        inter:number
         /**
          * 消息内容
          */

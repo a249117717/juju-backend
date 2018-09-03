@@ -349,15 +349,15 @@ define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/me
         /**
          * 消息编号
          */
-        mid:number,
+        mid:number
         /**
          * 用户编号,0表示全服,非0表示具体玩家
          */
-        uid:number,
+        uid:number
         /**
          * 发送时间
          */
-        send_time:string,
+        send_time:string
         /**
          * 消息内容
          */

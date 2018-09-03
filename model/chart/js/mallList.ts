@@ -19,28 +19,23 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
 
         /**
          * 数据获取
-         * @param {number} pageNo [页码]
-         * @param {number} pageSize [每页条数]
          */
-        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+        fetch() {
             let self:MallList = this;
-            self.render({});
 
-            // _load(true);
-            // (<Function>_resource.mallList)(JSON.stringify({
-            //     "page_size":pageSize,
-            //     "page_index":pageNo,
-            //     "token":this.mainView.mainView.token
-            // }),function(data:any){
-            //     if(!self.$el) {
-            //         self.render(data);
-            //     } else {
-            //         // 设置总页数
-            //         self.pading.setTotal(data.count);
-            //     };
-            //     self.renderDetail(data)
-            //     _load(false);
-            // });
+            _load(true);
+            (<Function>_resource.mallList)(JSON.stringify({
+                "token":this.mainView.mainView.token
+            }),function(data:any){
+                if(!self.$el) {
+                    self.render(data);
+                } else {
+                    // 设置总页数
+                    self.pading.setTotal(data.count);
+                };
+                self.renderDetail(data)
+                _load(false);
+            });
         }
 
         /**
@@ -121,6 +116,53 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
                     });
                 };
             });
+
+            // 删除按钮
+            this.$el.find(".detail").on("click",".btn-delete",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+
+                (<any>window).layer.confirm(`是否删除编号为${$this.attr("mid")}的商品？`,function(e){
+                    (<Function>_resource.DeleteMall)(JSON.stringify({
+                        "id":parseInt($this.attr("mid")),
+                        "token":self.mainView.mainView.token
+                    }),function(data){
+                        $this.prop("disabled",true);
+                        (<any>window).layer.msg("删除成功");
+                        (<any>window).layer.close(e);
+                    });
+                });
+            });
+
+            // 更新
+            this.$el.find(".detail").on("click",".btn-update",function(){
+                self.showUpdate($(this));
+            });
+
+            // 更新框的取消按钮
+            this.$update.find(".btn-cancel").on("click",() => {
+                this.$update.removeClass("active");
+                setTimeout(() => {
+                    this.$update.hide()
+                },200);
+            });
+
+            // 更新消息确定按钮
+            this.$update.on("click",".btn-submit",function(){
+                if(!self.dataCheck(self.$update)) {
+                    return;
+                };
+
+                (<any>window).layer.confirm("确认更新消息么？",function(e){
+                    _load(true);
+                    (<Function>_resource.updateMall)(JSON.stringify(self.getSubmitData(self.$update)),function(data){
+                        self.$update.find(".btn-cancel").click();
+                        self.fetch();
+                        (<any>window).layer.msg("更新成功");
+                        (<any>window).layer.close(e);
+                        _load(false);
+                    });
+                });
+            });
         }
 
         /**
@@ -128,7 +170,94 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
          * @param {Object} data [数据]
          */
         renderDetail(data:any) {
+            this.$el.find(".info").html((<any>window).template.compile(this.template.detail)(data));
+        }
 
+        /**
+         * 打开更新框
+         * @param {JQuery<HTMLElement>} $obj [点击的JQ对象]
+         */
+        showUpdate($obj:JQuery<HTMLElement>) {
+            let $tr:JQuery<HTMLElement> = $obj.parents("tr"),
+            head = $tr.find(".head .pho").attr("src");
+            // 如果照片为默认，则表示不存在
+            head == "common/images/defaultUser.png"?"":head;
+
+            this.$update.show();
+            setTimeout(() => {
+                this.$update.addClass("active");
+            },10);
+
+            this.initUpdate({
+                "mid":parseInt($obj.attr("mid")),
+                "type":$obj.attr("mtype"),
+                "num":parseInt($tr.find(".num").text()),
+                "give_num":parseInt($tr.find(".giveNum").text()),
+                "product_id":parseInt($tr.find(".pid").text()),
+                "price":parseInt($tr.find(".price").text())
+            });
+        }
+
+        /**
+         * 初始化更新框
+         * @param {JSON} initData [数据]
+         */
+        initUpdate(initData:UpdateInitData) {
+            let $update:JQuery<HTMLElement> = this.$update;
+            $update.find(".input-group").html((<any>window).template.compile(this.template.update)(initData));
+            // 类型
+            $update.find(".operation").eq(parseInt(initData.type) - 1).prop("checked",true);
+            switch(initData.type) {
+                case "1":
+                    $update.find(".reducePrice-out").hide();
+                    $update.find(".gitDiamon").attr("old",initData.give_num).val(initData.give_num);
+                break;
+                case "2":
+                    $update.find(".gitDiamon-out").hide();
+                    $update.find(".reducePrice").attr("old",initData.give_num / 100).val(initData.give_num / 100);
+                break
+            };
+            this.updateBindEvent();
+        }
+
+        /**
+         * 更新框的事件绑定
+         */
+        updateBindEvent() {
+            let self:MallList = this;
+
+            // 新增框的类型选择
+            this.$update.find(".operation").on("change",function(){
+                let $this:JQuery<HTMLElement> = $(this);
+                
+                // 切换商品类型
+                switch($this.val()) {
+                    case "1":   // 类型为钻石，则显示赠送钻石输入框
+                        self.$update.find(".reducePrice-out").hide();
+                        self.$update.find(".gitDiamon-out").show();
+                    break;
+                    case "2":   // 类型为会员，则显示钻石数量框
+                        self.$update.find(".gitDiamon-out").hide();
+                        self.$update.find(".reducePrice-out").show();
+                    break;
+                }
+            });
+            
+            // 表单内输入框的正整数校验
+            this.$update.find(".gitDiamon,.diamonNumber,.reducePrice,.produceId,.price").on("input",function(){
+                let $this:JQuery<HTMLElement> = $(this),
+                val:string = <string>$this.val();
+
+                if(/^\d*$/.test(val) && parseInt(val) >= 0) {
+                    $this.attr("old",<string>$this.val());
+                } else {
+                    $this.val($this.attr("old"));
+                    (<any>window).layer.tips('请输入大于等于0的整数', $this[0], {
+                        tips: [1, '#FF9800'],
+                        time: 2000
+                    });
+                };
+            });
         }
 
         /**
@@ -184,17 +313,39 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
                 break;
             };
 
+            if($JQ.is(".updateProcude")) {
+                option["id"] = parseInt(<string>$JQ.find(".mid").val());
+            };
+
             return option;
         }
+    }
 
+    interface UpdateInitData {
         /**
-         * 页码变更
-         * @param {number} pageNo [页码]
-         * @param {number} pageSize [每页条数]
+         * 商品编号
          */
-        changePading(pageNo:number,pageSize:number) {
-            this.fetch(pageNo,pageSize);
-        }
+        mid:number
+        /**
+         * 类型
+         */
+        type:string
+        /**
+         * 钻石数量
+         */
+        num:number
+        /**
+         * 钻石数量/立减价格
+         */
+        give_num:number
+        /**
+         * 苹果对应的商品id
+         */
+        product_id:number
+        /**
+         * 价格
+         */
+        price:number
     }
 
     return MallList;

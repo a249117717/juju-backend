@@ -1,34 +1,52 @@
-<!-- 商城商品详情 -->
-<thead>
-    <tr>
-        <th>创建时间</th>
-        <th>头像</th>
-        <th>昵称</th>
-        <th>性别</th>
-        <th>签名</th>
-        <th>手机号</th>
-        <th>出生日期</th>
-        <th>推送内容</th>
-        <th>操作</th>
-    </tr>
-</thead>
-<tbody>
-    {{ each data as en }}
-        <tr>
-            <td class="create" createTime="{{ en.create_time }}">{{ formatDate(en.create_time) }}</td>
-            <td class="head">
-                <img class="pho" src="{{ en.head_img?en.head_img:'common/images/defaultUser.png' }}">
-            </td>
-            <td class="nickname">{{ en.name }}</td>
-            <td class="sex" sex="{{ en.sex }}">{{ en.sex == 0?'未知':(en.sex == 1?'男':'女') }}</td>
-            <td class="sign">{{ en.sign }}</td>
-            <td class="phone">{{ en.phone }}</td>
-            <td class="birthday">{{ formatDate(en.birthday) }}</td>
-            <td class="reason">{{ en.text }}</td>
-            <td>
-                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}" uname="{{ en.name }}">删除</button>
-                <button class="btn btn-update mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}">更新</button>
-            </td>
-        </tr>
-    {{ /each }}
-</tbody>
+<!-- 商城商品更新框内容 -->
+<div class="group">
+    <div class="tip">商品编号</div>
+    <div class="descript">
+        <input class="mid defaultInput" value="{{ mid }}" readonly>
+    </div>
+</div>
+<div class="group mdui-theme-accent-blue">
+    <div class="tip">类型</div>
+    <div class="descript">
+        <label class="mdui-radio">
+            <input class="operation" type="radio" name="sex" value="1"/>
+            <i class="mdui-radio-icon"></i>
+            <span>钻石</span>
+        </label>
+        <label class="mdui-radio">
+            <input class="operation" type="radio" name="sex" value="2"/>
+            <i class="mdui-radio-icon"></i>
+            <span>会员</span>
+        </label>
+    </div>
+</div>
+<div class="group">
+    <div class="tip">钻石数量</div>
+    <div class="descript">
+        <input class="diamonNumber defaultInput" old="{{ num }}" type="text" placeholder="请输入钻石数量" value="{{ num }}">
+    </div>
+</div>
+<div class="group gitDiamon-out">
+    <div class="tip">赠送钻石</div>
+    <div class="descript">
+        <input class="gitDiamon defaultInput" old="0" type="text" placeholder="请输入赠送钻石数量">
+    </div>
+</div>
+<div class="group reducePrice-out">
+    <div class="tip">立减价格</div>
+    <div class="descript">
+        <input class="reducePrice defaultInput" old="0" type="text" placeholder="请输入立减价格">
+    </div>
+</div>
+<div class="group">
+    <div class="tip">苹果商品ID</div>
+    <div class="descript">
+        <input class="produceId defaultInput" old="{{ product_id }}" type="text" placeholder="请输入苹果商品ID" value="{{ product_id }}">
+    </div>
+</div>
+<div class="group">
+    <div class="tip">价格</div>
+    <div class="descript">
+        <input class="price defaultInput" old="{{ price / 100 }}" type="text" placeholder="请输入价格" value="{{ price / 100 }}">
+    </div>
+</div>

@@ -14,6 +14,8 @@ define(["text!model/chart/views/orderListTemp.html", "text!model/chart/views/ord
         function OrderList(props) {
             var _this = _super.call(this, props) || this;
             _this.$el = null;
+            _this.select = "30,50,100,200";
+            _this.selected = 30;
             _this.template = {
                 "routerTemp": orderListTemp,
                 "detail": orderListDetail
@@ -23,7 +25,7 @@ define(["text!model/chart/views/orderListTemp.html", "text!model/chart/views/ord
         }
         OrderList.prototype.fetch = function (pageNo, pageSize, start, end) {
             if (pageNo === void 0) { pageNo = 1; }
-            if (pageSize === void 0) { pageSize = _pageSize; }
+            if (pageSize === void 0) { pageSize = this.selected; }
             var self = this;
             _load(true);
             _resource.orderList(JSON.stringify({
@@ -34,6 +36,7 @@ define(["text!model/chart/views/orderListTemp.html", "text!model/chart/views/ord
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (!self.$el) {
+                    data["select"] = self.select;
                     self.render(data);
                 }
                 else {
@@ -52,8 +55,23 @@ define(["text!model/chart/views/orderListTemp.html", "text!model/chart/views/ord
             this.bindEvent();
         };
         OrderList.prototype.bindEvent = function () {
+            var self = this;
+            this.$el.find(".detail").on("click", ".btn-elivery", function () {
+                var $this = $(this);
+                window.layer.confirm("\u7F16\u53F7\u4E3A" + $this.attr("oid") + "\u7684\u8BA2\u5355\u662F\u5426\u4EA4\u8D27\uFF1F", function (e) {
+                    _resource.deliveryOrder(JSON.stringify({
+                        "id": parseInt($this.attr("oid")),
+                        "token": self.mainView.mainView.token
+                    }), function () {
+                        $this.prop("disabled", true);
+                        window.layer.msg("交货成功");
+                        window.layer.close(e);
+                    });
+                });
+            });
         };
         OrderList.prototype.renderDetail = function (data) {
+            this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
         };
         OrderList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);

@@ -99,7 +99,7 @@ var _loadObject = null, _resource = {
     "orderList": {
         "url": _domain + "/v1/backend/finance/order/list-order"
     },
-    "deleteOrder": {
+    "deliveryOrder": {
         "url": _domain + "/v1/backend/finance/order/delivery"
     }
 };

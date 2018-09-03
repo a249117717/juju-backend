@@ -543,26 +543,8 @@ class Pading {
      * 获取数据
      */
     fetch() {
-        let $pading:JQuery<HTMLElement> = this.mainView.mainView.$el.find("pading");
-        this.total = parseInt($pading.attr("total"));
-        if(!this.total) {
-            let count:string = $pading.attr("count");
-            if(count) {
-                // 允许用户传递总个数，当总页数不存在的时候
-                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
-            } else {
-                // 如果两者都不存在，则默认为1
-                this.total = 1;
-            };
-            // 如果总页数小于1，则设置为1
-            this.total = this.total?this.total:1;
-        };
-
-        // 下拉选项
-        this.selectSize = $pading.attr("select")?$pading.attr("select").split(","):null;
-        // 下拉选项的默认选中
-        this.selected = $pading.attr("defaultSelect")?$pading.attr("defaultSelect"):null;
-
+        this.initSelectByAttr();
+        this.initTotalByAttr()
         this.render();
     }
 
@@ -572,13 +554,15 @@ class Pading {
     render() {
         let $detail = this.mainView.mainView.$el;
 
-        $detail.find("pading")[0].outerHTML = (<any>window).template(this.template,{});
+        $detail.find("pading")[0].outerHTML = (<any>window).template(this.template,{
+            select:this.selectSize,
+            selected:this.selected
+        });
         this.$el = $detail.find(".m-pading:last");
         this.$selectSize = this.$el.find(".selectSize");
         this.$selectNo = this.$el.find(".selectNo");
 
         this.initTotal("init");
-        this.initSelectSize();
         // 初始化mdui组件
         (<any>window).mdui.mutation();
 
@@ -639,28 +623,53 @@ class Pading {
     }
 
     /**
-     * 初始化下拉选项
+     * 根据dom标签属性初始化总页数
      */
-    initSelectSize() {
-        let html:string = "";
+    initTotalByAttr() {
+        let $pading:JQuery<HTMLElement> = this.mainView.mainView.$el.find("pading");
 
-        if(this.selectSize) {   // 如果存在下拉选项，则根据其改变，否则使用默认
-            this.selectSize.forEach(en => {
-                if(en == this.selected) {
-                    html += `<option value='${en}' selected>${en}</option>`;
-                } else {
-                    html += `<option value='${en}'>${en}</option>`;
-                };
-            });
-            this.$selectSize.find(".pageSize").html(html);
+        this.total = parseInt($pading.attr("total"));
+        if(!this.total) {
+            let count:string = $pading.attr("count");
+            if(count) {
+                // 允许用户传递总个数，当总页数不存在的时候
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            } else {
+                // 如果两者都不存在，则默认为1
+                this.total = 1;
+            };
+            // 如果总页数小于1，则设置为1
+            this.total = this.total?this.total:1;
         };
+    }
+
+    /**
+     * 根据dom标签属性初始化下拉列表
+     */
+    initSelectByAttr() {
+        let $pading:JQuery<HTMLElement> = this.mainView.mainView.$el.find("pading");
+        // 下拉选项
+        if($pading.attr("select")) {
+            this.selectSize = $pading.attr("select").split(",");
+            // 下拉选项的默认选中
+            this.selected = $pading.attr("defaultSelect");
+            // 如果默认选中不存在或者在下拉列表中不存在，则选中下拉列表的第一个
+            if(!this.selected || !~this.selectSize.indexOf(this.selected)) {
+                this.selected = this.selectSize[0];
+            };
+        } else {
+            this.selectSize = ["10","20","30","50"];
+            this.selected = "10";
+        };
+        // 设置默认每页条数
+        this.pageSize = parseInt(this.selected);
     }
 
     /**
      * 初始化或重置总页数
      * @param {string} operation [操作，init或reset]
      */
-    initTotal(operation) {
+    initTotal(operation:string) {
         let total:number = this.total;
         // 设置总页数
         this.$el.find(".total").text(total);

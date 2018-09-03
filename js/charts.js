@@ -344,32 +344,20 @@ var Pading = (function () {
         $.extend(this, props);
     }
     Pading.prototype.fetch = function () {
-        var $pading = this.mainView.mainView.$el.find("pading");
-        this.total = parseInt($pading.attr("total"));
-        if (!this.total) {
-            var count = $pading.attr("count");
-            if (count) {
-                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
-            }
-            else {
-                this.total = 1;
-            }
-            ;
-            this.total = this.total ? this.total : 1;
-        }
-        ;
-        this.selectSize = $pading.attr("select") ? $pading.attr("select").split(",") : null;
-        this.selected = $pading.attr("defaultSelect") ? $pading.attr("defaultSelect") : null;
+        this.initSelectByAttr();
+        this.initTotalByAttr();
         this.render();
     };
     Pading.prototype.render = function () {
         var $detail = this.mainView.mainView.$el;
-        $detail.find("pading")[0].outerHTML = window.template(this.template, {});
+        $detail.find("pading")[0].outerHTML = window.template(this.template, {
+            select: this.selectSize,
+            selected: this.selected
+        });
         this.$el = $detail.find(".m-pading:last");
         this.$selectSize = this.$el.find(".selectSize");
         this.$selectNo = this.$el.find(".selectNo");
         this.initTotal("init");
-        this.initSelectSize();
         window.mdui.mutation();
         this.bindEvent();
     };
@@ -416,22 +404,38 @@ var Pading = (function () {
             _this.setPageNo(1, "home");
         });
     };
-    Pading.prototype.initSelectSize = function () {
-        var _this = this;
-        var html = "";
-        if (this.selectSize) {
-            this.selectSize.forEach(function (en) {
-                if (en == _this.selected) {
-                    html += "<option value='" + en + "' selected>" + en + "</option>";
-                }
-                else {
-                    html += "<option value='" + en + "'>" + en + "</option>";
-                }
-                ;
-            });
-            this.$selectSize.find(".pageSize").html(html);
+    Pading.prototype.initTotalByAttr = function () {
+        var $pading = this.mainView.mainView.$el.find("pading");
+        this.total = parseInt($pading.attr("total"));
+        if (!this.total) {
+            var count = $pading.attr("count");
+            if (count) {
+                this.total = Math.ceil(parseInt($pading.attr("count")) / this.pageSize);
+            }
+            else {
+                this.total = 1;
+            }
+            ;
+            this.total = this.total ? this.total : 1;
         }
         ;
+    };
+    Pading.prototype.initSelectByAttr = function () {
+        var $pading = this.mainView.mainView.$el.find("pading");
+        if ($pading.attr("select")) {
+            this.selectSize = $pading.attr("select").split(",");
+            this.selected = $pading.attr("defaultSelect");
+            if (!this.selected || !~this.selectSize.indexOf(this.selected)) {
+                this.selected = this.selectSize[0];
+            }
+            ;
+        }
+        else {
+            this.selectSize = ["10", "20", "30", "50"];
+            this.selected = "10";
+        }
+        ;
+        this.pageSize = parseInt(this.selected);
     };
     Pading.prototype.initTotal = function (operation) {
         var total = this.total;

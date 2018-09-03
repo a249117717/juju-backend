@@ -16,9 +16,9 @@
             <td>{{ en.id }}</td>
             <td>{{ en.type == 1?"钻石":"会员" }}</td>
             <td class="num">{{ en.num }}</td>
-            <td>{{ en.type == 1?"赠送":"立减" }}：<span class="giveNum">{{ en.give_num }}</span></td>
+            <td>{{ en.type == 1?"赠送":"立减" }}：<span class="giveNum">{{ en.type == 1?en.give_num:en.give_num / 100 }}</span></td>
             <td class="pid">{{ en.product_id }}</td>
-            <td class="price">{{ en.price }}</td>
+            <td class="price">{{ en.price / 100 }}</td>
             <td>
                 <button class="btn btn-delete mdui-ripple mdui-ripple-grey" mid="{{ en.id }}">删除</button>
                 <button class="btn btn-update mdui-ripple mdui-ripple-grey" mid="{{ en.id }}" mtype="{{ en.type }}">更新</button>

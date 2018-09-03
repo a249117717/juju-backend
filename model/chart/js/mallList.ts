@@ -214,7 +214,7 @@ define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallL
                 break;
                 case "2":
                     $update.find(".gitDiamon-out").hide();
-                    $update.find(".reducePrice").attr("old",initData.give_num / 100).val(initData.give_num / 100);
+                    $update.find(".reducePrice").attr("old",initData.give_num / 100).val(initData.give_num);
                 break
             };
             this.updateBindEvent();

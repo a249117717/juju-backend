@@ -1,8 +1,55 @@
 <!-- 订单列表详情 -->
 <thead>
     <tr>
-        <th>创建时间</th>
+        <th>编号</th>
+        <th>用户编号</th>
+        <th>用户名称</th>
+        <th>订单日期</th>
+        <th>购买数量</th>
+        <th>赠送豆子</th>
+        <th>支付类型</th>
+        <th>支付时间</th>
+        <th>支付类型</th>
+        <th>价格</th>
+        <th>交货日期</th>
+        <th>状态</th>
+        <th>操作</th>
     </tr>
 </thead>
 <tbody>
+    {{ each data as en }}
+        <tr>
+            <td>{{ en.id }}</td>
+            <td>{{ en.uid }}</td>
+            <td>{{ en.name }}</td>
+            <td>{{# formatDate(en.order_time,1).replace(" ","<br />") }}</td>
+            <td>{{ en.num }}</td>
+            <td>{{ en.give_num }}</td>
+            <td>{{ en.order_type == "1"?"商城商品":"开通会员" }}</td>
+            <td>{{# en.pay_time == "0"?"未支付":formatDate(en.pay_time,1).replace(" ","<br>") }}</td>
+            <td>{{ en.pay_type == "1"?"苹果":(en.pay_type == "2"?"微信":"支付宝") }}</td>
+            <td>{{ en.price / 100 }}</td>
+            <td>{{# en.delivery_time == "0"?"未交货":formatDate(en.delivery_time,1).replace(" ","<br />") }}</td>
+            <td>
+                {{ if en.status == "1" }}
+                    <span>未支付</span>
+                {{ else if en.status == "2" }}
+                    <span>已关闭</span>
+                {{ else if en.status == "3" }}
+                    <span>支付错误</span>
+                {{ else if en.status == "4" }}
+                    <span>支付成功，未发货</span>
+                {{ else if en.status == "5" }}
+                    <span>已发货</span>
+                {{ /if }}
+            </td>
+            <th>
+                {{ if en.status == "4" }}
+                    <button class="btn btn-elivery mdui-ripple mdui-ripple-grey" oid="{{ en.id }}">交货</button>
+                {{ else }}
+                    <button class="btn btn-elivery mdui-ripple mdui-ripple-grey" disabled>交货</button>
+                {{ /if }}
+            </th>
+        </tr>
+    {{ /each }}
 </tbody>

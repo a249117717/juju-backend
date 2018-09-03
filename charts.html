@@ -199,10 +199,9 @@
             <div class="selectSize">
                 <span class="tip">条数:</span>
                 <select class="pageSize mdui-select" mdui-select="options">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="50">50</option>
+                    {{ each select as en }}
+                        <option value="{{ en }}">{{ en }}</option>
+                    {{ /each }}
                 </select>
             </div>
             <div class="selectNo">

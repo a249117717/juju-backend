@@ -103,7 +103,7 @@ _resource:resource = {  // 服务请求
     "orderList":{   // 订单列表
         "url":`${_domain}/v1/backend/finance/order/list-order`
     },
-    "deleteOrder":{   // 删除订单
+    "deliveryOrder":{   // 订单交货
         "url":`${_domain}/v1/backend/finance/order/delivery`
     }
 };
@@ -229,9 +229,9 @@ interface resource {
      */
     "orderList":postUrl|Function
     /**
-     * 删除订单
+     * 订单交货
      */
-    "deleteOrder":postUrl|Function
+    "deliveryOrder":postUrl|Function
 }
 
 /**

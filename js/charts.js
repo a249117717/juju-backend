@@ -99,18 +99,17 @@ var CHeader = (function () {
         var self = this;
         this.calendar = new window.Calendar({
             submitMethod: function (start, end, obj) {
-                start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
                 if (obj.isSingle) {
                     self.$singleDate.text(start);
                 }
                 else {
-                    end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g, "0$1$2");
                     self.$start.text(start);
                     self.$end.text(end);
                 }
                 ;
                 self.mainView.detail.currentChart.changeDate(start, end);
             },
+            "format": "yyyy-MM-dd",
             "choiceModel": 2,
             "isReset": true,
             "haveSubmit": false

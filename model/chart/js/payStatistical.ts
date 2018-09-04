@@ -5,6 +5,13 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
     class PayStatistical extends ChartBase {
         $el:JQuery<HTMLElement> = null;
         chart:any = null;
+        dayInfo:{
+            "day":string    // 日期
+            "timestamp":number  // 时间戳
+        } = {
+            "day":"0",
+            "timestamp":0
+        };
         template = {
             "routerTemp":payStatisticalTemp,
             "detail":payStatisticalDetail
@@ -19,15 +26,16 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
          * 数据获取
          * @param {number} pageSize [每页条数]
          * @param {uid} string [用户编号]
+         * @param {number} day [时间戳]
          */
-        fetch(pageNo:number = 1,pageSize:number = _pageSize) {
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,day:number = this.dayInfo.timestamp) {
             let self:PayStatistical = this;
 
             _load(true);
             (<Function>_resource.payStatistical)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
-                "day":0,
+                "day":day,
                 "token":this.mainView.mainView.token
             }),function(data:any){
                 if(!self.$el) {
@@ -69,8 +77,16 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
          * @param {Object} data [数据]
          */
         renderDetail(data:any) {
-            this.$el.find(".info").html((<any>window).template.compile(this.template.detail)(data));
-            this.renderChart(data);
+            if(data.data) {
+                this.$el.find(".info").html((<any>window).template.compile(this.template.detail)(data));
+                if(data.data.length == 1) { // 单个数据用柱状图
+                    this.renderChartForColumn(data);
+                } else {    // 多个数据用折线图
+                    this.renderChart(data);
+                };
+            } else {
+                (<any>window).layer.msg(`暂无${this.dayInfo.day}的数据`);
+            };
         }
 
         /**
@@ -82,7 +98,7 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
             chart.clear();
 
             // Step 2: 载入数据源
-            chart.source(this.formatData(data));
+            chart.source(this.formatData(data,1));
             // 设置坐标轴范围
             chart.scale('value', {
                 min: 0
@@ -118,16 +134,61 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
         }
 
         /**
-         * 格式化数据
+         * 渲染图标（柱状图）
          * @param {Object} data [数据]
          */
-        formatData(data:any) : object {
+        renderChartForColumn(data:any) {
+            let chart = this.chart;
+            chart.clear();
+
+            // Step 2: 载入数据源
+            chart.source(this.formatData(data,2));
+            // 设置坐标轴范围
+            chart.scale('value', {
+                min: 0
+            });
+            // 设置提示框
+            chart.tooltip(true,{
+                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                crosshairs: {
+                type: 'line'
+                }
+            });
+            // 设置坐标轴
+            chart.axis('value', {
+                line: {
+                stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                stroke: '#BDBDBD'
+                }
+            });
+            // 设置图例
+            chart.legend(true);
+            // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+            chart.interval().position('create_time*value').color('type').adjust([{
+                type: 'dodge',
+                marginRatio: 1 / 32
+            }]);
+            // Step 4: 渲染图表
+            chart.render();
+        }
+
+        /**
+         * 格式化数据
+         * @param {Object} data [数据]
+         * @param {number} operation [操作，1为折线图，2为柱状图]
+         */
+        formatData(data:any,operation:number) : object {
             let temp:any[] = [],
-            date:Date = new Date();
+            date:Date = new Date(),
+            str = operation == 1?"":" ";
 
             data.data.forEach(en => {
                 date.setTime(en.create_time*1000);
-                en.create_time = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}`;
+                en.create_time = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}${str}`;
                 temp.push({
                     "create_time":en.create_time,
                     "type":"累计订单总额",
@@ -160,10 +221,11 @@ define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views
         /**
          * 日期变更（为了头部选择日期之后进行触发）
          * @param {string} start [开始日期]
-         * @param {string} end [结束日期]
          */
-        changeDate(start:string,end:string) {
-            this.fetch()
+        changeDate(start:string) {
+            this.dayInfo.day = start;
+            this.dayInfo.timestamp = parseInt(<any>((new Date(`${start} 00:00:00`)).getTime()/1000));
+            this.fetch();
         }
 
         /**

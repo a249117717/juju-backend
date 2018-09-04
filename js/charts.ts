@@ -162,18 +162,17 @@ class CHeader {
         // 初始化日期选择控件
         this.calendar = new (<any>window).Calendar({
             submitMethod:function(start,end,obj){
-                start = start.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
                 // 变更头部显示的日期
                 if(obj.isSingle) {
                     self.$singleDate.text(start);
                 } else {
-                    end = end.replace(/(?<=-)([0-9])(?=-)|(?<=-)([0-9])$/g,"0$1$2");
                     self.$start.text(start);
                     self.$end.text(end);
                 };
                 // 触发详情的改变日期函数
                 self.mainView.detail.currentChart.changeDate(start,end);
             },
+            "format":"yyyy-MM-dd",
             "choiceModel":2,
             "isReset":true,
             "haveSubmit":false

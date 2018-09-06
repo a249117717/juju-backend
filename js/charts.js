@@ -42,10 +42,11 @@ var IndexMain = (function () {
         this.header.fetch();
         this.side = new CSide(options);
         this.side.fetch();
+        this.detail = new CDetail(options);
+        this.detail.fetch();
         this.changepwd = new ChangePWD(options);
         this.frozenInfo = new FrozenInfo(options);
         this.givDiamond = new GivDiamond(options);
-        this.detail = new CDetail(options);
     };
     IndexMain.prototype.windowEvent = function () {
         var self = this;
@@ -281,12 +282,7 @@ var CDetail = (function () {
     CDetail.prototype.render = function () {
         this.bindEvent();
     };
-    CDetail.prototype.bindEvent = function () {
-        var self = this;
-        $("#formReturn").on("load", function () {
-            self.currentChart.getFormReturn(this);
-        });
-    };
+    CDetail.prototype.bindEvent = function () { };
     CDetail.prototype.renderByChildren = function (html) {
         this.$el.html(html);
         this.renderComponent();
@@ -921,7 +917,6 @@ var ChartBase = (function () {
     ChartBase.prototype.changeDate = function (start, end) { };
     ChartBase.prototype.changePading = function (pageNo, pageSize) { };
     ChartBase.prototype.frozen = function () { };
-    ChartBase.prototype.getFormReturn = function (e) { };
     return ChartBase;
 }());
 //# sourceMappingURL=charts.js.map

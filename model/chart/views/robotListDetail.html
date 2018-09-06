@@ -1,6 +1,7 @@
 <!-- 机器人弹幕详情 -->
 <thead>
     <tr>
+        <th>编号</th>
         <th>创建时间</th>
         <th>头像</th>
         <th>昵称</th>
@@ -15,6 +16,7 @@
 <tbody>
     {{ each data as en }}
         <tr>
+            <td>{{ en.uid }}</td>
             <td class="create" createTime="{{ en.create_time }}">{{ formatDate(en.create_time) }}</td>
             <td class="head">
                 <img class="pho" src="{{ en.head_img?en.head_img:'common/images/defaultUser.png' }}">

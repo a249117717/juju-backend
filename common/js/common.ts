@@ -88,6 +88,15 @@ _resource:resource = {  // 服务请求
     "updateRobot":{ // 更新机器人弹幕
         "url":`${_domain}/v1/backend/run/push/update-robot-push`
     },
+    "listRobotPic":{  // 机器人图片列表
+        "url":`${_domain}/v1/backend/run/list-robot-photo`
+    },
+    "uploadRobotPic":{  // 上传机器人图片
+        "url":`${_domain}/v1/backend/run/upload-robot-photo`
+    },
+    "deleteRobotPic":{  // 删除机器人图片
+        "url":`${_domain}/v1/backend/run/delete-robot-photo`
+    },
     "mallList":{    // 商城商品列表
         "url":`${_domain}/v1/backend/finance/product/list-product`
     },
@@ -105,6 +114,10 @@ _resource:resource = {  // 服务请求
     },
     "deliveryOrder":{   // 订单交货
         "url":`${_domain}/v1/backend/finance/order/delivery`
+    },
+    "upload":{  // 通用上传文件或图片
+        "url":`${_domain}/v1/backend/func/upload`,
+        "isAjax":false
     }
 };
 
@@ -209,6 +222,18 @@ interface resource {
      */
     "updateRobot":postUrl|Function
     /**
+     * 机器人相片列表
+     */
+    "listRobotPic":postUrl|Function
+    /**
+     * 上传机器人图片（一次只能上传一张，最多上传6张）
+     */
+    "uploadRobotPic":postUrl|Function
+    /**
+     * 删除相片
+     */
+    "deleteRobotPic":postUrl|Function
+    /**
      * 商城商品列表
      */
     "mallList":postUrl|Function
@@ -232,6 +257,10 @@ interface resource {
      * 订单交货
      */
     "deliveryOrder":postUrl|Function
+    /**
+     * 通用上传文件或图片
+     */
+    "upload":postUrl|Function
 }
 
 /**
@@ -246,6 +275,10 @@ interface postUrl {
      * 请求类型
      */
     "type"?:string;
+    /**
+     * 是否需要ajax化，默认为true
+     */
+    "isAjax"?:boolean
 }
 
 /**
@@ -303,11 +336,16 @@ function _resourceError(code:number,msg:string) {
 
 !(function(){   // 服务器请求
     for(let en in _resource) {
-        _resource[en] = (function(url:string,type:string = "post"){
-            return function(data?:{},success?:Function,error?:Function) {
-                ajax(url,type,data,success,error);
+        _resource[en] = (function(url:string,type:string = "post",isAjax:boolean = true){
+            if(isAjax) {
+                return function(data?:any,success?:Function,error?:Function) {
+                    ajax(url,type,data,success,error);
+                };
+            } else {
+                // 如果isAjax为false，表示不需要ajax化，直接返回地址
+                return url;
             };
-        }(_resource[en].url,_resource[en].type));
+        }(_resource[en].url,_resource[en].type,_resource[en].isAjax));
     };
 
     function ajax(url:string,type:string,data?:any,success?:Function,error?:Function) {

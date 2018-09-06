@@ -24,7 +24,6 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize) {
             let self:RobotList = this;
-            // let data = {"code":0,"msg":"成功","count":400,"data":[{"birthday":"704736000","create_time":"1530072005","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"ewjwyo0jiuu3vy_199284","im_token":"52d19ebe7b6947a236e570206fa8bc34","name":"异彩飞杨199","phone":"18825165555","sex":"2","sign":"自由自在，释放自己,199","text":"机器人弹幕199","uid":"199284"},{"birthday":"704736000","create_time":"1530072005","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"ahl6hwraekmej6_199285","im_token":"0b0d559444ce965c2e6f3489ab425acd","name":"异彩飞杨198","phone":"18825165555","sex":"1","sign":"自由自在，释放自己,198","text":"机器人弹幕198","uid":"199285"},{"birthday":"704736000","create_time":"1530072005","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"vzcqusiycj1fdz_199286","im_token":"b6134329a70628f3a3c6efc8455eb00a","name":"异彩飞杨197","phone":"18825165555","sex":"2","sign":"自由自在，释放自己,197","text":"机器人弹幕197","uid":"199286"},{"birthday":"704736000","create_time":"1530072005","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"mqf2ex9wxthn9z_199287","im_token":"a63b08ed13260a344f8ece2ec0c53cc1","name":"异彩飞杨196","phone":"18825165555","sex":"1","sign":"自由自在，释放自己,196","text":"机器人弹幕196","uid":"199287"},{"birthday":"704736000","create_time":"1530072004","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"woki1qo12hf0a7_199288","im_token":"7dab4df2634d0a9a8cf153e252590504","name":"异彩飞杨195","phone":"18825165555","sex":"2","sign":"自由自在，释放自己,195","text":"机器人弹幕195","uid":"199288"},{"birthday":"704736000","create_time":"1530072004","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"tnglzrpze9nuqs_199289","im_token":"a4e07636a90734f1428ca062ce64905c","name":"异彩飞杨194","phone":"18825165555","sex":"1","sign":"自由自在，释放自己,194","text":"机器人弹幕194","uid":"199289"},{"birthday":"704736000","create_time":"1530072004","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"kiww5u1b7ddzzp_199290","im_token":"a5621b0ffc0afb4f16f13165e5424e0c","name":"异彩飞杨193","phone":"18825165555","sex":"2","sign":"自由自在，释放自己,193","text":"机器人弹幕193","uid":"199290"},{"birthday":"704736000","create_time":"1530072004","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"sormey4bv2vlfo_199291","im_token":"203b08840aa5a67fc1eb11519afbbf34","name":"异彩飞杨192","phone":"18825165555","sex":"1","sign":"自由自在，释放自己,192","text":"机器人弹幕192","uid":"199291"},{"birthday":"704736000","create_time":"1530072004","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"ruqu3akwuegtc8_199292","im_token":"a31d5cc38729056e999565dd6c6c3fa5","name":"异彩飞杨191","phone":"18825165555","sex":"2","sign":"自由自在，释放自己,191","text":"机器人弹幕191","uid":"199292"},{"birthday":"704736000","create_time":"1530072003","head_img":"http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg","im_account":"oirdnkb40hswyj_199293","im_token":"b51c39079d43c9ae885785d2166d9241","name":"异彩飞杨190","phone":"18825165555","sex":"1","sign":"自由自在，释放自己,190","text":"机器人弹幕190","uid":"199293"}]};
 
             _load(true);
             (<Function>_resource.robotList)(JSON.stringify({
@@ -33,6 +32,7 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                 "token":this.mainView.mainView.token
             }),function(data:any){
                 if(!self.$el) {
+                    data["token"] = self.mainView.mainView.token;
                     self.render(data);
                 } else {
                     // 设置总页数
@@ -66,7 +66,9 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
 
             // 新增弹幕的重置按钮
             this.$add.find(".btn-reset").on("click",() => {
-                (<HTMLFormElement>this.$add.find("form")[0]).reset();
+                this.$add.wrap('<form onsubmit="return false;">');
+                (<HTMLFormElement>this.$add.parent("form")[0]).reset();
+                this.$add.unwrap();
             });
 
             // 新增弹幕的确定按钮
@@ -143,6 +145,41 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                     });
                 });
             });
+
+            // 上传头像url
+            this.$add.find(".avatar").on({
+                "change":function(){
+                    let file:File = (<HTMLInputElement>this).files[0];
+                    self.$add.find(".uploadPic").wrap(`<form id="uploadPic" target="formReturn" novalidate="novalidate" onkeydown="if(event.keyCode==13) {return false;}" action="${_resource.upload}" method="post" enctype="multipart/form-data">`);
+
+                    if(file.size > 512000) {
+                        // 限制选择的图片不能大于500k
+                        (<any>window).layer.msg("选择的图片过大，请重新选择（500k以内的图片）");
+                        return;
+                    };
+                    // 预览图片
+                    self.$add.find(".avatarUrl").attr("src",window.URL.createObjectURL(file));
+
+                    _load(true);
+                    // 提交表单
+                    (<any>$("#uploadPic")).ajaxSubmit({
+                        "success":function(data){
+                            _load(false);
+                            // 设置返回的地址
+                            self.$add.find(".avatar").attr("finshPic",data.data);
+                        },
+                        "error":function(requres){
+                            _load(false);
+                            // 如果上传失败，则切换回默认图片或者之前已经上传成功的图片
+                            self.$add.find(".avatarUrl").attr("src",self.$add.find(".avatar").attr("finshPic") || "common/images/defaultUser.png");
+                        },
+                        "complete":function(){  // 完成请求
+                            // 去掉提交图片的表单
+                            self.$add.find(".uploadPic").unwrap();
+                        }
+                    });
+                },
+            });
         }
 
         /**
@@ -163,6 +200,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
 
             if(!$JQ.find(".nickname").val()) {
                 tip = "请输入昵称";
+            } else if(!$JQ.find(".avatar").attr("finshPic")) {
+                tip = "请选择头像";
             } else if(!$JQ.find(".sign").val()) {
                 tip = "请输入签名";
             } else if(!/^1(?:3\d|4[4-9]|5[0-35-9]|6[67]|7[013-8]|8\d|9\d)\d{8}$/.test(<string>$JQ.find(".phone").val())) {
@@ -192,7 +231,7 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                 "sign":$JQ.find(".sign").val(), // 签名
                 "sex":parseInt(<string>$JQ.find(".operation").val()),    // 性别
                 "text":$JQ.find(".reason").val(),   // 推送内容
-                "head_img":"",  // 头像url
+                "head_img":$JQ.find(".avatar").attr("finshPic"),  // 头像url
                 "phone":$JQ.find(".phone").val(),   // 手机
                 "birthday":0,  // 生日日期
                 "token":this.mainView.mainView.token
@@ -232,7 +271,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                 "text":$tr.find(".reason").text(),
                 "head_img":head,
                 "phone":$tr.find(".phone").text(),
-                "birthday":$tr.find(".birthday").text()
+                "birthday":$tr.find(".birthday").text(),
+                "token":this.mainView.mainView.token
             });
         }
 
@@ -251,6 +291,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
          * 更新框的事件绑定
          */
         updateBindEvent() {
+            let self:RobotList = this;
+
             // 生日日期
             (<any>window).laydate.render({
                 elem: '.m-updateContent .birthday',
@@ -258,6 +300,41 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                 theme: '#42a5f5',
                 format: 'yyyy-MM-dd',
                 value: this.$update.find(".birthday").val()
+            });
+
+            // 上传头像
+            this.$update.find(".avatar").on({
+                "change":function(){
+                    let file:File = (<HTMLInputElement>this).files[0];
+                    self.$update.find(".uploadPic").wrap(`<form id="uploadPicUpdate" target="formReturn" novalidate="novalidate" onkeydown="if(event.keyCode==13) {return false;}" action="${_resource.upload}" method="post" enctype="multipart/form-data">`);
+
+                    if(file.size > 512000) {
+                        // 限制选择的图片不能大于500k
+                        (<any>window).layer.msg("选择的图片过大，请重新选择（500k以内的图片）");
+                        return;
+                    };
+                    // 预览图片
+                    self.$update.find(".avatarUrl").attr("src",window.URL.createObjectURL(file));
+
+                    _load(true);
+                    // 提交表单
+                    (<any>$("#uploadPicUpdate")).ajaxSubmit({
+                        "success":function(data){
+                            _load(false);
+                            // 设置返回的地址
+                            self.$update.find(".avatar").attr("finshPic",data.data);
+                        },
+                        "error":function(requres){
+                            _load(false);
+                            // 如果上传失败，则切换回默认图片或者之前已经上传成功的图片
+                            self.$update.find(".avatarUrl").attr("src",self.$update.find(".avatar").attr("finshPic"));
+                        },
+                        "complete":function(){  // 完成请求
+                            // 去掉提交图片的表单
+                            self.$update.find(".uploadPic").unwrap();
+                        }
+                    });
+                },
             });
         }
 
@@ -268,19 +345,6 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
          */
         changePading(pageNo:number,pageSize:number) {
             this.fetch(pageNo,pageSize);
-        }
-
-        /**
-         * 获取表单提交的返回信息
-         * @param {HTMLElement} e [表单元素]
-         */
-        getFormReturn(e:HTMLElement) {
-            var data = e[0].contentWindow.document.body.innerText;
-            if(data) {
-                data = JSON.parse(data);
-            } else {
-                (<any>window).layer.msg("提交失败!");
-            };
         }
     }
 
@@ -320,6 +384,10 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
          * 出生日期
          */
         birthday:string
+        /**
+         * token
+         */
+        token:string
     }
 
     return RobotList;

@@ -35,6 +35,7 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (!self.$el) {
+                    data["token"] = self.mainView.mainView.token;
                     self.render(data);
                 }
                 else {
@@ -58,7 +59,9 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
             var _this = this;
             var self = this;
             this.$add.find(".btn-reset").on("click", function () {
-                _this.$add.find("form")[0].reset();
+                _this.$add.wrap('<form onsubmit="return false;">');
+                _this.$add.parent("form")[0].reset();
+                _this.$add.unwrap();
             });
             this.$add.find(".btn-submit").on("click", function () {
                 if (!self.dataCheck(self.$add)) {
@@ -120,6 +123,32 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                     });
                 });
             });
+            this.$add.find(".avatar").on({
+                "change": function () {
+                    var file = this.files[0];
+                    self.$add.find(".uploadPic").wrap("<form id=\"uploadPic\" target=\"formReturn\" novalidate=\"novalidate\" onkeydown=\"if(event.keyCode==13) {return false;}\" action=\"" + _resource.upload + "\" method=\"post\" enctype=\"multipart/form-data\">");
+                    if (file.size > 512000) {
+                        window.layer.msg("选择的图片过大，请重新选择（500k以内的图片）");
+                        return;
+                    }
+                    ;
+                    self.$add.find(".avatarUrl").attr("src", window.URL.createObjectURL(file));
+                    _load(true);
+                    $("#uploadPic").ajaxSubmit({
+                        "success": function (data) {
+                            _load(false);
+                            self.$add.find(".avatar").attr("finshPic", data.data);
+                        },
+                        "error": function (requres) {
+                            _load(false);
+                            self.$add.find(".avatarUrl").attr("src", self.$add.find(".avatar").attr("finshPic") || "common/images/defaultUser.png");
+                        },
+                        "complete": function () {
+                            self.$add.find(".uploadPic").unwrap();
+                        }
+                    });
+                },
+            });
         };
         RobotList.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
@@ -128,6 +157,9 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
             var tip = "";
             if (!$JQ.find(".nickname").val()) {
                 tip = "请输入昵称";
+            }
+            else if (!$JQ.find(".avatar").attr("finshPic")) {
+                tip = "请选择头像";
             }
             else if (!$JQ.find(".sign").val()) {
                 tip = "请输入签名";
@@ -156,7 +188,7 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                 "sign": $JQ.find(".sign").val(),
                 "sex": parseInt($JQ.find(".operation").val()),
                 "text": $JQ.find(".reason").val(),
-                "head_img": "",
+                "head_img": $JQ.find(".avatar").attr("finshPic"),
                 "phone": $JQ.find(".phone").val(),
                 "birthday": 0,
                 "token": this.mainView.mainView.token
@@ -185,7 +217,8 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                 "text": $tr.find(".reason").text(),
                 "head_img": head,
                 "phone": $tr.find(".phone").text(),
-                "birthday": $tr.find(".birthday").text()
+                "birthday": $tr.find(".birthday").text(),
+                "token": this.mainView.mainView.token
             });
         };
         RobotList.prototype.initUpdate = function (iniData) {
@@ -195,6 +228,7 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
             this.updateBindEvent();
         };
         RobotList.prototype.updateBindEvent = function () {
+            var self = this;
             window.laydate.render({
                 elem: '.m-updateContent .birthday',
                 type: 'date',
@@ -202,19 +236,35 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                 format: 'yyyy-MM-dd',
                 value: this.$update.find(".birthday").val()
             });
+            this.$update.find(".avatar").on({
+                "change": function () {
+                    var file = this.files[0];
+                    self.$update.find(".uploadPic").wrap("<form id=\"uploadPicUpdate\" target=\"formReturn\" novalidate=\"novalidate\" onkeydown=\"if(event.keyCode==13) {return false;}\" action=\"" + _resource.upload + "\" method=\"post\" enctype=\"multipart/form-data\">");
+                    if (file.size > 512000) {
+                        window.layer.msg("选择的图片过大，请重新选择（500k以内的图片）");
+                        return;
+                    }
+                    ;
+                    self.$update.find(".avatarUrl").attr("src", window.URL.createObjectURL(file));
+                    _load(true);
+                    $("#uploadPicUpdate").ajaxSubmit({
+                        "success": function (data) {
+                            _load(false);
+                            self.$update.find(".avatar").attr("finshPic", data.data);
+                        },
+                        "error": function (requres) {
+                            _load(false);
+                            self.$update.find(".avatarUrl").attr("src", self.$update.find(".avatar").attr("finshPic"));
+                        },
+                        "complete": function () {
+                            self.$update.find(".uploadPic").unwrap();
+                        }
+                    });
+                },
+            });
         };
         RobotList.prototype.changePading = function (pageNo, pageSize) {
             this.fetch(pageNo, pageSize);
-        };
-        RobotList.prototype.getFormReturn = function (e) {
-            var data = e[0].contentWindow.document.body.innerText;
-            if (data) {
-                data = JSON.parse(data);
-            }
-            else {
-                window.layer.msg("提交失败!");
-            }
-            ;
         };
         return RobotList;
     }(ChartBase));

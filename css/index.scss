@@ -1233,6 +1233,28 @@ body{
     @include detail;
 }
 
+.m-robotList {
+
+    .uploadPic {
+        position: relative;
+        left:0;
+        top:0;
+
+        .avatar,
+        .avatarUrl {
+            width:40px;
+            height:40px;
+        }
+
+        .avatar {
+            position: absolute;
+            left:110px;
+            top:0;
+            opacity: 0;
+        }
+    }
+}
+
 #diagram {
     margin-bottom:40px;
 }

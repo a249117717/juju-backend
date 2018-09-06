@@ -51,7 +51,7 @@ define(["text!model/chart/views/payStatisticalTemp.html", "text!model/chart/view
         };
         PayStatistical.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(false, false, true);
+            header.showMenu();
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-payStatistical");
             this.chart = new window.G2.Chart({

@@ -70,15 +70,16 @@ class IndexMain {
         this.side = new CSide(options);
         this.side.fetch();
 
+        // 详情
+        this.detail = new CDetail(options)
+        this.detail.fetch();
+
         // 变更密码
         this.changepwd = new ChangePWD(options);
         // 冻结信息
         this.frozenInfo = new FrozenInfo(options);
         // 赠送钻石
         this.givDiamond = new GivDiamond(options);
-
-        // 详情
-        this.detail = new CDetail(options)
     }
 
     /**
@@ -434,14 +435,7 @@ class CDetail {
     /**
      * 事件绑定
      */
-    bindEvent(){
-        let self:CDetail = this;
-
-        // 绑定iframe表单的加载事件
-        $("#formReturn").on("load",function(){
-            self.currentChart.getFormReturn(this);
-        });
-    }
+    bindEvent(){}
 
     /**
      * 根据子对象渲染内容
@@ -1348,10 +1342,4 @@ class ChartBase {
      * 冻结用户
      */
     frozen(){}
-
-    /**
-     * 获取表单提交的返回信息
-     * @param {HTMLElement} e [表单元素]
-     */
-    getFormReturn(e:HTMLElement){}
 }

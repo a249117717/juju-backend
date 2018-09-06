@@ -16,7 +16,6 @@
     </div>
     <!-- 新增弹幕 -->
     <div class="m-addContent addCurtain">
-        <form onsubmit="return false;">
             <div class="title">新增弹幕</div>
             <div class="input-group">
                 <div class="group">
@@ -27,8 +26,11 @@
                 </div>
                 <div class="group">
                     <div class="tip">头像url</div>
-                    <div class="descript">
-                        <input class="avatarUrl defaultInput" type="text" placeholder="请输入机器人头像的url">
+                    <div class="descript uploadPic">
+                        <input class="avatar" type="file" name="file" finshPic="">
+                        <input type="hidden" name="token" value="{{ token }}">
+                        <input type="hidden" name="module" value="HeadImg">
+                        <img class="avatarUrl" src="common/images/defaultUser.png">
                     </div>
                 </div>
                 <div class="group">
@@ -80,7 +82,6 @@
                 <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
                 <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
             </div>
-        </form>
     </div>
     <div class="detail">
         <div class="title-out">

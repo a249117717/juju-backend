@@ -1448,6 +1448,25 @@ body {
   color: #EEEEEE;
 }
 
+.m-robotList .uploadPic {
+  position: relative;
+  left: 0;
+  top: 0;
+}
+
+.m-robotList .uploadPic .avatar,
+.m-robotList .uploadPic .avatarUrl {
+  width: 40px;
+  height: 40px;
+}
+
+.m-robotList .uploadPic .avatar {
+  position: absolute;
+  left: 110px;
+  top: 0;
+  opacity: 0;
+}
+
 #diagram {
   margin-bottom: 40px;
 }

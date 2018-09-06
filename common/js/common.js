@@ -84,6 +84,15 @@ var _loadObject = null, _resource = {
     "updateRobot": {
         "url": _domain + "/v1/backend/run/push/update-robot-push"
     },
+    "listRobotPic": {
+        "url": _domain + "/v1/backend/run/list-robot-photo"
+    },
+    "uploadRobotPic": {
+        "url": _domain + "/v1/backend/run/upload-robot-photo"
+    },
+    "deleteRobotPic": {
+        "url": _domain + "/v1/backend/run/delete-robot-photo"
+    },
     "mallList": {
         "url": _domain + "/v1/backend/finance/product/list-product"
     },
@@ -101,6 +110,10 @@ var _loadObject = null, _resource = {
     },
     "deliveryOrder": {
         "url": _domain + "/v1/backend/finance/order/delivery"
+    },
+    "upload": {
+        "url": _domain + "/v1/backend/func/upload",
+        "isAjax": false
     }
 };
 function _load(isShow) {
@@ -145,12 +158,19 @@ function _resourceError(code, msg) {
 }
 !(function () {
     for (var en in _resource) {
-        _resource[en] = (function (url, type) {
+        _resource[en] = (function (url, type, isAjax) {
             if (type === void 0) { type = "post"; }
-            return function (data, success, error) {
-                ajax(url, type, data, success, error);
-            };
-        }(_resource[en].url, _resource[en].type));
+            if (isAjax === void 0) { isAjax = true; }
+            if (isAjax) {
+                return function (data, success, error) {
+                    ajax(url, type, data, success, error);
+                };
+            }
+            else {
+                return url;
+            }
+            ;
+        }(_resource[en].url, _resource[en].type, _resource[en].isAjax));
     }
     ;
     function ajax(url, type, data, success, error) {

@@ -205,11 +205,5 @@ declare namespace Charts {
          * 冻结用户
          */
         frozen()
-
-        /**
-         * 获取表单提交的返回信息
-         * @param {HTMLElement} e [表单元素]
-         */
-        getFormReturn(e:HTMLElement)
     }
 }

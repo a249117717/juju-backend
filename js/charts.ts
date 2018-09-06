@@ -571,7 +571,7 @@ class Pading {
         // 点击回到首页
         this.$el.find(".home").on("click",function(){
             if(!$(this).attr("disabled")) {
-                self.setPageNo(0,"home");
+                self.setPageNo(1,"home");
             };
         });
 

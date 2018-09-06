@@ -361,7 +361,7 @@ var Pading = (function () {
         var self = this;
         this.$el.find(".home").on("click", function () {
             if (!$(this).attr("disabled")) {
-                self.setPageNo(0, "home");
+                self.setPageNo(1, "home");
             }
             ;
         });

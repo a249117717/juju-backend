@@ -68,6 +68,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
             this.$add.find(".btn-reset").on("click",() => {
                 this.$add.wrap('<form onsubmit="return false;">');
                 (<HTMLFormElement>this.$add.parent("form")[0]).reset();
+                this.$add.find(".avatar").attr("finshpic","");
+                this.$add.find(".avatarUrl").attr("src","common/images/defaultUser.png");
                 this.$add.unwrap();
             });
 

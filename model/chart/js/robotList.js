@@ -61,6 +61,8 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
             this.$add.find(".btn-reset").on("click", function () {
                 _this.$add.wrap('<form onsubmit="return false;">');
                 _this.$add.parent("form")[0].reset();
+                _this.$add.find(".avatar").attr("finshpic", "");
+                _this.$add.find(".avatarUrl").attr("src", "common/images/defaultUser.png");
                 _this.$add.unwrap();
             });
             this.$add.find(".btn-submit").on("click", function () {

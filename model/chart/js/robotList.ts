@@ -151,7 +151,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
             // 上传头像url
             this.$add.find(".avatar").on({
                 "change":function(){
-                    let file:File = (<HTMLInputElement>this).files[0];
+                    let file:File = (<HTMLInputElement>this).files[0],
+                    fileUrl = window.URL.createObjectURL(file);
                     self.$add.find(".uploadPic").wrap(`<form id="uploadPic" target="formReturn" novalidate="novalidate" onkeydown="if(event.keyCode==13) {return false;}" action="${_resource.upload}" method="post" enctype="multipart/form-data">`);
 
                     if(file.size > 512000) {
@@ -160,7 +161,7 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                         return;
                     };
                     // 预览图片
-                    self.$add.find(".avatarUrl").attr("src",window.URL.createObjectURL(file));
+                    self.$add.find(".avatarUrl").attr("src",fileUrl);
 
                     _load(true);
                     // 提交表单
@@ -174,6 +175,8 @@ define(["text!model/chart/views/robotListTemp.html","text!model/chart/views/robo
                             _load(false);
                             // 如果上传失败，则切换回默认图片或者之前已经上传成功的图片
                             self.$add.find(".avatarUrl").attr("src",self.$add.find(".avatar").attr("finshPic") || "common/images/defaultUser.png");
+                            // 释放掉已经存在的URL对象
+                            window.URL.revokeObjectURL(fileUrl);
                         },
                         "complete":function(){  // 完成请求
                             // 去掉提交图片的表单

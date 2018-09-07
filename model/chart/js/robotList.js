@@ -127,14 +127,14 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
             });
             this.$add.find(".avatar").on({
                 "change": function () {
-                    var file = this.files[0];
+                    var file = this.files[0], fileUrl = window.URL.createObjectURL(file);
                     self.$add.find(".uploadPic").wrap("<form id=\"uploadPic\" target=\"formReturn\" novalidate=\"novalidate\" onkeydown=\"if(event.keyCode==13) {return false;}\" action=\"" + _resource.upload + "\" method=\"post\" enctype=\"multipart/form-data\">");
                     if (file.size > 512000) {
                         window.layer.msg("选择的图片过大，请重新选择（500k以内的图片）");
                         return;
                     }
                     ;
-                    self.$add.find(".avatarUrl").attr("src", window.URL.createObjectURL(file));
+                    self.$add.find(".avatarUrl").attr("src", fileUrl);
                     _load(true);
                     $("#uploadPic").ajaxSubmit({
                         "success": function (data) {
@@ -144,6 +144,7 @@ define(["text!model/chart/views/robotListTemp.html", "text!model/chart/views/rob
                         "error": function (requres) {
                             _load(false);
                             self.$add.find(".avatarUrl").attr("src", self.$add.find(".avatar").attr("finshPic") || "common/images/defaultUser.png");
+                            window.URL.revokeObjectURL(fileUrl);
                         },
                         "complete": function () {
                             self.$add.find(".uploadPic").unwrap();

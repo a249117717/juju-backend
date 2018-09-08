@@ -88,7 +88,8 @@ var _loadObject = null, _resource = {
         "url": _domain + "/v1/backend/run/list-robot-photo"
     },
     "uploadRobotPic": {
-        "url": _domain + "/v1/backend/run/upload-robot-photo"
+        "url": _domain + "/v1/backend/run/upload-robot-photo",
+        "isAjax": false
     },
     "deleteRobotPic": {
         "url": _domain + "/v1/backend/run/delete-robot-photo"

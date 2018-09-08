@@ -3,17 +3,17 @@ requirejs.config({
     "paths":{
         "charts":"js/charts",
         "text":"lib/requirejs/text/text",
-        "statisticalUser":"model/chart/js/statisticalUser",
-        "userList":"model/chart/js/userList",
-        "payStatistical":"model/chart/js/payStatistical",
-        "diamond":"model/chart/js/diamond",
-        "freezeList":"model/chart/js/freezeList",
-        "orderList":"model/chart/js/orderList",
-        "mallList":"model/chart/js/mallList",
-        "robotList":"model/chart/js/robotList",
-        "infoQuery":"model/chart/js/infoQuery",
-        "messageList":"model/chart/js/messageList",
-        "systemNotice":"model/chart/js/systemNotice"
+        "statisticalUser":"module/chart/js/statisticalUser",
+        "userList":"module/chart/js/userList",
+        "payStatistical":"module/chart/js/payStatistical",
+        "diamond":"module/chart/js/diamond",
+        "freezeList":"module/chart/js/freezeList",
+        "orderList":"module/chart/js/orderList",
+        "mallList":"module/chart/js/mallList",
+        "robotList":"module/chart/js/robotList",
+        "infoQuery":"module/chart/js/infoQuery",
+        "messageList":"module/chart/js/messageList",
+        "systemNotice":"module/chart/js/systemNotice"
     }
 });
 

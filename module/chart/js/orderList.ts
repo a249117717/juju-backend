@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/orderListTemp.html","text!model/chart/views/orderListDetail.html"],function(orderListTemp,orderListDetail){
+define(["text!module/chart/views/orderListTemp.html","text!module/chart/views/orderListDetail.html"],function(orderListTemp,orderListDetail){
     // 订单列表
     class OrderList extends ChartBase {
         $el:JQuery<HTMLElement> = null;

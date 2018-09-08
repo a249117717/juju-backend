@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/messageListTemp.html","text!model/chart/views/messageListDetail.html","text!model/chart/views/messageListUpdate.html"],function(messageListTemp,messageListDetail,messageListUpdate){
+define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/messageListDetail.html","text!module/chart/views/messageListUpdate.html"],function(messageListTemp,messageListDetail,messageListUpdate){
     // 消息列表
     class MessageList extends ChartBase {
         $el:JQuery<HTMLElement> = null;

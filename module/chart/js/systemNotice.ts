@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/systemNoticeTemp.html","text!model/chart/views/systemNoticeDetail.html","text!model/chart/views/systemNoticeUpdate.html"],function(systemNoticeTemp,systemNoticeDetail,systemNoticeUpdate){
+define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views/systemNoticeDetail.html","text!module/chart/views/systemNoticeUpdate.html"],function(systemNoticeTemp,systemNoticeDetail,systemNoticeUpdate){
     // 系统公告
     class SystemNotice extends ChartBase {
         $el:JQuery<HTMLElement> = null;

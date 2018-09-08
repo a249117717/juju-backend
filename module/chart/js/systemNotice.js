@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/systemNoticeTemp.html", "text!model/chart/views/systemNoticeDetail.html", "text!model/chart/views/systemNoticeUpdate.html"], function (systemNoticeTemp, systemNoticeDetail, systemNoticeUpdate) {
+define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/views/systemNoticeDetail.html", "text!module/chart/views/systemNoticeUpdate.html"], function (systemNoticeTemp, systemNoticeDetail, systemNoticeUpdate) {
     var SystemNotice = (function (_super) {
         __extends(SystemNotice, _super);
         function SystemNotice(props) {

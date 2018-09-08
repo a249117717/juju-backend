@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/statisticalTemp.html","text!model/chart/views/statisticalDetail.html"],function(statisticalTemp,statisticalDetail){
+define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/statisticalDetail.html"],function(statisticalTemp,statisticalDetail){
     // 统计用户
     class StatisticalUser extends ChartBase {
         $el:JQuery<HTMLElement> = null;

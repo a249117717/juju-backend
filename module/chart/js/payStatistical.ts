@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/payStatisticalTemp.html","text!model/chart/views/payStatisticalDetail.html"],function(payStatisticalTemp,payStatisticalDetail){
+define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/views/payStatisticalDetail.html"],function(payStatisticalTemp,payStatisticalDetail){
     // 付费统计
     class PayStatistical extends ChartBase {
         $el:JQuery<HTMLElement> = null;

@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/diamondTemp.html", "text!model/chart/views/diamondDetail.html"], function (diamondTemp, diamondDetail) {
+define(["text!module/chart/views/diamondTemp.html", "text!module/chart/views/diamondDetail.html"], function (diamondTemp, diamondDetail) {
     var Diamond = (function (_super) {
         __extends(Diamond, _super);
         function Diamond(props) {

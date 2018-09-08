@@ -473,22 +473,6 @@ class CDetail {
             currentChart.fetch();
         });
 
-        // if(this.moduleObject[fileName]) {
-        //     // 将上一个激活对象设置为非激活
-        //     if(this.currentChart) {
-        //         this.currentChart.activation = false;
-        //     };
-        //     // 如果目录对象存在，则直接调用fetch
-        //     this.moduleObject[fileName].fetch();
-        //     // 设置当前对象为激活状态
-        //     this.moduleObject[fileName].activation = true;
-        //     // 变更当前激活对象
-        //     this.currentChart = this.moduleObject[fileName];
-        // } else {
-        //     // 如果目录对象不存在，则先请求相应的js，然后实例化对象
-        //     this.introductionJS(fileName);
-        // };
-
         // 设置详情内容的左侧标题
         this.mainView.header.setTitle(this.mainView.side.$el.find(".active").text());
     }

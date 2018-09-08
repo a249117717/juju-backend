@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/diamondTemp.html","text!model/chart/views/diamondDetail.html"],function(diamondTemp,diamondDetail){
+define(["text!module/chart/views/diamondTemp.html","text!module/chart/views/diamondDetail.html"],function(diamondTemp,diamondDetail){
     // 钻石流水
     class Diamond extends ChartBase {
         $el:JQuery<HTMLElement> = null;

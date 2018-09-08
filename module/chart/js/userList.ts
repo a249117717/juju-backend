@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/userListTemp.html","text!model/chart/views/userListDetail.html"],function(userListTemp,userListDetail){
+define(["text!module/chart/views/userListTemp.html","text!module/chart/views/userListDetail.html"],function(userListTemp,userListDetail){
     // 用户列表
     class UserList extends ChartBase {
         $currentForzen:JQuery<HTMLElement> = null;  // 当前需要冻结的对象

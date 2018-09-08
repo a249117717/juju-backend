@@ -708,6 +708,14 @@ body{
                 background-color: #42A5F5;
             }
         }
+
+        .btn-block {
+
+            .btn {
+                display: block;
+                margin:5px auto;
+            }
+        }
     }
 
     .m-addContent {
@@ -777,7 +785,8 @@ body{
         }
     }
 
-    .m-updateContent {
+    .m-updateContent,
+    .m-albumContent {
         position: fixed;
         top:0;
         left:0;
@@ -838,8 +847,6 @@ body{
                 border-radius: 3px 3px 0 0;
             }
 
-            @include inputGroup;
-
             .button-group {
                 background-color: #fff;
                 overflow: hidden;
@@ -862,11 +869,96 @@ body{
                 }
 
                 .btn-submit {
-                    color:#fff;
                     background-color: #42a5f5;
 
                     &:hover {
                         background-color: #2196F3;
+                    }
+                }
+            }
+        }
+    }
+
+    .m-updateContent {
+
+        .content {
+
+            @include inputGroup;
+        }
+    }
+
+    .m-albumContent {
+
+        .photograph {
+            margin:0 auto;
+            padding:0 10px;
+            width:100%;
+            overflow: hidden;
+            
+            li {
+                margin:10px 0;
+                width:50%;
+                float: left;
+                position: relative;
+                left:0;
+                top:0;
+                text-align: center;
+
+                &.has {
+                    &:hover .btn-group {
+                        display: block
+                    }
+
+                    .upload {
+                        display:none;
+                    }
+                }
+
+                .pic {
+                    width:150px;
+                    max-height: 131px;
+                }
+
+                .upload {
+                    position: absolute;
+                    left:0;
+                    top:0;
+                    width:100%;
+                    height:100%;
+                    opacity: 0;
+                }
+
+                .btn-group {
+                    margin-top:-15px;
+                    display: none;
+                    position: absolute;
+                    left:0;
+                    top:50%;
+                    width:100%;
+                    text-align: center;
+
+                    .btn {
+                        display: inline;
+                        padding:5px 15px;
+                        border-radius: 5px;
+                        color:#fff;
+                        cursor: pointer;
+                    }
+    
+                    .btn-check {
+                        background-color: #42a5f5;
+    
+                        &:hover {
+                            background-color: #2196F3;
+                        }
+                    }
+    
+                    .btn-delete {
+                        background-color: #F44336;
+    
+                        &:hover {
+                            background-color: #EF5350;
+                        }
                     }
                 }
             }
@@ -1256,4 +1348,8 @@ body{
 
 #diagram {
     margin-bottom:40px;
+}
+
+#albumShow {
+    width:100%;
 }

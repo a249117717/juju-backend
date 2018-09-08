@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/infoQueryTemp.html","text!model/chart/views/infoQueryDetail.html"],function(infoQueryTemp,infoQueryDetail){
+define(["text!module/chart/views/infoQueryTemp.html","text!module/chart/views/infoQueryDetail.html"],function(infoQueryTemp,infoQueryDetail){
     // 信息查询
     class InfoQuery extends ChartBase {
         $el:JQuery<HTMLElement> = null;

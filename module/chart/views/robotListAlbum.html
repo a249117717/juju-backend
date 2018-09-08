@@ -1,0 +1,25 @@
+<!-- 机器人相册 -->
+{{ each data.photo as en }}
+    <li class="has" pid="{{ en.id }}">
+        <img class="pic" src="{{ data.oss_pre + en.url }}">
+        <div class="btn-group">
+            <button class="btn btn-delete mdui-ripple mdui-ripple-while">删除</button>
+            <button class="btn btn-check mdui-ripple mdui-ripple-while">查看</button>
+        </div>
+        <input type="file" name="file" class="upload">
+        <input type="hidden" name="token" value="{{ token }}">
+        <input type="hidden" name="uid" value="{{ en.uid }}">
+    </li>
+{{ /each }}
+{{ each notpic as en }}
+    <li>
+        <img class="pic" src="./common/images/notpic.png">
+        <div class="btn-group">
+            <button class="btn btn-delete mdui-ripple mdui-ripple-while">删除</button>
+            <button class="btn btn-check mdui-ripple mdui-ripple-while">查看</button>
+        </div>
+        <input type="file" name="file" class="upload">
+        <input type="hidden" name="token" value="{{ token }}">
+        <input type="hidden" name="uid" value="{{ uid }}">
+    </li>
+{{ /each }}

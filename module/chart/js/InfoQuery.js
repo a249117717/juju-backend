@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["text!model/chart/views/infoQueryTemp.html", "text!model/chart/views/infoQueryDetail.html"], function (infoQueryTemp, infoQueryDetail) {
+define(["text!module/chart/views/infoQueryTemp.html", "text!module/chart/views/infoQueryDetail.html"], function (infoQueryTemp, infoQueryDetail) {
     var InfoQuery = (function (_super) {
         __extends(InfoQuery, _super);
         function InfoQuery(props) {

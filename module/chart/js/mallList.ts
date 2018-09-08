@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/mallListTemp.html","text!model/chart/views/mallListDetail.html","text!model/chart/views/mallListUpdate.html"],function(mallListTemp,mallListDetail,mallListUpdate){
+define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mallListDetail.html","text!module/chart/views/mallListUpdate.html"],function(mallListTemp,mallListDetail,mallListUpdate){
     // 商城商品
     class MallList extends ChartBase {
         $el:JQuery<HTMLElement> = null;

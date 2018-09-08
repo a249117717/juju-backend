@@ -1,6 +1,6 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!model/chart/views/freezeListTemp.html","text!model/chart/views/freezeListDetail.html"],function(freezeListTemp,freezeListDetail){
+define(["text!module/chart/views/freezeListTemp.html","text!module/chart/views/freezeListDetail.html"],function(freezeListTemp,freezeListDetail){
     // 冻结名单
     class FreezeList extends ChartBase {
         $el:JQuery<HTMLElement> = null;

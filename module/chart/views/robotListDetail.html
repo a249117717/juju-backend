@@ -27,9 +27,10 @@
             <td class="phone">{{ en.phone }}</td>
             <td class="birthday">{{ formatDate(en.birthday) }}</td>
             <td class="reason">{{ en.text }}</td>
-            <td>
-                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}" uname="{{ en.name }}">删除</button>
-                <button class="btn btn-update mdui-ripple mdui-ripple-grey" uid="{{ en.uid }}">更新</button>
+            <td class="btn-block" uid="{{ en.uid }}" uname="{{ en.name }}">
+                <button class="btn btn-delete mdui-ripple mdui-ripple-grey">删除</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey">更新</button>
+                <button class="btn btn-album mdui-ripple mdui-ripple-grey">相册</button>
             </td>
         </tr>
     {{ /each }}

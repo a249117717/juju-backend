@@ -92,7 +92,8 @@ _resource:resource = {  // 服务请求
         "url":`${_domain}/v1/backend/run/list-robot-photo`
     },
     "uploadRobotPic":{  // 上传机器人图片
-        "url":`${_domain}/v1/backend/run/upload-robot-photo`
+        "url":`${_domain}/v1/backend/run/upload-robot-photo`,
+        "isAjax":false
     },
     "deleteRobotPic":{  // 删除机器人图片
         "url":`${_domain}/v1/backend/run/delete-robot-photo`

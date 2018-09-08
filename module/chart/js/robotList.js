@@ -35,16 +35,23 @@ define([
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = _pageSize; }
             var self = this;
-            var data = { "code": 0, "msg": "成功", "count": 400, "data": [{ "birthday": "704764800", "create_time": "1530072005", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "ewjwyo0jiuu3vy_199284", "im_token": "52d19ebe7b6947a236e570206fa8bc34", "name": "异彩飞杨199", "phone": "18825165555", "sex": "2", "sign": "自由自在，释放自己,1991", "text": "机器人弹幕199", "uid": "199284" }, { "birthday": "704736000", "create_time": "1530072005", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "ahl6hwraekmej6_199285", "im_token": "0b0d559444ce965c2e6f3489ab425acd", "name": "异彩飞杨198", "phone": "18825165555", "sex": "1", "sign": "自由自在，释放自己,198", "text": "机器人弹幕198", "uid": "199285" }, { "birthday": "704736000", "create_time": "1530072005", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "vzcqusiycj1fdz_199286", "im_token": "b6134329a70628f3a3c6efc8455eb00a", "name": "异彩飞杨197", "phone": "18825165555", "sex": "2", "sign": "自由自在，释放自己,197", "text": "机器人弹幕197", "uid": "199286" }, { "birthday": "704736000", "create_time": "1530072005", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "mqf2ex9wxthn9z_199287", "im_token": "a63b08ed13260a344f8ece2ec0c53cc1", "name": "异彩飞杨196", "phone": "18825165555", "sex": "1", "sign": "自由自在，释放自己,196", "text": "机器人弹幕196", "uid": "199287" }, { "birthday": "704736000", "create_time": "1530072004", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "woki1qo12hf0a7_199288", "im_token": "7dab4df2634d0a9a8cf153e252590504", "name": "异彩飞杨195", "phone": "18825165555", "sex": "2", "sign": "自由自在，释放自己,195", "text": "机器人弹幕195", "uid": "199288" }, { "birthday": "704736000", "create_time": "1530072004", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "tnglzrpze9nuqs_199289", "im_token": "a4e07636a90734f1428ca062ce64905c", "name": "异彩飞杨194", "phone": "18825165555", "sex": "1", "sign": "自由自在，释放自己,194", "text": "机器人弹幕194", "uid": "199289" }, { "birthday": "704736000", "create_time": "1530072004", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "kiww5u1b7ddzzp_199290", "im_token": "a5621b0ffc0afb4f16f13165e5424e0c", "name": "异彩飞杨193", "phone": "18825165555", "sex": "2", "sign": "自由自在，释放自己,193", "text": "机器人弹幕193", "uid": "199290" }, { "birthday": "704736000", "create_time": "1530072004", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "sormey4bv2vlfo_199291", "im_token": "203b08840aa5a67fc1eb11519afbbf34", "name": "异彩飞杨192", "phone": "18825165555", "sex": "1", "sign": "自由自在，释放自己,192", "text": "机器人弹幕192", "uid": "199291" }, { "birthday": "704736000", "create_time": "1530072004", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "ruqu3akwuegtc8_199292", "im_token": "a31d5cc38729056e999565dd6c6c3fa5", "name": "异彩飞杨191", "phone": "18825165555", "sex": "2", "sign": "自由自在，释放自己,191", "text": "机器人弹幕191", "uid": "199292" }, { "birthday": "704736000", "create_time": "1530072003", "head_img": "http://i1.umei.cc/uploads/tu/201806/9999/d3738a0d75.jpg", "im_account": "oirdnkb40hswyj_199293", "im_token": "b51c39079d43c9ae885785d2166d9241", "name": "异彩飞杨190", "phone": "18825165555", "sex": "1", "sign": "自由自在，释放自己,190", "text": "机器人弹幕190", "uid": "199293" }] };
-            if (!self.$el) {
-                data["token"] = self.mainView.mainView.token;
-                self.render(data);
-            }
-            else {
-                self.pading.setTotal(data.count);
-            }
-            ;
-            self.renderDetail(data);
+            _load(true);
+            _resource.robotList(JSON.stringify({
+                "page_size": pageSize,
+                "page_index": pageNo,
+                "token": this.mainView.mainView.token
+            }), function (data) {
+                if (!self.$el) {
+                    data["token"] = self.mainView.mainView.token;
+                    self.render(data);
+                }
+                else {
+                    self.pading.setTotal(data.count);
+                }
+                ;
+                self.renderDetail(data);
+                _load(false);
+            });
         };
         RobotList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
@@ -284,7 +291,6 @@ define([
         };
         RobotList.prototype.initAlbum = function (uid) {
             var self = this, token = this.mainView.mainView.token;
-            var data = {};
             _resource.listRobotPic(JSON.stringify({
                 "uid": uid,
                 "token": token

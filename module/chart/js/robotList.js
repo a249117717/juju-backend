@@ -296,6 +296,7 @@ define([
                 "token": token
             }), function (data) {
                 data["token"] = token;
+                data["uid"] = uid;
                 data["notpic"] = new Array(6 - (data.data.photo ? data.data.photo.length : 0));
                 self.$album.find(".photograph").html(window.template.compile(self.template.album)(data));
                 self.albumBindEvent();

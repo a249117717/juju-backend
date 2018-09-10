@@ -55,13 +55,43 @@ define(["text!module/chart/views/userListTemp.html", "text!module/chart/views/us
         UserList.prototype.bindEvent = function () {
             var self = this;
             this.$el.find(".info").on("click", ".btn-freeze", function () {
-                var $this = $(this);
+                var $this = $(this), $td = $this.parent("td");
                 self.$currentForzen = $this;
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")), $this.attr("uname"), self);
+                self.mainView.mainView.frozenInfo.show(parseInt($td.attr("uid")), $td.attr("uname"), self);
             });
             this.$el.find(".info").on("click", ".btn-diamond", function () {
-                var $this = $(this);
-                self.mainView.mainView.givDiamond.show(parseInt($this.attr("uid")));
+                var $td = $(this).parent("td");
+                self.mainView.mainView.givDiamond.show(parseInt($td.attr("uid")));
+            });
+            this.$el.find(".info").on("click", ".btn-system", function () {
+                var $this = $(this), $td = $(this).parent("td");
+                if ($this.hasClass("btn-red")) {
+                    window.layer.confirm("\u662F\u5426\u8BBE\u7F6E\u7F16\u53F7" + $td.attr("uid") + "\u7684\u73A9\u5BB6\u4E3A\u975E\u7CFB\u7EDF\u7528\u6237\uFF1F", function (e) {
+                        _resource.setSystemUser(JSON.stringify({
+                            "uid": parseInt($td.attr("uid")),
+                            "is_sys_user": 0,
+                            "token": self.mainView.mainView.token
+                        }), function () {
+                            window.layer.msg("设置成功");
+                            $this.removeClass("btn-red").text("设置权限");
+                            window.layer.close(e);
+                        });
+                    });
+                }
+                else {
+                    window.layer.confirm("\u662F\u5426\u8BBE\u7F6E\u7F16\u53F7" + $td.attr("uid") + "\u7684\u73A9\u5BB6\u4E3A\u7CFB\u7EDF\u7528\u6237\uFF1F", function (e) {
+                        _resource.setSystemUser(JSON.stringify({
+                            "uid": parseInt($td.attr("uid")),
+                            "is_sys_user": 1,
+                            "token": self.mainView.mainView.token
+                        }), function () {
+                            window.layer.msg("设置成功");
+                            $this.addClass("btn-red").text("取消权限");
+                            window.layer.close(e);
+                        });
+                    });
+                }
+                ;
             });
         };
         UserList.prototype.renderDetail = function (data) {

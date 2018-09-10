@@ -28,6 +28,9 @@ _resource:resource = {  // 服务请求
     "userList":{    // 用户列表
         "url":`${_domain}/v1/backend/stat/stat/list-player`
     },
+    "setSystemUser":{   // 设置玩家为系统用户
+        "url":`${_domain}/v1/backend/run/user/update-system-user`
+    },
     "payStatistical":{  // 付费统计
         "url":`${_domain}/v1/backend/stat/stat/list-order-stat`
     },
@@ -142,6 +145,10 @@ interface resource {
      * 用户列表
      */
     "userList":postUrl|Function;
+    /**
+     * 设置玩家为系统用户
+     */
+    "setSystemUser":postUrl|Function;
     /**
      * 付费统计
      */

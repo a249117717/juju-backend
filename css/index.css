@@ -511,7 +511,8 @@ body {
 
 .defaultTable .info .btn {
   margin: 5px;
-  padding: 9px 16px;
+  padding: 9px 0;
+  width: 73px;
   border-radius: 2px;
   background-color: #64B5F6;
   font-size: 14px;
@@ -524,6 +525,14 @@ body {
 
 .defaultTable .info .btn:not([disabled]):hover {
   background-color: #42A5F5;
+}
+
+.defaultTable .info .btn.btn-red {
+  background-color: #F44336;
+}
+
+.defaultTable .info .btn.btn-red:hover {
+  background-color: #E53935;
 }
 
 .defaultTable .info .btn-block .btn {
@@ -1555,7 +1564,7 @@ body {
   opacity: 0;
 }
 
-#diagram {
+.diagram {
   margin-bottom: 40px;
 }
 

@@ -16,6 +16,7 @@ define(["text!module/chart/views/statisticalTemp.html", "text!module/chart/views
             _this.$el = null;
             _this.maxDate = null;
             _this.chart = null;
+            _this.chartDay = null;
             _this.template = {
                 "routerTemp": statisticalTemp,
                 "detail": statisticalDetail
@@ -63,17 +64,26 @@ define(["text!module/chart/views/statisticalTemp.html", "text!module/chart/views
                     fill: "#fff"
                 }
             });
+            this.chartDay = new window.G2.Chart({
+                container: 'diagram-day',
+                height: 400,
+                forceFit: true,
+                padding: ['auto', 50, 'auto', 'auto'],
+                background: {
+                    fill: "#fff"
+                }
+            });
             this.bindEvent();
         };
         StatisticalUser.prototype.bindEvent = function () { };
         StatisticalUser.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
-            this.renderChart(data);
+            this.formatData(data);
         };
         StatisticalUser.prototype.renderChart = function (data) {
             var chart = this.chart;
             chart.clear();
-            chart.source(this.formatData(data));
+            chart.source(data);
             chart.scale('value', {
                 min: 0
             });
@@ -101,8 +111,39 @@ define(["text!module/chart/views/statisticalTemp.html", "text!module/chart/views
             });
             chart.render();
         };
+        StatisticalUser.prototype.renderChartByDay = function (data) {
+            var chart = this.chartDay;
+            chart.clear();
+            chart.source(data);
+            chart.scale('value', {
+                min: 0
+            });
+            chart.tooltip(true, {
+                itemTpl: "<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}%</li>",
+                crosshairs: {
+                    type: 'line'
+                }
+            });
+            chart.axis('value', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                    stroke: '#BDBDBD'
+                }
+            });
+            chart.legend(true);
+            chart.line().position('create_time*value').color("type");
+            chart.point().position('create_time*value').color("type").size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            chart.render();
+        };
         StatisticalUser.prototype.formatData = function (data) {
-            var temp = [], date = new Date();
+            var temp = [], tempD = [], date = new Date();
             data.data.forEach(function (en) {
                 date.setTime(en.create_time * 1000);
                 en.create_time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
@@ -121,23 +162,24 @@ define(["text!module/chart/views/statisticalTemp.html", "text!module/chart/views
                     "type": "月活跃",
                     "value": parseInt(en.mau)
                 });
-                temp.push({
+                tempD.push({
                     "create_time": en.create_time,
                     "type": "七日",
-                    "value": parseInt(en.seven_day)
+                    "value": parseInt(en.seven_day) / 100
                 });
-                temp.push({
+                tempD.push({
                     "create_time": en.create_time,
                     "type": "三日",
-                    "value": parseInt(en.three_day)
+                    "value": parseInt(en.three_day) / 100
                 });
-                temp.push({
+                tempD.push({
                     "create_time": en.create_time,
                     "type": "两日",
-                    "value": parseInt(en.two_day)
+                    "value": parseInt(en.two_day) / 100
                 });
             });
-            return temp;
+            this.renderChart(temp);
+            this.renderChartByDay(tempD);
         };
         StatisticalUser.prototype.changeDate = function (start, end) {
             start = parseInt(((new Date(start + " 00:00:00")).getTime() / 1000));

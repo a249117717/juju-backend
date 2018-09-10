@@ -6,6 +6,7 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
         $el:JQuery<HTMLElement> = null;
         maxDate:string = null;  // 最大可选择日期
         chart:any = null;   // 图表
+        chartDay:any = null;    // 日图表
         template = { // 模板
             "routerTemp":statisticalTemp,
             "detail":statisticalDetail
@@ -66,6 +67,15 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
                     fill:"#fff"
                 }
             });
+            this.chartDay = new (<any>window).G2.Chart({
+                container: 'diagram-day', // 指定图表容器 ID
+                height : 400, // 指定图表高度
+                forceFit: true, // 自适应宽度
+                padding:['auto',50,'auto','auto'],
+                background:{
+                    fill:"#fff"
+                }
+            });
 
             this.bindEvent();
         }
@@ -81,7 +91,7 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
          */
         renderDetail(data:any) {
             this.$el.find(".info").html((<any>window).template.compile(this.template.detail)(data));
-            this.renderChart(data);
+            this.formatData(data);
         }
 
         /**
@@ -93,7 +103,7 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
             chart.clear();
 
             // Step 2: 载入数据源
-            chart.source(this.formatData(data));
+            chart.source(data);
             // 设置坐标轴范围
             chart.scale('value', {
                 min: 0
@@ -129,11 +139,56 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
         }
 
         /**
+         * 渲染图表
+         * @param {Object} data [数据]
+         */
+        renderChartByDay(data:any) {
+            let chart = this.chartDay;
+            chart.clear();
+
+            // Step 2: 载入数据源
+            chart.source(data);
+            // 设置坐标轴范围
+            chart.scale('value', {
+                min: 0
+            });
+            // 设置提示框
+            chart.tooltip(true,{
+                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}%</li>",
+                crosshairs: {
+                type: 'line'
+                }
+            });
+            // 设置坐标轴
+            chart.axis('value', {
+                line: {
+                stroke: '#BDBDBD'
+                }
+            });
+            chart.axis('create_time', {
+                line: {
+                stroke: '#BDBDBD'
+                }
+            });
+            // 设置图例
+            chart.legend(true);
+            // Step 3：创建图形语法，绘制柱状图，由 genre 和 sold 两个属性决定图形位置，genre 映射至 x 轴，sold 映射至 y 轴
+            chart.line().position('create_time*value').color("type");
+            chart.point().position('create_time*value').color("type").size(4).shape('circle').style({
+                stroke: '#fff',
+                lineWidth: 1
+            });
+            // Step 4: 渲染图表
+            chart.render();
+        }
+
+        /**
          * 格式化数据
          * @param {Object} data [数据]
          */
-        formatData(data:any) : object {
+        formatData(data:any) {
             let temp:any[] = [],
+            tempD:any[] = [],
             date:Date = new Date();
 
             data.data.forEach(en => {
@@ -154,24 +209,25 @@ define(["text!module/chart/views/statisticalTemp.html","text!module/chart/views/
                     "type":"月活跃",
                     "value":parseInt(en.mau)
                 });
-                temp.push({
+                tempD.push({
                     "create_time":en.create_time,
                     "type":"七日",
-                    "value":parseInt(en.seven_day)
+                    "value":parseInt(en.seven_day) / 100
                 });
-                temp.push({
+                tempD.push({
                     "create_time":en.create_time,
                     "type":"三日",
-                    "value":parseInt(en.three_day)
+                    "value":parseInt(en.three_day) / 100
                 });
-                temp.push({
+                tempD.push({
                     "create_time":en.create_time,
                     "type":"两日",
-                    "value":parseInt(en.two_day)
+                    "value":parseInt(en.two_day) / 100
                 });
             });
             
-            return temp;
+            this.renderChart(temp);
+            this.renderChartByDay(tempD);
         }
 
         /**

@@ -64,15 +64,49 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
 
             // 冻结
             this.$el.find(".info").on("click",".btn-freeze",function(){
-                let $this:JQuery<HTMLElement> = $(this);
+                let $this:JQuery<HTMLElement> = $(this),
+                $td:JQuery<HTMLElement> = $this.parent("td");
+
                 self.$currentForzen = $this;
-                self.mainView.mainView.frozenInfo.show(parseInt($this.attr("uid")),$this.attr("uname"),self);
+                self.mainView.mainView.frozenInfo.show(parseInt($td.attr("uid")),$td.attr("uname"),self);
             });
 
             // 赠送钻石
             this.$el.find(".info").on("click",".btn-diamond",function(){
-                let $this:JQuery<HTMLElement> = $(this);
-                self.mainView.mainView.givDiamond.show(parseInt($this.attr("uid")));
+                let $td:JQuery<HTMLElement> = $(this).parent("td");
+                self.mainView.mainView.givDiamond.show(parseInt($td.attr("uid")));
+            });
+
+            // 设置玩家为系统用户
+            this.$el.find(".info").on("click",".btn-system",function(){
+                let $this:JQuery<HTMLElement> = $(this),
+                $td:JQuery<HTMLElement> = $(this).parent("td");
+
+                if($this.hasClass("btn-red")) {
+                    (<any>window).layer.confirm(`是否设置编号${$td.attr("uid")}的玩家为非系统用户？`,function(e){
+                        (<Function>_resource.setSystemUser)(JSON.stringify({
+                            "uid":parseInt($td.attr("uid")),
+                            "is_sys_user":0,
+                            "token":self.mainView.mainView.token
+                        }),function(){
+                            (<any>window).layer.msg("设置成功");
+                            $this.removeClass("btn-red").text("设置权限");
+                            (<any>window).layer.close(e);
+                        });
+                    });
+                } else {
+                    (<any>window).layer.confirm(`是否设置编号${$td.attr("uid")}的玩家为系统用户？`,function(e){
+                        (<Function>_resource.setSystemUser)(JSON.stringify({
+                            "uid":parseInt($td.attr("uid")),
+                            "is_sys_user":1,
+                            "token":self.mainView.mainView.token
+                        }),function(){
+                            (<any>window).layer.msg("设置成功");
+                            $this.addClass("btn-red").text("取消权限");
+                            (<any>window).layer.close(e);
+                        });
+                    });
+                };
             });
         }
 

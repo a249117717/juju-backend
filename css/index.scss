@@ -694,7 +694,8 @@ body{
 
         .btn {
             margin:5px;
-            padding:9px 16px;
+            padding:9px 0;
+            width:73px;
             border-radius: 2px;
             background-color: #64B5F6;
             font-size: 14px;
@@ -706,6 +707,14 @@ body{
 
             &:not([disabled]):hover {
                 background-color: #42A5F5;
+            }
+
+            &.btn-red {
+                background-color: #F44336;
+
+                &:hover {
+                    background-color: #E53935;
+                }
             }
         }
 
@@ -1346,7 +1355,7 @@ body{
     }
 }
 
-#diagram {
+.diagram {
     margin-bottom:40px;
 }
 

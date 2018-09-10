@@ -24,6 +24,9 @@ var _loadObject = null, _resource = {
     "userList": {
         "url": _domain + "/v1/backend/stat/stat/list-player"
     },
+    "setSystemUser": {
+        "url": _domain + "/v1/backend/run/user/update-system-user"
+    },
     "payStatistical": {
         "url": _domain + "/v1/backend/stat/stat/list-order-stat"
     },

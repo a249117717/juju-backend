@@ -66,4 +66,4 @@ define(["text!module/chart/views/infoQueryTemp.html", "text!module/chart/views/i
     }(ChartBase));
     return InfoQuery;
 });
-//# sourceMappingURL=InfoQuery.js.map
+//# sourceMappingURL=infoQuery1.js.map

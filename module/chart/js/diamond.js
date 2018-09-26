@@ -46,14 +46,13 @@ define(["text!module/chart/views/diamondTemp.html", "text!module/chart/views/dia
         };
         Diamond.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-diamond");
             this.bindEvent();
         };
-        Diamond.prototype.bindEvent = function () {
-        };
+        Diamond.prototype.bindEvent = function () { };
         Diamond.prototype.renderDetail = function (data) {
             this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
         };

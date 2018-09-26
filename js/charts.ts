@@ -134,6 +134,10 @@ class CHeader {
     $end:JQuery<HTMLElement> = this.$el.find(".date-out .end .date");  // 结束日期
     $singleDate:JQuery<HTMLElement> = this.$el.find(".singleDate .date");   // 单日期
     $search:JQuery<HTMLElement> =  this.$el.find(".search");    // 搜索
+    $searchSelect:JQuery<HTMLElement> = this.$el.find(".search-select");   // 搜索内容选择
+    template = {    // 模板
+        "searchSelectTemp":"searchSelectTemp"   // 搜索内容
+    }
 
     constructor(props:any) {
         $.extend(this,props);
@@ -272,6 +276,14 @@ class CHeader {
     }
 
     /**
+     * 设置搜索框内容
+     * @param {string} value [搜索框内容]
+     */
+    setSearch(value:string) {
+        this.$search.val(value);
+    }
+
+    /**
      * 是否显示搜索框
      * @param {boolean} isShow [true为显示,false为隐藏，默认true]
      */
@@ -283,6 +295,31 @@ class CHeader {
             this.$el.find(".search-out").show();
         } else {
             this.$el.find(".search-out").hide();
+        };
+    }
+
+    /**
+     * 是否现在搜索内容选择
+     * @param {boolean} isShow [true为显示,false为隐藏，默认true]
+     * @param {Array<string>} arry [搜索内容选择列表内容]
+     */
+    showSelect(isShow:boolean = true,arry?:Array<string>) {
+        if(isShow) {
+            if(!arry.length) {
+                (<any>window).layer.msg("要显示搜索内容选择框必须键入相应内容！");
+                return;
+            };
+            // 初始化选择内容
+            this.$searchSelect.html((<any>window).template(this.template.searchSelectTemp,{"data":arry}));
+            // 初始化控件
+            (<any>window).mdui.mutation()
+            // 下拉选择控件
+            this.$searchSelect.find(".mdui-select").on("close.mdui.select",(e,value) => {
+                this.mainView.detail.currentChart.changeSearchContent(value.inst.value,value.inst.text);
+            });
+            this.$searchSelect.show();
+        } else {
+            this.$searchSelect.hide();
         };
     }
 
@@ -339,13 +376,13 @@ class CHeader {
      * @param {boolean} showSearch [是否显示搜索框，默认false]
      * @param {boolean} showDate [是否显示开始和截止日期选择，默认false]
      * @param {boolean} showSingleDate [是否显示单日日期选择，默认false]
-     * @param {string} maxDate [最大可选择日期]
+     * @param {boolean} showSelect [是否显示搜索内容选择，默认为false]
      */
-    showMenu(showSearch:boolean = false,showDate:boolean = false,showSingleDate:boolean = false,maxDate:string = null) {
+    showMenu(showSearch:boolean = false,showDate:boolean = false,showSingleDate:boolean = false,showSelect:boolean = false) {
         this.showSearch(showSearch);
         this.showDate(showDate);
         this.showSingleDate(showSingleDate);
-        this.setMaxDate(maxDate);
+        this.showSelect(showSelect);
     }
 }
 
@@ -466,10 +503,15 @@ class CDetail {
     callChartBySide(fileName:string) {
         // 实例化相应的目录对象
         require([fileName],(obj) => {
+            // 实例化相应目录
             var currentChart = new obj({
                 mainView:this
             });
+            // 初始化头部
+            this.mainView.header.showMenu();
+            // 设置当前处于激活状态的内容
             this.currentChart = currentChart;
+            // 调用fetch函数
             currentChart.fetch();
         });
 
@@ -1307,6 +1349,15 @@ class ChartBase {
      * @param {string} query [搜索关键字]
      */
     search(query:string) {}
+
+    /**
+     * 改变搜索内容
+     * @param {string} value [下拉选择框选中的编号]
+     * @param {string} text [下拉选择框选中的内容]
+     */
+    changeSearchContent(value:string,text:string) {
+
+    }
 
     /**
      * 日期变更（为了头部选择日期之后进行触发）

@@ -52,7 +52,8 @@ define(["text!module/chart/views/statisticalTemp.html", "text!module/chart/views
         };
         StatisticalUser.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(false, true, false, this.maxDate);
+            header.showDate();
+            header.setMaxDate(this.maxDate);
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-statisticalUser");
             this.chart = new window.G2.Chart({

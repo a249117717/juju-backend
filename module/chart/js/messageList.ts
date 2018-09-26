@@ -49,7 +49,7 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));

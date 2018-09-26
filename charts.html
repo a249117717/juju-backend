@@ -60,8 +60,11 @@
             <div class="c-header">
                 <div class="name mdui-ripple mdui-ripple-grey">新增用户</div>
                 <div class="menu">
+                    <!-- 搜索内容选择 -->
+                    <div class="search-select"></div>
                     <!-- 搜索框 -->
                     <div class="search-out">
+                        <!-- 搜索 -->
                         <input type="text" placeholder="Search" class="search">
                         <button class="btn btn-search mdui-btn-raised mdui-ripple mdui-ripple-grey"></button>
                     </div>
@@ -222,6 +225,14 @@
                 </div>
             </div>
         </div>
+    </script>
+    <!-- 搜索内容选择下拉列表模板 -->
+    <script id="searchSelectTemp" type="text/html">
+        <select class="mdui-select" mdui-select="options">
+            {{ each data as en index }}
+                <option value="{{ index }}">{{ en }}</option>
+            {{ /each }}
+        </select>
     </script>
     <script src="lib/jquery/jquery.min.js"></script>
     <script src="lib/jquery/jquery.form.min.js"></script>

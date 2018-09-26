@@ -47,7 +47,7 @@ define(["text!module/chart/views/freezeListTemp.html","text!module/chart/views/f
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));

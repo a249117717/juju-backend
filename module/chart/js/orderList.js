@@ -49,7 +49,7 @@ define(["text!module/chart/views/orderListTemp.html", "text!module/chart/views/o
         };
         OrderList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(false, true);
+            header.showDate();
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-orderList");
             this.bindEvent();

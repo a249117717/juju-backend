@@ -43,7 +43,6 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
         };
         MallList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu();
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-mallList");
             this.$add = this.$el.find(".m-addContent");

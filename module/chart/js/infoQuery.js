@@ -28,7 +28,7 @@ define(["text!module/chart/views/infoQueryTemp.html", "text!module/chart/views/i
         };
         InfoQuery.prototype.render = function () {
             var header = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)({}));
             this.$el = $(".m-infoQuery");

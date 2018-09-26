@@ -4,10 +4,11 @@
         <th>创建时间</th>
         <th>编号</th>
         <th>姓名</th>
-        <th>登录ip地址</th>
-        <th>登录时间</th>
         <th>性别</th>
         <th>年龄</th>
+        <th>登录ip地址</th>
+        <th>登录时间</th>
+        <th>邀请人</th>
         <th>vip</th>
         <th>头像</th>
         <th>操作</th>
@@ -19,10 +20,11 @@
             <td>{{ formatDate(en.create_time) }}</td>
             <td>{{ en.uid }}</td>
             <td>{{ en.name }}</td>
-            <td>{{ en.login_ip }}</td>
-            <td>{{ en.login_time }}</td>
             <td>{{ en.sex == "1"?"男":"女" }}</td>
             <td>{{ en.age }}</td>
+            <td>{{ en.login_ip }}</td>
+            <td>{{ en.login_time }}</td>
+            <td>{{ en.pid }}</td>
             <td>{{ en.vip }}</td>
             <td>
                 <img class="pho" src="{{ en.head_img }}" />

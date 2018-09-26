@@ -86,6 +86,10 @@ var CHeader = (function () {
         this.$end = this.$el.find(".date-out .end .date");
         this.$singleDate = this.$el.find(".singleDate .date");
         this.$search = this.$el.find(".search");
+        this.$searchSelect = this.$el.find(".search-select");
+        this.template = {
+            "searchSelectTemp": "searchSelectTemp"
+        };
         $.extend(this, props);
     }
     CHeader.prototype.fetch = function () {
@@ -175,6 +179,9 @@ var CHeader = (function () {
     CHeader.prototype.setTitle = function (title) {
         this.$el.find(".name").text(title);
     };
+    CHeader.prototype.setSearch = function (value) {
+        this.$search.val(value);
+    };
     CHeader.prototype.showSearch = function (isShow) {
         if (isShow === void 0) { isShow = true; }
         if (isShow) {
@@ -184,6 +191,27 @@ var CHeader = (function () {
         }
         else {
             this.$el.find(".search-out").hide();
+        }
+        ;
+    };
+    CHeader.prototype.showSelect = function (isShow, arry) {
+        var _this = this;
+        if (isShow === void 0) { isShow = true; }
+        if (isShow) {
+            if (!arry.length) {
+                window.layer.msg("要显示搜索内容选择框必须键入相应内容！");
+                return;
+            }
+            ;
+            this.$searchSelect.html(window.template(this.template.searchSelectTemp, { "data": arry }));
+            window.mdui.mutation();
+            this.$searchSelect.find(".mdui-select").on("close.mdui.select", function (e, value) {
+                _this.mainView.detail.currentChart.changeSearchContent(value.inst.value, value.inst.text);
+            });
+            this.$searchSelect.show();
+        }
+        else {
+            this.$searchSelect.hide();
         }
         ;
     };
@@ -222,15 +250,15 @@ var CHeader = (function () {
         ;
         this.calendar.setMaxDate(maxDate);
     };
-    CHeader.prototype.showMenu = function (showSearch, showDate, showSingleDate, maxDate) {
+    CHeader.prototype.showMenu = function (showSearch, showDate, showSingleDate, showSelect) {
         if (showSearch === void 0) { showSearch = false; }
         if (showDate === void 0) { showDate = false; }
         if (showSingleDate === void 0) { showSingleDate = false; }
-        if (maxDate === void 0) { maxDate = null; }
+        if (showSelect === void 0) { showSelect = false; }
         this.showSearch(showSearch);
         this.showDate(showDate);
         this.showSingleDate(showSingleDate);
-        this.setMaxDate(maxDate);
+        this.showSelect(showSelect);
     };
     return CHeader;
 }());
@@ -302,6 +330,7 @@ var CDetail = (function () {
             var currentChart = new obj({
                 mainView: _this
             });
+            _this.mainView.header.showMenu();
             _this.currentChart = currentChart;
             currentChart.fetch();
         });
@@ -914,6 +943,8 @@ var ChartBase = (function () {
     ChartBase.prototype.bindEvent = function () {
     };
     ChartBase.prototype.search = function (query) { };
+    ChartBase.prototype.changeSearchContent = function (value, text) {
+    };
     ChartBase.prototype.changeDate = function (start, end) { };
     ChartBase.prototype.changePading = function (pageNo, pageSize) { };
     ChartBase.prototype.frozen = function () { };

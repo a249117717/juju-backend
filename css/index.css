@@ -374,6 +374,12 @@ body {
   float: right;
 }
 
+.c-header .menu .search-select {
+  display: none;
+  margin: 14px 14px 0 0;
+  float: left;
+}
+
 .c-header .menu .search-out {
   display: none;
   float: left;

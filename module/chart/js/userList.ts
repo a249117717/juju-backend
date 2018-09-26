@@ -9,6 +9,9 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
             "routerTemp":userListTemp,
             "detail":userListDetail
         };
+        uid:number = 0; // 用户编号
+        pid:number = 0; // 邀请人编号
+        currentSelect:string = "0";   // 当前搜索内容框选中的内容编号
         
         constructor(props:any) {
             super(props);
@@ -18,9 +21,10 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
          * 获取数据
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数]
-         * @param {uid} string [用户编号]
+         * @param {uid} number [用户编号]
+         * @param {pid} number [邀请人编号]
          */
-        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = 0) {
+        fetch(pageNo:number = 1,pageSize:number = _pageSize,uid:number = this.uid,pid:number = this.pid) {
             let self:UserList = this;
             
             _load(true);
@@ -28,6 +32,7 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "uid":uid,
+                "pid":pid,
                 "token":this.mainView.mainView.token
             }),function(data:any){
                 if(!self.$el) {
@@ -47,7 +52,8 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
+            header.showSelect(true,["用户","邀请人"]);
             header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
@@ -133,9 +139,38 @@ define(["text!module/chart/views/userListTemp.html","text!module/chart/views/use
          */
         search(query:string) {
             if(!/^\d*$/.test(query)) {
-                (<any>window).layer.msg("请填写正确的用户编号");
+                (<any>window).layer.msg(`请填写正确的${this.currentSelect == "0"?"用户":"邀请人"}编号`);
             } else {
-                this.fetch(undefined,this.pading.pageSize,query?parseInt(query):undefined);
+                switch(this.currentSelect) {
+                    case "0":
+                        this.uid = query?parseInt(query):0;
+                    break;
+                    case "1":
+                        this.pid = query?parseInt(query):0;
+                    break;
+                };
+
+                this.fetch();
+            };
+        }
+
+        /**
+         * 改变搜索内容
+         * @param {string} value [下拉选择框选中的编号]
+         * @param {string} text [下拉选择框选中的内容]
+         */
+        changeSearchContent(value:string,text:string) {
+            let header:CHeader = this.mainView.mainView.header;
+            this.currentSelect = value;
+            this.uid = this.pid = 0;
+
+            switch(value) {
+                case "0":
+                    header.setPlaceHolder("请输入用户编号");
+                break;
+                case "1":
+                    header.setPlaceHolder("请输入邀请人编号");
+                break;
             };
         }
 

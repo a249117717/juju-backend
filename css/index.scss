@@ -541,6 +541,12 @@ body{
         margin-right: 20px;
         float: right;
 
+        .search-select {
+            display: none;
+            margin: 14px 14px 0 0;
+            float:left;
+        }
+
         .search-out {
             display: none;
             float:left;

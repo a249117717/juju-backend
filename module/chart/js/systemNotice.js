@@ -46,7 +46,6 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
         };
         SystemNotice.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu();
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-systemNotice");
             this.$add = this.$el.find(".addNotice");

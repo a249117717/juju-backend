@@ -47,7 +47,7 @@ define(["text!module/chart/views/diamondTemp.html","text!module/chart/views/diam
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
@@ -58,9 +58,7 @@ define(["text!module/chart/views/diamondTemp.html","text!module/chart/views/diam
         /**
          * 事件绑定
          */
-        bindEvent() {
-
-        }
+        bindEvent() {}
 
         /**
          * 渲染详情

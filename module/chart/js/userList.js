@@ -19,18 +19,23 @@ define(["text!module/chart/views/userListTemp.html", "text!module/chart/views/us
                 "routerTemp": userListTemp,
                 "detail": userListDetail
             };
+            _this.uid = 0;
+            _this.pid = 0;
+            _this.currentSelect = "0";
             return _this;
         }
-        UserList.prototype.fetch = function (pageNo, pageSize, uid) {
+        UserList.prototype.fetch = function (pageNo, pageSize, uid, pid) {
             if (pageNo === void 0) { pageNo = 1; }
             if (pageSize === void 0) { pageSize = _pageSize; }
-            if (uid === void 0) { uid = 0; }
+            if (uid === void 0) { uid = this.uid; }
+            if (pid === void 0) { pid = this.pid; }
             var self = this;
             _load(true);
             _resource.userList(JSON.stringify({
                 "page_size": pageSize,
                 "page_index": pageNo,
                 "uid": uid,
+                "pid": pid,
                 "token": this.mainView.mainView.token
             }), function (data) {
                 if (!self.$el) {
@@ -46,7 +51,8 @@ define(["text!module/chart/views/userListTemp.html", "text!module/chart/views/us
         };
         UserList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
+            header.showSelect(true, ["用户", "邀请人"]);
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-userList");
@@ -102,10 +108,33 @@ define(["text!module/chart/views/userListTemp.html", "text!module/chart/views/us
         };
         UserList.prototype.search = function (query) {
             if (!/^\d*$/.test(query)) {
-                window.layer.msg("请填写正确的用户编号");
+                window.layer.msg("\u8BF7\u586B\u5199\u6B63\u786E\u7684" + (this.currentSelect == "0" ? "用户" : "邀请人") + "\u7F16\u53F7");
             }
             else {
-                this.fetch(undefined, this.pading.pageSize, query ? parseInt(query) : undefined);
+                switch (this.currentSelect) {
+                    case "0":
+                        this.uid = query ? parseInt(query) : 0;
+                        break;
+                    case "1":
+                        this.pid = query ? parseInt(query) : 0;
+                        break;
+                }
+                ;
+                this.fetch();
+            }
+            ;
+        };
+        UserList.prototype.changeSearchContent = function (value, text) {
+            var header = this.mainView.mainView.header;
+            this.currentSelect = value;
+            this.uid = this.pid = 0;
+            switch (value) {
+                case "0":
+                    header.setPlaceHolder("请输入用户编号");
+                    break;
+                case "1":
+                    header.setPlaceHolder("请输入邀请人编号");
+                    break;
             }
             ;
         };

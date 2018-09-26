@@ -46,7 +46,7 @@ define(["text!module/chart/views/freezeListTemp.html", "text!module/chart/views/
         };
         FreezeList.prototype.render = function (data) {
             var header = this.mainView.mainView.header;
-            header.showMenu(true);
+            header.showSearch();
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-freezeList");

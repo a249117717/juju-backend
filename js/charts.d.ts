@@ -188,6 +188,13 @@ declare namespace Charts {
         search(query:string)
 
         /**
+         * 改变搜索内容
+         * @param {string} value [下拉选择框选中的编号]
+         * @param {string} text [下拉选择框选中的内容]
+         */
+        changeSearchContent(value:string,text:string)
+
+        /**
          * 日期变更（为了头部选择日期之后进行触发）
          * @param {string} start [开始日期]
          * @param {string} end [结束日期]

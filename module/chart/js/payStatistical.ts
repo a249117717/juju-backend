@@ -55,7 +55,6 @@ define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/vie
          */
         render(data:any) {
             let header:CHeader = this.mainView.mainView.header;
-            header.showMenu();
             
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-payStatistical");

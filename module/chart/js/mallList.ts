@@ -29,9 +29,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             }),function(data:any){
                 if(!self.$el) {
                     self.render(data);
-                } else {
-                    // 设置总页数
-                    self.pading.setTotal(data.count);
                 };
                 self.renderDetail(data)
                 _load(false);
@@ -178,7 +175,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
          */
         showUpdate($obj:JQuery<HTMLElement>) {
             let $tr:JQuery<HTMLElement> = $obj.parents("tr"),
-            head = $tr.find(".head .pho").attr("src");
+            head = $tr.find(".head .pho").attr("src"),
+            mid:number = parseInt($obj.attr("mid"));
             // 如果照片为默认，则表示不存在
             head == "common/images/defaultUser.png"?"":head;
 
@@ -188,10 +186,10 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             },10);
 
             this.initUpdate({
-                "mid":parseInt($obj.attr("mid")),
+                "mid":mid,
                 "type":$obj.attr("mtype"),
                 "num":parseInt($tr.find(".num").text()),
-                "give_num":parseInt($tr.find(".giveNum").text()),
+                "give_num":mid == 1?parseInt($tr.find(".giveNum").text()):parseInt($tr.find(".discount_price").text()),
                 "product_id":parseInt($tr.find(".pid").text()),
                 "price":parseInt($tr.find(".price").text())
             });
@@ -296,7 +294,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             let option:any = {
                 "type":parseInt(<string>$JQ.find(".operation:checked").val()), // 类型
                 "num":parseInt(<string>$JQ.find(".diamonNumber").val()), // 钻石数量
-                "give_num":0,    // 当type=1时，give_num是赠送的钻石数量,当type=2时,give_num是优惠价,要乘以100传到后端
+                "give_num":0,    // 钻石数量
+                "discount_price":0, // 优惠价,要乘以100传到后端
                 "product_id":parseInt(<string>$JQ.find(".produceId").val()),   // 苹果对应的商品id
                 "price":<number>$JQ.find(".price").val() * 100, // 价格,要乘以100再传到后端来
                 "token":this.mainView.mainView.token
@@ -308,7 +307,7 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                     option.give_num = parseInt(<string>$JQ.find(".gitDiamon").val());
                 break;
                 case "2":   // 会员：立减价格
-                    option.give_num = <number>$JQ.find(".reducePrice").val() * 100;
+                    option.discount_price = <number>$JQ.find(".reducePrice").val() * 100;
                 break;
             };
 

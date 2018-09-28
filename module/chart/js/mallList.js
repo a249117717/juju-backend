@@ -33,9 +33,6 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 if (!self.$el) {
                     self.render(data);
                 }
-                else {
-                    self.pading.setTotal(data.count);
-                }
                 ;
                 self.renderDetail(data);
                 _load(false);
@@ -142,17 +139,17 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
         };
         MallList.prototype.showUpdate = function ($obj) {
             var _this = this;
-            var $tr = $obj.parents("tr"), head = $tr.find(".head .pho").attr("src");
+            var $tr = $obj.parents("tr"), head = $tr.find(".head .pho").attr("src"), mid = parseInt($obj.attr("mid"));
             head == "common/images/defaultUser.png" ? "" : head;
             this.$update.show();
             setTimeout(function () {
                 _this.$update.addClass("active");
             }, 10);
             this.initUpdate({
-                "mid": parseInt($obj.attr("mid")),
+                "mid": mid,
                 "type": $obj.attr("mtype"),
                 "num": parseInt($tr.find(".num").text()),
-                "give_num": parseInt($tr.find(".giveNum").text()),
+                "give_num": mid == 1 ? parseInt($tr.find(".giveNum").text()) : parseInt($tr.find(".discount_price").text()),
                 "product_id": parseInt($tr.find(".pid").text()),
                 "price": parseInt($tr.find(".price").text())
             });
@@ -235,6 +232,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 "type": parseInt($JQ.find(".operation:checked").val()),
                 "num": parseInt($JQ.find(".diamonNumber").val()),
                 "give_num": 0,
+                "discount_price": 0,
                 "product_id": parseInt($JQ.find(".produceId").val()),
                 "price": $JQ.find(".price").val() * 100,
                 "token": this.mainView.mainView.token
@@ -244,7 +242,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                     option.give_num = parseInt($JQ.find(".gitDiamon").val());
                     break;
                 case "2":
-                    option.give_num = $JQ.find(".reducePrice").val() * 100;
+                    option.discount_price = $JQ.find(".reducePrice").val() * 100;
                     break;
             }
             ;

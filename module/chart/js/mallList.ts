@@ -79,23 +79,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                     });
                 });
             });
-
-            // 新增框的类型选择
-            this.$add.find(".operation").on("change",function(){
-                let $this:JQuery<HTMLElement> = $(this);
-                
-                // 切换商品类型
-                switch($this.val()) {
-                    case "1":   // 类型为钻石，则显示赠送钻石输入框
-                        self.$add.find(".reducePrice-out").hide();
-                        self.$add.find(".gitDiamon-out").show();
-                    break;
-                    case "2":   // 类型为会员，则显示钻石数量框
-                        self.$add.find(".gitDiamon-out").hide();
-                        self.$add.find(".reducePrice-out").show();
-                    break;
-                }
-            });
             
             // 表单内输入框的正整数校验
             this.$add.find(".gitDiamon,.diamonNumber,.reducePrice,.produceId,.price").on("input",function(){
@@ -104,6 +87,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
 
                 if(/^\d*$/.test(val) && parseInt(val) >= 0) {
                     $this.attr("old",<string>$this.val());
+                } else if(!val) {
+                    $this.val("");
                 } else {
                     $this.val($this.attr("old"));
                     (<any>window).layer.tips('请输入大于等于0的整数', $this[0], {
@@ -189,7 +174,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                 "mid":mid,
                 "type":$obj.attr("mtype"),
                 "num":parseInt($tr.find(".num").text()),
-                "give_num":mid == 1?parseInt($tr.find(".giveNum").text()):parseInt($tr.find(".discount_price").text()),
+                "give_num":parseInt($tr.find(".giveNum").text()),
+                "discount_price":parseInt($tr.find(".discount_price").text()),
                 "product_id":parseInt($tr.find(".pid").text()),
                 "price":parseInt($tr.find(".price").text())
             });
@@ -204,16 +190,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             $update.find(".input-group").html((<any>window).template.compile(this.template.update)(initData));
             // 类型
             $update.find(".operation").eq(parseInt(initData.type) - 1).prop("checked",true);
-            switch(initData.type) {
-                case "1":
-                    $update.find(".reducePrice-out").hide();
-                    $update.find(".gitDiamon").attr("old",initData.give_num).val(initData.give_num);
-                break;
-                case "2":
-                    $update.find(".gitDiamon-out").hide();
-                    $update.find(".reducePrice").attr("old",initData.give_num / 100).val(initData.give_num);
-                break
-            };
             this.updateBindEvent();
         }
 
@@ -221,25 +197,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
          * 更新框的事件绑定
          */
         updateBindEvent() {
-            let self:MallList = this;
-
-            // 新增框的类型选择
-            this.$update.find(".operation").on("change",function(){
-                let $this:JQuery<HTMLElement> = $(this);
-                
-                // 切换商品类型
-                switch($this.val()) {
-                    case "1":   // 类型为钻石，则显示赠送钻石输入框
-                        self.$update.find(".reducePrice-out").hide();
-                        self.$update.find(".gitDiamon-out").show();
-                    break;
-                    case "2":   // 类型为会员，则显示钻石数量框
-                        self.$update.find(".gitDiamon-out").hide();
-                        self.$update.find(".reducePrice-out").show();
-                    break;
-                }
-            });
-            
             // 表单内输入框的正整数校验
             this.$update.find(".gitDiamon,.diamonNumber,.reducePrice,.produceId,.price").on("input",function(){
                 let $this:JQuery<HTMLElement> = $(this),
@@ -247,6 +204,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
 
                 if(/^\d*$/.test(val) && parseInt(val) >= 0) {
                     $this.attr("old",<string>$this.val());
+                } else if(!val) {
+                    $this.val("");
                 } else {
                     $this.val($this.attr("old"));
                     (<any>window).layer.tips('请输入大于等于0的整数', $this[0], {
@@ -267,10 +226,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
 
             if(!$JQ.find(".diamonNumber").val()) {
                 tip = "请输入钻石数量";
-            } else if($JQ.find(".operation:checked").val() == 1 && !$JQ.find(".gitDiamon").val()) {
-                tip = "请输入赠送钻石数量";
-            } else if($JQ.find(".operation:checked").val() == 2 && !$JQ.find(".reducePrice").val()) {
-                tip = "请输入立减价格";
             } else if(!$JQ.find(".produceId").val()) {
                 tip = "请输入苹果商品ID";
             } else if(!$JQ.find(".price").val()) {
@@ -294,21 +249,11 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             let option:any = {
                 "type":parseInt(<string>$JQ.find(".operation:checked").val()), // 类型
                 "num":parseInt(<string>$JQ.find(".diamonNumber").val()), // 钻石数量
-                "give_num":0,    // 钻石数量
-                "discount_price":0, // 优惠价,要乘以100传到后端
+                "give_num":(parseInt(<string>$JQ.find(".gitDiamon").val())) || 0,    // 钻石数量
+                "discount_price":(<number>$JQ.find(".reducePrice").val() * 100) || 0, // 优惠价,要乘以100传到后端
                 "product_id":parseInt(<string>$JQ.find(".produceId").val()),   // 苹果对应的商品id
                 "price":<number>$JQ.find(".price").val() * 100, // 价格,要乘以100再传到后端来
                 "token":this.mainView.mainView.token
-            };
-            
-            // 商品类型
-            switch($JQ.find(".operation:checked").val()) {
-                case "1":   // 钻石：赠送的钻石数量
-                    option.give_num = parseInt(<string>$JQ.find(".gitDiamon").val());
-                break;
-                case "2":   // 会员：立减价格
-                    option.discount_price = <number>$JQ.find(".reducePrice").val() * 100;
-                break;
             };
 
             if($JQ.is(".updateProcude")) {
@@ -333,9 +278,13 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
          */
         num:number
         /**
-         * 钻石数量/立减价格
+         * 钻石数量
          */
         give_num:number
+        /**
+         * 立减价格
+         */
+        discount_price:number
         /**
          * 苹果对应的商品id
          */

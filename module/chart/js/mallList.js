@@ -68,23 +68,13 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                     });
                 });
             });
-            this.$add.find(".operation").on("change", function () {
-                var $this = $(this);
-                switch ($this.val()) {
-                    case "1":
-                        self.$add.find(".reducePrice-out").hide();
-                        self.$add.find(".gitDiamon-out").show();
-                        break;
-                    case "2":
-                        self.$add.find(".gitDiamon-out").hide();
-                        self.$add.find(".reducePrice-out").show();
-                        break;
-                }
-            });
             this.$add.find(".gitDiamon,.diamonNumber,.reducePrice,.produceId,.price").on("input", function () {
                 var $this = $(this), val = $this.val();
                 if (/^\d*$/.test(val) && parseInt(val) >= 0) {
                     $this.attr("old", $this.val());
+                }
+                else if (!val) {
+                    $this.val("");
                 }
                 else {
                     $this.val($this.attr("old"));
@@ -149,7 +139,8 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 "mid": mid,
                 "type": $obj.attr("mtype"),
                 "num": parseInt($tr.find(".num").text()),
-                "give_num": mid == 1 ? parseInt($tr.find(".giveNum").text()) : parseInt($tr.find(".discount_price").text()),
+                "give_num": parseInt($tr.find(".giveNum").text()),
+                "discount_price": parseInt($tr.find(".discount_price").text()),
                 "product_id": parseInt($tr.find(".pid").text()),
                 "price": parseInt($tr.find(".price").text())
             });
@@ -158,38 +149,16 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
             var $update = this.$update;
             $update.find(".input-group").html(window.template.compile(this.template.update)(initData));
             $update.find(".operation").eq(parseInt(initData.type) - 1).prop("checked", true);
-            switch (initData.type) {
-                case "1":
-                    $update.find(".reducePrice-out").hide();
-                    $update.find(".gitDiamon").attr("old", initData.give_num).val(initData.give_num);
-                    break;
-                case "2":
-                    $update.find(".gitDiamon-out").hide();
-                    $update.find(".reducePrice").attr("old", initData.give_num / 100).val(initData.give_num);
-                    break;
-            }
-            ;
             this.updateBindEvent();
         };
         MallList.prototype.updateBindEvent = function () {
-            var self = this;
-            this.$update.find(".operation").on("change", function () {
-                var $this = $(this);
-                switch ($this.val()) {
-                    case "1":
-                        self.$update.find(".reducePrice-out").hide();
-                        self.$update.find(".gitDiamon-out").show();
-                        break;
-                    case "2":
-                        self.$update.find(".gitDiamon-out").hide();
-                        self.$update.find(".reducePrice-out").show();
-                        break;
-                }
-            });
             this.$update.find(".gitDiamon,.diamonNumber,.reducePrice,.produceId,.price").on("input", function () {
                 var $this = $(this), val = $this.val();
                 if (/^\d*$/.test(val) && parseInt(val) >= 0) {
                     $this.attr("old", $this.val());
+                }
+                else if (!val) {
+                    $this.val("");
                 }
                 else {
                     $this.val($this.attr("old"));
@@ -205,12 +174,6 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
             var tip = "";
             if (!$JQ.find(".diamonNumber").val()) {
                 tip = "请输入钻石数量";
-            }
-            else if ($JQ.find(".operation:checked").val() == 1 && !$JQ.find(".gitDiamon").val()) {
-                tip = "请输入赠送钻石数量";
-            }
-            else if ($JQ.find(".operation:checked").val() == 2 && !$JQ.find(".reducePrice").val()) {
-                tip = "请输入立减价格";
             }
             else if (!$JQ.find(".produceId").val()) {
                 tip = "请输入苹果商品ID";
@@ -231,21 +194,12 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
             var option = {
                 "type": parseInt($JQ.find(".operation:checked").val()),
                 "num": parseInt($JQ.find(".diamonNumber").val()),
-                "give_num": 0,
-                "discount_price": 0,
+                "give_num": (parseInt($JQ.find(".gitDiamon").val())) || 0,
+                "discount_price": ($JQ.find(".reducePrice").val() * 100) || 0,
                 "product_id": parseInt($JQ.find(".produceId").val()),
                 "price": $JQ.find(".price").val() * 100,
                 "token": this.mainView.mainView.token
             };
-            switch ($JQ.find(".operation:checked").val()) {
-                case "1":
-                    option.give_num = parseInt($JQ.find(".gitDiamon").val());
-                    break;
-                case "2":
-                    option.discount_price = $JQ.find(".reducePrice").val() * 100;
-                    break;
-            }
-            ;
             if ($JQ.is(".updateProcude")) {
                 option["id"] = parseInt($JQ.find(".mid").val());
             }

@@ -827,6 +827,7 @@ body {
 
 .defaultTable .m-updateContent .content .button-group .btn-submit,
 .defaultTable .m-albumContent .content .button-group .btn-submit {
+  color: #fff;
   background-color: #42a5f5;
 }
 

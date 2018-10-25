@@ -1,0 +1,119 @@
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  padding-top: 30px;
+  background: url("../images/bg.png") no-repeat;
+  background-size: cover;
+}
+
+.moon {
+  display: block;
+  margin: 0 auto;
+  width: 141px;
+}
+
+.title {
+  color: #E1EBF6;
+  font-size: 18px;
+  text-align: center;
+}
+
+.g-content {
+  position: relative;
+  left: 0;
+  top: 0;
+  margin: 20px auto;
+  padding-top: 30px;
+  width: 240px;
+  height: 320px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.g-content:before {
+  content: "";
+  margin-left: -12px;
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  padding: 12px;
+  border-radius: 100%;
+  background-color: #000;
+}
+
+.g-content:after {
+  content: "";
+  margin-left: -12px;
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  padding: 12px;
+  border-radius: 100%;
+  background-color: #000;
+}
+
+.g-content .circle {
+  margin: 10px 0;
+  height: 10px;
+  background: url("../images/circle.png") repeat-x 3px 0;
+  background-size: 10px;
+}
+
+.m-number .name {
+  text-align: center;
+  font-size: 12px;
+  color: #4a4a4a;
+}
+
+.m-number .number {
+  margin: 20px 0;
+  font-size: 32px;
+  letter-spacing: 6px;
+  color: #7B4BFF;
+  text-align: center;
+  width: 100%;
+}
+
+.m-user {
+  text-align: center;
+}
+
+.m-user .userImg {
+  margin: 0 auto;
+  width: 54px;
+  height: 54px;
+}
+
+.m-user .btn-down {
+  display: block;
+  margin: 20px auto;
+  padding: 0;
+  width: 180px;
+  height: 30px;
+  line-height: 26px;
+  font-size: 14px;
+  color: #7B4BFF;
+  border: 2px solid #7B4BFF;
+  background-color: #fff;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+}
+
+.m-tip {
+  font-size: 14px;
+  color: #E1EBF6;
+  text-align: center;
+  line-height: 24px;
+}

@@ -20,7 +20,6 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
          * 获取数据
          * @param {number} pageNo [页码]
          * @param {number} pageSize [每页条数]
-         * @param {uid} string [用户编号]
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize) {
             let self:SystemNotice = this;

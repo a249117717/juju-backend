@@ -37,6 +37,7 @@ class IndexMain {
      * 获取数据
      */
     fetch() {
+        _conversionAjax(_resource);
         this.render();
     }
 
@@ -97,8 +98,14 @@ class IndexMain {
         window.onhashchange = function(){
              let hash:string = window.location.hash.substr(1);
             
-            if(!~_router.indexOf(hash)) {// 如果hash不存在，则访问路由中的第一个
-                hash = _router[0];
+            if(!_router.hasOwnProperty(hash)) {// 如果hash不存在，则访问路由中的第一个
+                let first = "";
+                for(var en in _router) {
+                    first = en;
+                    break;
+                };
+                window.location.hash = first;
+                return;
             };
             
             // 左侧菜单显示相应的目录
@@ -389,6 +396,7 @@ class CHeader {
 // 侧栏
 class CSide {
     $el:JQuery<HTMLElement> = $(".c-side");
+    template:string = "silderMenuTemp";
     mainView:IndexMain = null;
 
     constructor(props:any) {
@@ -406,6 +414,7 @@ class CSide {
      * 页面渲染
      */
     render() {
+        this.$el.find(".menu-list").html((<any>window).template(this.template,{data:_router}));
         this.bindEvent();
     }
 

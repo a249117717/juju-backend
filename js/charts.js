@@ -26,6 +26,7 @@ var IndexMain = (function () {
         this.initMethod();
     }
     IndexMain.prototype.fetch = function () {
+        _conversionAjax(_resource);
         this.render();
     };
     IndexMain.prototype.render = function () {
@@ -56,8 +57,15 @@ var IndexMain = (function () {
         ;
         window.onhashchange = function () {
             var hash = window.location.hash.substr(1);
-            if (!~_router.indexOf(hash)) {
-                hash = _router[0];
+            if (!_router.hasOwnProperty(hash)) {
+                var first = "";
+                for (var en in _router) {
+                    first = en;
+                    break;
+                }
+                ;
+                window.location.hash = first;
+                return;
             }
             ;
             self.side.setActive("." + hash);
@@ -265,6 +273,7 @@ var CHeader = (function () {
 var CSide = (function () {
     function CSide(props) {
         this.$el = $(".c-side");
+        this.template = "silderMenuTemp";
         this.mainView = null;
         $.extend(this, props);
     }
@@ -272,6 +281,7 @@ var CSide = (function () {
         this.render();
     };
     CSide.prototype.render = function () {
+        this.$el.find(".menu-list").html(window.template(this.template, { data: _router }));
         this.bindEvent();
     };
     CSide.prototype.bindEvent = function () {

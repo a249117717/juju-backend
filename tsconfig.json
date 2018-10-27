@@ -13,6 +13,7 @@
     // "include":[], // 编译时需要包含的文件夹
     "exclude": [    // 编译时需要剔除的文件夹。
         "node_modules",
-        "./lib"
+        "./lib",
+        "module/shareLanding"
     ]
 }

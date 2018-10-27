@@ -53,6 +53,9 @@
                 <li class="systemNotice mdui-ripple mdui-ripple-white">
                     <a href="#systemNotice">系统公告</a>
                 </li>
+                <li class="systemNotice mdui-ripple mdui-ripple-white">
+                    <a href="#systemNotice">系统公告</a>
+                </li>
             </ul>
         </div>
         <div class="g-right">
@@ -195,6 +198,14 @@
         <div class="shade"></div>
     </div>
 
+    <!-- 左侧菜单栏 -->
+    <script id="silderMenuTemp" type="text/html">
+        {{ each data as en index }}
+            <li class="{{ index }} mdui-ripple mdui-ripple-white">
+                <a href="#{{ index }}">{{ en }}</a>
+            </li>
+        {{ /each }}
+    </script>
     <!-- 翻页模板 -->
     <script id="padingTemp" type="text/html">
         <div class="m-pading">

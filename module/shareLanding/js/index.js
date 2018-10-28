@@ -16,9 +16,25 @@ var download = {
         $(".m-user .userImg").attr("src",img.src);
     };
     // 设置推荐码
-    $(".m-number .number").val(search[0]);
+    $(".m-number .number").val(search[0]).attr("old",search[0]);
     // 设置用户名
     $(".m-number .name").text(search[1] + "的推荐码");
+
+    // 检测输入框，不允许用户变更输入框内容
+    $(".m-number .number").on("input",function(){
+        var $this = $(this);
+        $this.val($this.attr("old"));
+    });
+
+    // 按钮特效
+    $(".btn").on({
+        "touchstart":function(){
+            $(this).addClass("active");
+        },
+        "touchend":function(){
+            $(this).removeClass("active");
+        }
+    });
 
     // 下载按钮
     $(".btn-down").on("click",function(){
@@ -30,4 +46,21 @@ var download = {
             window.location.href = download.iOS;
         };
     });
+
+    // 复制
+    function copy() {
+        var clipboard = new ClipboardJS('.btn-copy',{
+            text:function() {
+                return $(".m-number .number").val();
+            }
+        });
+        clipboard.on('success', function(e) {
+            layer.msg("复制成功");
+            e.clearSelection();
+        });
+        clipboard.on('error', function(e) {
+            layer.msg("非常抱歉，复制失败，你可能尝试自行复制");
+        });
+    };
+    copy();
 }());

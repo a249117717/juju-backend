@@ -64,7 +64,7 @@ body {
 }
 
 .g-content .circle {
-  margin: 10px 0;
+  margin: 15px 0;
   height: 10px;
   background: url("../images/circle.png") repeat-x 3px 0;
   background-size: 10px;
@@ -77,7 +77,7 @@ body {
 }
 
 .m-number .number {
-  margin: 20px 0;
+  margin: 10px 0;
   font-size: 32px;
   letter-spacing: 6px;
   color: #7B4BFF;
@@ -95,9 +95,9 @@ body {
   height: 54px;
 }
 
-.m-user .btn-down {
+.btn {
   display: block;
-  margin: 20px auto;
+  margin: 10px auto;
   padding: 0;
   width: 180px;
   height: 30px;
@@ -109,6 +109,16 @@ body {
   text-align: center;
   border-radius: 20px;
   outline: none;
+}
+
+.btn.active {
+  color: #fff;
+  background-color: #CE93D8;
+  border-color: #CE93D8;
+}
+
+.btn-copy {
+  width: 80px;
 }
 
 .m-tip {

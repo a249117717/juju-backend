@@ -63,7 +63,7 @@ body {
     }
 
     .circle {
-        margin:10px 0;
+        margin:15px 0;
         height:10px;
         background: url("../images/circle.png") repeat-x 3px 0;
         background-size: 10px;
@@ -79,7 +79,7 @@ body {
     }
 
     .number {
-        margin:20px 0;
+        margin:10px 0;
         font-size: 32px;
         letter-spacing: 6px;
         color:#7B4BFF;
@@ -96,22 +96,32 @@ body {
         width:54px;
         height:54px;
     }
+}
 
-    .btn-down {
-        display: block;
-        margin:20px auto;
-        padding:0;
-        width:180px;
-        height:30px;
-        line-height: 26px;
-        font-size: 14px;
-        color:#7B4BFF;
-        border:2px solid #7B4BFF;
-        background-color: #fff;
-        text-align: center;
-        border-radius: 20px;
-        outline: none;
+.btn {
+    display: block;
+    margin:10px auto;
+    padding:0;
+    width:180px;
+    height:30px;
+    line-height: 26px;
+    font-size: 14px;
+    color:#7B4BFF;
+    border:2px solid #7B4BFF;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 20px;
+    outline: none;
+
+    &.active {
+        color:#fff;
+        background-color: #CE93D8;
+        border-color: #CE93D8;
     }
+}
+
+.btn-copy {
+    width:80px;
 }
 
 .m-tip {

@@ -1386,4 +1386,26 @@ class ChartBase {
      * 冻结用户
      */
     frozen(){}
+
+    /**
+     * 动画显示或隐藏对象
+     * @param {JQuery<HTMLElement>} $obj [JQ对象]
+     * @param {number} operation [操作,0:隐藏,1:显示，默认为显示]
+     */
+    showOrHideByAni($obj:JQuery<HTMLElement>,operation:number = 1) {
+        switch(operation) {
+            case 0:
+                $obj.removeClass("active");
+                setTimeout(() => {
+                    $obj.hide()
+                },200);
+            break;
+            default:
+                $obj.show();
+                setTimeout(() => {
+                    $obj.addClass("active");
+                },10);
+            break;
+        };
+    }
 }

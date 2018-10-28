@@ -1,0 +1,22 @@
+<!-- 系统公告详情 -->
+<thead>
+    <tr>
+        <th>编号</th>
+        <th>是否启用</th>
+        <th>内容</th>
+        <th>操作</th>
+    </tr>
+</thead>
+<tbody>
+    {{ each data as en }}
+        <tr>
+            <td>{{ en.id }}</td>
+            <td>{{ en.status == 0?'否':'是' }}</td>
+            <td class="ncontent">{{ en.msg }}</td>
+            <td>
+                <button class="btn btn-delete mdui-ripple mdui-ripple-grey" nid="{{ en.id }}">删除</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey" nid="{{ en.id }}" status="{{ en.status }}">更新</button>
+            </td>
+        </tr>
+    {{ /each }}
+</tbody>

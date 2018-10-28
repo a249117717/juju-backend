@@ -127,7 +127,8 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
                         "id":nid,
                         "token":self.mainView.mainView.token
                     }),function(data){
-                        $this.prop("disabled",true);
+                        // 让本条数据的所有按钮全部不能点击
+                        $this.prop("disabled",true).siblings("").prop("disabled",true);
                         (<any>window).layer.msg("删除成功");
                         (<any>window).layer.close(e);
                     });
@@ -141,10 +142,7 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
 
             // 取消
             this.$update.find(".btn-cancel").on("click",() => {
-                this.$update.removeClass("active");
-                setTimeout(() => {
-                    this.$update.hide()
-                },200);
+                this.showOrHideByAni(this.$update,0);
             });
 
             // 更新消息确定按钮
@@ -270,11 +268,6 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
         showUpdate($obj:JQuery<HTMLElement>) {
             let $tr:JQuery<HTMLElement> = $obj.parents("tr");
 
-            this.$update.show();
-            setTimeout(() => {
-                this.$update.addClass("active");
-            },10);
-
             this.initUpdate({
                 "nid":parseInt($obj.attr("nid")),
                 "startDate":<string>$tr.find(".startDate").text(),
@@ -282,6 +275,8 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
                 "inter":parseInt(<string>$tr.find(".inter").text()),
                 "content":<string>$tr.find(".ncontent").text()
             });
+            
+            this.showOrHideByAni(this.$update);
         }
 
         /**

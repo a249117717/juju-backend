@@ -126,7 +126,7 @@ define([
                         "uid": parseInt($td.attr("uid")),
                         "token": self.mainView.mainView.token
                     }), function (data) {
-                        $this.prop("disabled", true);
+                        $this.prop("disabled", true).siblings("").prop("disabled", true);
                         window.layer.msg("删除成功");
                         window.layer.close(e);
                     });
@@ -136,10 +136,7 @@ define([
                 self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
-                _this.$update.removeClass("active");
-                setTimeout(function () {
-                    _this.$update.hide();
-                }, 200);
+                _this.showOrHideByAni(_this.$update, 0);
             });
             this.$update.on("click", ".btn-submit", function () {
                 if (!self.dataCheck(self.$update)) {
@@ -161,10 +158,7 @@ define([
                 self.showAlbum($(this));
             });
             this.$album.find(".btn-cancel").on("click", function () {
-                _this.$album.removeClass("active");
-                setTimeout(function () {
-                    _this.$album.hide();
-                }, 200);
+                _this.showOrHideByAni(_this.$album, 0);
             });
         };
         RobotList.prototype.renderDetail = function (data) {
@@ -219,13 +213,8 @@ define([
             return option;
         };
         RobotList.prototype.showUpdate = function ($obj) {
-            var _this = this;
             var $tr = $obj.parents("tr"), head = $tr.find(".head .pho").attr("src");
             head == "common/images/defaultUser.png" ? "" : head;
-            this.$update.show();
-            setTimeout(function () {
-                _this.$update.addClass("active");
-            }, 10);
             this.initUpdate({
                 "uid": parseInt($obj.parent("td").attr("uid")),
                 "nickname": $tr.find(".nickname").text(),
@@ -237,6 +226,7 @@ define([
                 "birthday": $tr.find(".birthday").text(),
                 "token": this.mainView.mainView.token
             });
+            this.showOrHideByAni(this.$update);
         };
         RobotList.prototype.initUpdate = function (iniData) {
             var $update = this.$update;
@@ -281,11 +271,7 @@ define([
             });
         };
         RobotList.prototype.showAlbum = function ($obj) {
-            var _this = this;
-            this.$album.show();
-            setTimeout(function () {
-                _this.$album.addClass("active");
-            }, 10);
+            this.showOrHideByAni(this.$album);
             this.initAlbum(parseInt($obj.parent("td").attr("uid")));
         };
         RobotList.prototype.initAlbum = function (uid) {

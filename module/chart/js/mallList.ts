@@ -40,8 +40,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
          * @param {object} data [数据]
          */
         render(data:any) {
-            let header:CHeader = this.mainView.mainView.header;
-
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-mallList");
             this.$add = this.$el.find(".m-addContent");
@@ -107,7 +105,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                         "id":parseInt($this.attr("mid")),
                         "token":self.mainView.mainView.token
                     }),function(data){
-                        $this.prop("disabled",true);
+                        // 让本条数据的所有按钮全部不能点击
+                        $this.prop("disabled",true).siblings("").prop("disabled",true);
                         (<any>window).layer.msg("删除成功");
                         (<any>window).layer.close(e);
                     });
@@ -121,10 +120,7 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
 
             // 更新框的取消按钮
             this.$update.find(".btn-cancel").on("click",() => {
-                this.$update.removeClass("active");
-                setTimeout(() => {
-                    this.$update.hide()
-                },200);
+                this.showOrHideByAni(this.$update,0);
             });
 
             // 更新消息确定按钮
@@ -165,11 +161,6 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
             // 如果照片为默认，则表示不存在
             head == "common/images/defaultUser.png"?"":head;
 
-            this.$update.show();
-            setTimeout(() => {
-                this.$update.addClass("active");
-            },10);
-
             this.initUpdate({
                 "mid":mid,
                 "type":$obj.attr("mtype"),
@@ -179,6 +170,8 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                 "product_id":parseInt($tr.find(".pid").text()),
                 "price":parseInt($tr.find(".price").text())
             });
+
+            this.showOrHideByAni(this.$update);
         }
 
         /**

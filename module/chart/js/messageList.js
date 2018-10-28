@@ -103,7 +103,7 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
                         "id": mid,
                         "token": self.mainView.mainView.token
                     }), function (data) {
-                        $this.prop("disabled", true);
+                        $this.prop("disabled", true).siblings("").prop("disabled", true);
                         window.layer.msg("删除成功");
                         window.layer.close(e);
                     });
@@ -113,10 +113,7 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
                 self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
-                _this.$update.removeClass("active");
-                setTimeout(function () {
-                    _this.$update.hide();
-                }, 200);
+                _this.showOrHideByAni(_this.$update, 0);
             });
             this.$update.on("click", ".btn-submit", function () {
                 if (!self.messageCheck(self.$update)) {
@@ -198,18 +195,14 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
             return option;
         };
         MessageList.prototype.showUpdate = function ($obj) {
-            var _this = this;
             var $tr = $obj.parents("tr");
-            this.$update.show();
-            setTimeout(function () {
-                _this.$update.addClass("active");
-            }, 10);
             this.initUpdate({
                 "mid": parseInt($obj.attr("mid")),
                 "uid": parseInt($obj.attr("uid")),
                 "send_time": $tr.find(".mtime").text(),
                 "content": $tr.find(".mcontent").text()
             });
+            this.showOrHideByAni(this.$update);
         };
         MessageList.prototype.initUpdate = function (initData) {
             this.$update.find(".input-group").html(window.template.compile(this.template.update)(initData));

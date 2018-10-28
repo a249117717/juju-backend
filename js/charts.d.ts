@@ -212,5 +212,12 @@ declare namespace Charts {
          * 冻结用户
          */
         frozen()
+
+        /**
+         * 动画显示或隐藏对象
+         * @param {JQuery<HTMLElement>} $obj [JQ对象]
+         * @param {number} operation [操作,0:隐藏,1:显示]
+         */
+        showOrHideByAni($obj:JQuery<HTMLElement>,operation:number)
     }
 }

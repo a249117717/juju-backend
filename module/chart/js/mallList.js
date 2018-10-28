@@ -39,7 +39,6 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
             });
         };
         MallList.prototype.render = function (data) {
-            var header = this.mainView.mainView.header;
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-mallList");
             this.$add = this.$el.find(".m-addContent");
@@ -92,7 +91,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                         "id": parseInt($this.attr("mid")),
                         "token": self.mainView.mainView.token
                     }), function (data) {
-                        $this.prop("disabled", true);
+                        $this.prop("disabled", true).siblings("").prop("disabled", true);
                         window.layer.msg("删除成功");
                         window.layer.close(e);
                     });
@@ -102,10 +101,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
-                _this.$update.removeClass("active");
-                setTimeout(function () {
-                    _this.$update.hide();
-                }, 200);
+                _this.showOrHideByAni(_this.$update, 0);
             });
             this.$update.on("click", ".btn-submit", function () {
                 if (!self.dataCheck(self.$update)) {
@@ -128,13 +124,8 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
             this.$el.find(".info").html(window.template.compile(this.template.detail)(data));
         };
         MallList.prototype.showUpdate = function ($obj) {
-            var _this = this;
             var $tr = $obj.parents("tr"), head = $tr.find(".head .pho").attr("src"), mid = parseInt($obj.attr("mid"));
             head == "common/images/defaultUser.png" ? "" : head;
-            this.$update.show();
-            setTimeout(function () {
-                _this.$update.addClass("active");
-            }, 10);
             this.initUpdate({
                 "mid": mid,
                 "type": $obj.attr("mtype"),
@@ -144,6 +135,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 "product_id": parseInt($tr.find(".pid").text()),
                 "price": parseInt($tr.find(".price").text())
             });
+            this.showOrHideByAni(this.$update);
         };
         MallList.prototype.initUpdate = function (initData) {
             var $update = this.$update;

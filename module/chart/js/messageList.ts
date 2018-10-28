@@ -122,7 +122,8 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
                         "id":mid,
                         "token":self.mainView.mainView.token
                     }),function(data){
-                        $this.prop("disabled",true);
+                        // 让本条数据的所有按钮全部不能点击
+                        $this.prop("disabled",true).siblings("").prop("disabled",true);
                         (<any>window).layer.msg("删除成功");
                         (<any>window).layer.close(e);
                     });
@@ -136,10 +137,7 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
 
             // 取消
             this.$update.find(".btn-cancel").on("click",() => {
-                this.$update.removeClass("active");
-                setTimeout(() => {
-                    this.$update.hide()
-                },200);
+                this.showOrHideByAni(this.$update,0);
             });
 
             // 更新消息确定按钮
@@ -253,17 +251,14 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
         showUpdate($obj:JQuery<HTMLElement>) {
             let $tr:JQuery<HTMLElement> = $obj.parents("tr");
 
-            this.$update.show();
-            setTimeout(() => {
-                this.$update.addClass("active");
-            },10);
-
             this.initUpdate({
                 "mid":parseInt($obj.attr("mid")),
                 "uid":parseInt($obj.attr("uid")),
                 "send_time":<string>$tr.find(".mtime").text(),
                 "content":<string>$tr.find(".mcontent").text()
             });
+
+            this.showOrHideByAni(this.$update);
         }
 
         /**

@@ -958,6 +958,24 @@ var ChartBase = (function () {
     ChartBase.prototype.changeDate = function (start, end) { };
     ChartBase.prototype.changePading = function (pageNo, pageSize) { };
     ChartBase.prototype.frozen = function () { };
+    ChartBase.prototype.showOrHideByAni = function ($obj, operation) {
+        if (operation === void 0) { operation = 1; }
+        switch (operation) {
+            case 0:
+                $obj.removeClass("active");
+                setTimeout(function () {
+                    $obj.hide();
+                }, 200);
+                break;
+            default:
+                $obj.show();
+                setTimeout(function () {
+                    $obj.addClass("active");
+                }, 10);
+                break;
+        }
+        ;
+    };
     return ChartBase;
 }());
 //# sourceMappingURL=charts.js.map

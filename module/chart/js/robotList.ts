@@ -154,7 +154,8 @@ define([
                         "uid":parseInt($td.attr("uid")),
                         "token":self.mainView.mainView.token
                     }),function(data){
-                        $this.prop("disabled",true);
+                        // 让本条数据的所有按钮全部不能点击
+                        $this.prop("disabled",true).siblings("").prop("disabled",true);
                         (<any>window).layer.msg("删除成功");
                         (<any>window).layer.close(e);
                     });
@@ -168,10 +169,7 @@ define([
 
             // 更新框的取消按钮
             this.$update.find(".btn-cancel").on("click",() => {
-                this.$update.removeClass("active");
-                setTimeout(() => {
-                    this.$update.hide()
-                },200);
+                this.showOrHideByAni(this.$update,0);
             });
 
             // 更新消息确定按钮
@@ -199,10 +197,7 @@ define([
 
             // 相册的取消按钮
             this.$album.find(".btn-cancel").on("click",() => {
-                this.$album.removeClass("active");
-                setTimeout(() => {
-                    this.$album.hide()
-                },200);
+                this.showOrHideByAni(this.$album,0);
             });
         }
 
@@ -282,11 +277,6 @@ define([
             // 如果照片为默认，则表示不存在
             head == "common/images/defaultUser.png"?"":head;
 
-            this.$update.show();
-            setTimeout(() => {
-                this.$update.addClass("active");
-            },10);
-
             this.initUpdate({
                 "uid":parseInt($obj.parent("td").attr("uid")),
                 "nickname":$tr.find(".nickname").text(),
@@ -298,6 +288,8 @@ define([
                 "birthday":$tr.find(".birthday").text(),
                 "token":this.mainView.mainView.token
             });
+
+            this.showOrHideByAni(this.$update);
         }
 
         /**
@@ -367,10 +359,7 @@ define([
          * @param {JQuery<HTMLElement>} $obj [点击的JQ对象]
          */
         showAlbum($obj:JQuery<HTMLElement>) {
-            this.$album.show();
-            setTimeout(() => {
-                this.$album.addClass("active");
-            },10);
+            this.showOrHideByAni(this.$album);
             this.initAlbum(parseInt($obj.parent("td").attr("uid")));
         }
 

@@ -1,0 +1,59 @@
+<!-- 注册欢迎消息模板 -->
+<div class="m-startUp defaultTable">
+    <!-- 更新欢迎消息 -->
+    <div class="m-updateContent updateNotice">
+        <div class="content">
+            <div class="title">更新消息</div>
+            <div class="input-group">
+                
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-cancel mdui-ripple mdui-ripple-while">取消</button>
+            </div>
+        </div>
+        <div class="shade"></div>
+    </div>
+    <!-- 新增欢迎消息 -->
+    <div class="m-addContent addNotice">
+        <form onsubmit="return false;">
+            <div class="title">新增消息</div>
+            <div class="input-group">
+                <div class="group">
+                    <div class="tip">消息内容</div>
+                    <div class="descript">
+                        <textarea class="reason" placeholder="请输入发送的消息内容"></textarea>    
+                    </div>
+                </div>
+                <div class="group mdui-theme-accent-blue">
+                    <div class="tip">是否启用</div>
+                    <div class="descript">
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="isenable" checked value="1"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>是</span>
+                        </label>
+                        <label class="mdui-radio">
+                            <input class="operation" type="radio" name="isenable" value="0"/>
+                            <i class="mdui-radio-icon"></i>
+                            <span>否</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-submit mdui-ripple mdui-ripple-while">确定</button>
+                <button class="btn btn-reset mdui-ripple mdui-ripple-while">重置</button>
+            </div>
+        </div>
+        <div class="detail">
+            <div class="title-out">
+                <div class="title">详情</div>
+                <div class="subtitle">Detail</div>
+            </div>
+            <table class="info" border="0">
+            </table>
+            <pading count="{{ count }}"></pading>
+        </div>
+    </form>
+</div>

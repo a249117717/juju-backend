@@ -147,7 +147,8 @@ requirejs.config({
         "robotList": "module/chart/js/robotList",
         "infoQuery": "module/chart/js/infoQuery",
         "messageList": "module/chart/js/messageList",
-        "systemNotice": "module/chart/js/systemNotice"
+        "systemNotice": "module/chart/js/systemNotice",
+        "startUp": "module/chart/js/startUp"
     }
 });
 require(["text", "charts"], function (text, charts) {

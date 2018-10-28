@@ -107,7 +107,7 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
                         "id": nid,
                         "token": self.mainView.mainView.token
                     }), function (data) {
-                        $this.prop("disabled", true);
+                        $this.prop("disabled", true).siblings("").prop("disabled", true);
                         window.layer.msg("删除成功");
                         window.layer.close(e);
                     });
@@ -117,10 +117,7 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
                 self.showUpdate($(this));
             });
             this.$update.find(".btn-cancel").on("click", function () {
-                _this.$update.removeClass("active");
-                setTimeout(function () {
-                    _this.$update.hide();
-                }, 200);
+                _this.showOrHideByAni(_this.$update, 0);
             });
             this.$update.on("click", ".btn-submit", function () {
                 if (!self.noticeCheck(self.$update)) {
@@ -205,12 +202,7 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
             return option;
         };
         SystemNotice.prototype.showUpdate = function ($obj) {
-            var _this = this;
             var $tr = $obj.parents("tr");
-            this.$update.show();
-            setTimeout(function () {
-                _this.$update.addClass("active");
-            }, 10);
             this.initUpdate({
                 "nid": parseInt($obj.attr("nid")),
                 "startDate": $tr.find(".startDate").text(),
@@ -218,6 +210,7 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
                 "inter": parseInt($tr.find(".inter").text()),
                 "content": $tr.find(".ncontent").text()
             });
+            this.showOrHideByAni(this.$update);
         };
         SystemNotice.prototype.initUpdate = function (initData) {
             this.$update.find(".input-group").html(window.template.compile(this.template.update)(initData));

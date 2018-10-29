@@ -1,5 +1,5 @@
 var _domain = "http://39.108.151.200:9999", _pageSize = 10;
-var _loadObject = null;
+var _resource = null, _loadObject = null;
 function _load(isShow) {
     var temp = window;
     if (isShow) {

@@ -11,10 +11,8 @@ var _router = {
     "messageList": "消息列表",
     "startUp": "注册欢迎消息",
     "systemNotice": "系统公告"
-}, _resource = {
-    "login": {
-        "url": _domain + "/v1/backend/public/login"
-    },
+};
+_resource = {
     "changePwd": {
         "url": _domain + "/v1/backend/user/update-user"
     },

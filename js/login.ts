@@ -1,4 +1,10 @@
-!(function(){
+_resource = {  // 服务请求
+    "login":{   // 登录
+        "url":`${_domain}/v1/backend/public/login`
+    }
+};
+
+(function(){
     let _currentObject:Login = null;
 
     // 登陆
@@ -13,7 +19,7 @@
          * 数据获取
          */
         fetch() {
-
+            _conversionAjax(_resource);
             this.render();
         }
 

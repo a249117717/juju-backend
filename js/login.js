@@ -1,4 +1,9 @@
-!(function () {
+_resource = {
+    "login": {
+        "url": _domain + "/v1/backend/public/login"
+    }
+};
+(function () {
     var _currentObject = null;
     var Login = (function () {
         function Login() {
@@ -7,6 +12,7 @@
             ;
         }
         Login.prototype.fetch = function () {
+            _conversionAjax(_resource);
             this.render();
         };
         Login.prototype.render = function () {

@@ -99,7 +99,7 @@ define(["text!module/chart/views/startUpTemp.html", "text!module/chart/views/sta
                 ;
                 window.layer.confirm("确认更新消息么？", function (e) {
                     _load(true);
-                    _resource.updateSNotice(JSON.stringify(self.getMessage(self.$update)), function (data) {
+                    _resource.updateStartUp(JSON.stringify(self.getMessage(self.$update)), function (data) {
                         self.$update.find(".btn-cancel").click();
                         self.fetch(self.pading.pageNo, self.pading.pageSize);
                         window.layer.msg("更新成功");

@@ -45,11 +45,10 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
             });
         };
         SystemNotice.prototype.render = function (data) {
-            var header = this.mainView.mainView.header;
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-systemNotice");
-            this.$add = this.$el.find(".addNotice");
-            this.$update = this.$el.find(".updateNotice");
+            this.$add = $(".m-addContent");
+            this.$update = $(".m-updateContent");
             this.bindEvent();
         };
         SystemNotice.prototype.bindEvent = function () {
@@ -164,17 +163,9 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
             ;
             return true;
         };
-        SystemNotice.prototype.initAddNotice = function (isRender) {
-            if (isRender === void 0) { isRender = false; }
-            this.$add.find(".startDate,.endDate,.inter,.reason").val("");
-            if (isRender) {
-                this.fetch();
-            }
-            ;
-        };
         SystemNotice.prototype.getNotice = function ($JQ) {
             var option = null;
-            if ($JQ.hasClass("addNotice")) {
+            if ($JQ.hasClass("m-addContent")) {
                 option = {
                     "start_time": 0,
                     "end_time": "",
@@ -183,7 +174,7 @@ define(["text!module/chart/views/systemNoticeTemp.html", "text!module/chart/view
                     "token": this.mainView.mainView.token
                 };
             }
-            else if ($JQ.hasClass("updateNotice")) {
+            else if ($JQ.hasClass("m-updateContent")) {
                 option = {
                     "id": parseInt($JQ.find(".nid").val()),
                     "start_time": 0,

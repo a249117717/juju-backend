@@ -10,7 +10,8 @@ var _router = {
     "infoQuery": "信息查询",
     "messageList": "消息列表",
     "startUp": "注册欢迎消息",
-    "systemNotice": "系统公告"
+    "systemNotice": "系统公告",
+    "systemConfig": "系统配置"
 };
 _resource = {
     "changePwd": {
@@ -128,6 +129,18 @@ _resource = {
     "upload": {
         "url": _domain + "/v1/backend/func/upload",
         "isAjax": false
+    },
+    "systemConfigList": {
+        "url": _domain + "/v1/backend/operation/system/list-system-conf"
+    },
+    "addSystemConfig": {
+        "url": _domain + "/v1/backend/operation/system/new-system-conf"
+    },
+    "SystemConfigInfo": {
+        "url": _domain + "/v1/backend/operation/system/system-conf-info"
+    },
+    "updateSystemConfig": {
+        "url": _domain + "/v1/backend/operation/system/update-system-conf"
     }
 };
 requirejs.config({
@@ -145,8 +158,9 @@ requirejs.config({
         "robotList": "module/chart/js/robotList",
         "infoQuery": "module/chart/js/infoQuery",
         "messageList": "module/chart/js/messageList",
+        "startUp": "module/chart/js/startUp",
         "systemNotice": "module/chart/js/systemNotice",
-        "startUp": "module/chart/js/startUp"
+        "systemConfig": "module/chart/js/systemConfig"
     }
 });
 require(["text", "charts"], function (text, charts) {

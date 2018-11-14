@@ -1,9 +1,9 @@
-<!-- 系统公告模板 -->
-<div class="m-systemNotice defaultTable">
-    <!-- 更新公告 -->
+<!-- 系统配置模板 -->
+<div class="m-systemConfig defaultTable">
+    <!-- 更新配置 -->
     <div class="m-updateContent">
         <div class="content">
-            <div class="title">更新公告</div>
+            <div class="title">更新配置</div>
             <div class="input-group">
                 
             </div>
@@ -14,33 +14,27 @@
         </div>
         <div class="shade"></div>
     </div>
-    <!-- 新增公告 -->
+    <!-- 新增配置 -->
     <div class="m-addContent">
         <form onsubmit="return false;">
-            <div class="title">新增公告</div>
+            <div class="title">新增配置</div>
             <div class="input-group">
                 <div class="group">
-                    <div class="tip">开始时间</div>
+                    <div class="tip">键</div>
                     <div class="descript">
-                        <input class="startDate defaultInput" type="text" readonly placeholder="请点击选择开始时间">
+                        <input class="configKey defaultInput" type="text" placeholder="请输入键">
                     </div>
                 </div>
                 <div class="group">
-                    <div class="tip">结束时间</div>
+                    <div class="tip">值</div>
                     <div class="descript">
-                        <input class="endDate defaultInput" type="text" readonly placeholder="请点击选择结束时间">
+                        <input class="configVal defaultInput" type="text" placeholder="请输入值">
                     </div>
                 </div>
                 <div class="group">
-                    <div class="tip">发送间隔</div>
+                    <div class="tip">备注</div>
                     <div class="descript">
-                        <input class="inter defaultInput" old="0" type="text" placeholder="请输入发送间隔(s)">
-                    </div>
-                </div>
-                <div class="group">
-                    <div class="tip">公告内容</div>
-                    <div class="descript">
-                        <textarea class="reason" placeholder="请输入公告内容"></textarea>    
+                        <textarea class="reason" placeholder="请输入备注"></textarea>    
                     </div>
                 </div>
             </div>

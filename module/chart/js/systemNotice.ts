@@ -45,12 +45,10 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
          * @param {Object} data [数据]
          */
         render(data:any) {
-            let header:CHeader = this.mainView.mainView.header;
-
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-systemNotice");
-            this.$add = this.$el.find(".addNotice");
-            this.$update = this.$el.find(".updateNotice");
+            this.$add = $(".m-addContent");
+            this.$update = $(".m-updateContent");
 
             this.bindEvent();
         }
@@ -208,27 +206,14 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
         }
 
         /**
-         * 初始化新增公告框
-         * @param {boolean} isRender [是否渲染列表，默认为false]
-         */
-        initAddNotice(isRender:boolean = false) {
-            // 清空开始时间，结束时间，发送间隔和公告内容
-            this.$add.find(".startDate,.endDate,.inter,.reason").val("");
-
-            if(isRender) {
-                this.fetch();
-            };
-        }
-
-        /**
          * 获取需要提交的公告数据
          * @param {JQuery<HTMLElement>} $JQ [JQuery对象]
          * @return {object} option {提交数据}
          */
-        getNotice($JQ:JQuery<HTMLElement>) {
+        getNotice($JQ:JQuery<HTMLElement>) : object {
             let option:any = null;
 
-            if($JQ.hasClass("addNotice")) {    // 新增消息
+            if($JQ.hasClass("m-addContent")) {    // 新增消息
                 option =  {
                     "start_time":0,    // 开始时间
                     "end_time":"",   // 结束时间
@@ -236,7 +221,7 @@ define(["text!module/chart/views/systemNoticeTemp.html","text!module/chart/views
                     "content":"",   // 公告内容
                     "token":this.mainView.mainView.token
                 };
-            } else if($JQ.hasClass("updateNotice")) {  // 更新消息
+            } else if($JQ.hasClass("m-updateContent")) {  // 更新消息
                 option = {
                     "id":parseInt(<string>$JQ.find(".nid").val()), // 消息编号
                     "start_time":0,    // 开始时间

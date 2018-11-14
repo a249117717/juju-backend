@@ -1,15 +1,15 @@
 /// <reference path="../../../js/charts.d.ts" />
 
-define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/startUpDetail.html","text!module/chart/views/startUpUpdate.html"],function(startUpTemp,startUpDetail,startUpUpdate){
-    // 注册欢迎消息
-    class StartUp extends ChartBase {
+define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views/systemConfigDetail.html","text!module/chart/views/systemConfigUpdate.html"],function(systemConfigTemp,systemConfigDetail,systemConfigUpdate){
+    // 系统配置
+    class SystemConfig extends ChartBase {
         $el:JQuery<HTMLElement> = null;
-        $add:JQuery<HTMLElement> = null;    // 新增欢迎消息
-        $update:JQuery<HTMLElement> = null;    // 更新欢迎消息
+        $add:JQuery<HTMLElement> = null;    // 新增配置
+        $update:JQuery<HTMLElement> = null;    // 更新配置
         template = { // 模板
-            "routerTemp":startUpTemp,
-            "detail":startUpDetail,
-            "update":startUpUpdate
+            "routerTemp":systemConfigTemp,
+            "detail":systemConfigDetail,
+            "update":systemConfigUpdate
         };
 
         constructor(props:any) {
@@ -22,10 +22,9 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
          * @param {number} pageSize [每页条数]
          */
         fetch(pageNo:number = 1,pageSize:number = _pageSize) {
-            let self:StartUp = this;
+            let self:SystemConfig = this;
             _load(true);
-            // let data = {count:1};
-            (<Function>_resource.StartUpList)(JSON.stringify({
+            (<Function>_resource.systemConfigList)(JSON.stringify({
                 "page_size":pageSize,
                 "page_index":pageNo,
                 "token":this.mainView.mainView.token
@@ -47,7 +46,7 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
          */
         render(data:any) {
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
-            this.$el = $(".m-startUp");
+            this.$el = $(".m-systemConfig");
             this.$add = $(".m-addContent");
             this.$update = $(".m-updateContent");
 
@@ -58,7 +57,7 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
          * 事件绑定
          */
         bindEvent() {
-            let self:StartUp = this;
+            let self:SystemConfig = this;
 
             // 重置新增消息框
             this.$add.find(".btn-reset").on("click",() => {
@@ -67,13 +66,13 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
 
             // 新增消息确定按钮
             this.$add.find(".btn-submit").on("click",function(){
-                if(!self.messageCheck(self.$add)) {
+                if(!self.configCheck(self.$add)) {
                     return;
                 };
                 
-                (<any>window).layer.confirm("是否确认新增公告",function(e){
+                (<any>window).layer.confirm("是否确认新增配置",function(e){
                     _load(true);
-                    (<Function>_resource.addStartUp)(JSON.stringify(self.getMessage(self.$add)),function(data){
+                    (<Function>_resource.addSystemConfig)(JSON.stringify(self.getConfig(self.$add)),function(data){
                         // 重置新增框
                         self.$add.find(".btn-reset").click();
                         // 刷新数据列表
@@ -85,20 +84,14 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
                 });
             });
 
-            // 删除
-            this.$el.find(".detail").on("click",".btn-delete",function(){
+            // 信息
+            this.$el.find(".detail").on("click",".btn-info",function(){
                 let $this:JQuery<HTMLElement> = $(this),
                 nid:number = parseInt($this.attr("nid"));
-                (<any>window).layer.confirm(`确认删除编号为${nid}的公告么？`,function(e){
-                    (<Function>_resource.deleteStartUp)(JSON.stringify({
-                        "id":nid,
-                        "token":self.mainView.mainView.token
-                    }),function(data){
-                        // 让本条数据的所有按钮全部不能点击
-                        $this.prop("disabled",true).siblings("").prop("disabled",true);
-                        (<any>window).layer.msg("删除成功");
-                        (<any>window).layer.close(e);
-                    });
+                (<Function>_resource.SystemConfigInfo)(JSON.stringify({
+                    "id":nid,
+                    "token":self.mainView.mainView.token
+                }),function(data){
                 });
             });
 
@@ -114,13 +107,13 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
 
             // 更新消息确定按钮
             this.$update.on("click",".btn-submit",function(){
-                if(!self.messageCheck(self.$update)) {
+                if(!self.configCheck(self.$update)) {
                     return;
                 };
 
                 (<any>window).layer.confirm("确认更新消息么？",function(e){
                     _load(true);
-                    (<Function>_resource.updateStartUp)(JSON.stringify(self.getMessage(self.$update)),function(data){
+                    (<Function>_resource.updateSystemConfig)(JSON.stringify(self.getConfig(self.$update)),function(data){
                         self.$update.find(".btn-cancel").click();
                         self.fetch(self.pading.pageNo,self.pading.pageSize);
                         (<any>window).layer.msg("更新成功");
@@ -140,15 +133,17 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
         }
 
         /**
-         * 内容数据校验
-         * @param {JQuery<HTMLElement>} $JQ [jQuery对象]
+         * 配置数据校验
+         * @param {JQuery<HTMLElement>} $JQ [JQuery对象]
          * @return {Boolean} bool [校验是否通过,true为通过,false为失败]
          */
-        messageCheck($JQ:JQuery<HTMLElement>) : boolean {
+        configCheck($JQ:JQuery<HTMLElement>) : boolean {
             let tip:string = "";
 
-            if(!(<string>$JQ.find(".reason").val()).replace(/\s/g,"")) {
-                tip = "请填写发送的消息内容";
+            if(!(<string>$JQ.find(".configKey").val()).replace(/\s/g,"")) {
+                tip = "请填写键";
+            } else if(!(<string>$JQ.find(".configVal").val()).replace(/\s/g,"")) {
+                tip = "请填写值";
             };
 
             if(tip) {
@@ -160,41 +155,53 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
         }
 
         /**
-         * 获取需要提交的欢迎消息
+         * 获取需要提交的配置数据
          * @param {JQuery<HTMLElement>} $JQ [JQuery对象]
          * @return {object} option {提交数据}
          */
-        getMessage($JQ:JQuery<HTMLElement>) : object {
-            let option:any = {
-                "msg":$JQ.find(".reason").val(),    // 消息内容
-                "status":parseInt(<string>$JQ.find(".operation:checked").val()), // 是否启用
-                "token":this.mainView.mainView.token
-            };
+        getConfig($JQ:JQuery<HTMLElement>) : object {
+            let option:any = null;
 
-            // 更新消息需要传编号信息
-            if($JQ.hasClass("m-updateContent")) {
-                option["id"] = parseInt(<string>$JQ.find(".nid").val()) // 消息编号
+            if($JQ.hasClass("m-addContent")) {    // 新增消息
+                option =  {
+                    "key":$JQ.find(".configKey").val(),    // 键
+                    "value":$JQ.find(".configVal").val(),   // 值
+                    "remark":$JQ.find(".reason").val(),   // 备注
+                    "token":this.mainView.mainView.token
+                };
+            } else if($JQ.hasClass("m-updateContent")) {  // 更新消息
+                option = {
+                    "id":parseInt(<string>$JQ.find(".nid").val()), // 消息编号
+                    "start_time":0,    // 开始时间
+                    "end_time":"",   // 结束时间
+                    "interval":parseInt(<string>$JQ.find(".inter").val()),  // 发送间隔
+                    "content":"",   // 配置内容
+                    "token":this.mainView.mainView.token
+                };
             };
 
             return option;
         }
 
         /**
-         * 打开更新消息框
+         * 打开更新配置框
          * @param {JQuery<HTMLElement>} $obj [点击的JQ对象]
          */
         showUpdate($obj:JQuery<HTMLElement>) {
+            let $tr:JQuery<HTMLElement> = $obj.parents("tr");
+
             this.initUpdate({
                 "nid":parseInt($obj.attr("nid")),
-                "msg":$obj.parents("tr").find(".ncontent").text(),
-                "status":parseInt($obj.attr("status"))
+                "key":"",
+                "value":"",
+                "content":<string>$tr.find(".ncontent").text()
             });
             
             this.showOrHideByAni(this.$update);
         }
 
         /**
-         * 初始化更新消息框
+         * 初始化更新配置框
          * @param {JSON} initData [数据]
          */
         initUpdate(initData:UpdateInitData) {
@@ -206,6 +213,7 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
          * 更新框的事件绑定
          */
         updateBindEvent() {
+            
         }
 
         /**
@@ -225,16 +233,20 @@ define(["text!module/chart/views/startUpTemp.html","text!module/chart/views/star
         /**
          * 消息编号
          */
-        "nid":number
+        nid:number
+        /**
+         * 键
+         */
+        key:string
+        /**
+         * 值
+         */
+        value:string
         /**
          * 消息内容
          */
-        "msg":string
-        /**
-         * 是否启用
-         */
-        "status":number
+        content:string
     }
 
-    return StartUp;
+    return SystemConfig;
 });

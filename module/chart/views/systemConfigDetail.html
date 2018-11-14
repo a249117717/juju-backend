@@ -1,0 +1,24 @@
+<!-- 系统配置详情 -->
+<thead>
+    <tr>
+        <th>键</th>
+        <th>值</th>
+        <th>备注</th>
+        <th>操作</th>
+    </tr>
+</thead>
+<tbody>
+    {{ each data as en index }}
+        <tr>
+            {{ each en as con index }}
+                <td>{{ index }}</td>
+                <td>{{ jsonStringify(con) }}</td>
+            {{ /each }}
+            <td></td>
+            <td>
+                <button class="btn btn-info mdui-ripple mdui-ripple-grey">信息</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey">更新</button>
+            </td>
+        </tr>
+    {{ /each }}
+</tbody>

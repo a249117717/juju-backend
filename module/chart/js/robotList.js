@@ -57,8 +57,8 @@ define([
             var header = this.mainView.mainView.header;
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-robotList");
-            this.$add = this.$el.find(".addRobot");
-            this.$update = this.$el.find(".updateRobot");
+            this.$add = this.$el.find(".m-addContent");
+            this.$update = this.$el.find(".m-updateContent");
             this.$album = this.$el.find(".albumRobot");
             this.bindEvent();
         };
@@ -206,7 +206,7 @@ define([
             };
             var date = new Date($JQ.find(".birthday").val());
             option.birthday = parseInt((date.getTime() / 1000));
-            if ($JQ.is(".updateRobot")) {
+            if ($JQ.is(".m-updateContent")) {
                 option["uid"] = parseInt($JQ.find(".uid").val());
             }
             ;

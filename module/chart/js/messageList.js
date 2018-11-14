@@ -52,8 +52,8 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
             header.setPlaceHolder("请输入用户编号");
             this.mainView.renderByChildren(window.template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-messageList");
-            this.$add = this.$el.find(".addMessage");
-            this.$update = this.$el.find(".updateMessage");
+            this.$add = this.$el.find(".m-addContent");
+            this.$update = this.$el.find(".m-updateContent");
             this.bindEvent();
         };
         MessageList.prototype.bindEvent = function () {
@@ -162,7 +162,7 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
         };
         MessageList.prototype.getMessage = function ($JQ) {
             var option = null;
-            if ($JQ.hasClass("addMessage")) {
+            if ($JQ.hasClass("m-addContent")) {
                 option = {
                     "uid": 0,
                     "content": "",
@@ -170,7 +170,7 @@ define(["text!module/chart/views/messageListTemp.html", "text!module/chart/views
                     "token": this.mainView.mainView.token
                 };
             }
-            else if ($JQ.hasClass("updateMessage")) {
+            else if ($JQ.hasClass("m-updateContent")) {
                 option = {
                     "id": parseInt($JQ.find(".mid").val()),
                     "uid": 0,

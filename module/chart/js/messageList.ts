@@ -54,8 +54,8 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
 
             this.mainView.renderByChildren((<any>window).template.compile(this.template.routerTemp)(data));
             this.$el = $(".m-messageList");
-            this.$add = this.$el.find(".addMessage");
-            this.$update = this.$el.find(".updateMessage");
+            this.$add = this.$el.find(".m-addContent");
+            this.$update = this.$el.find(".m-updateContent");
 
             this.bindEvent();
         }
@@ -207,14 +207,14 @@ define(["text!module/chart/views/messageListTemp.html","text!module/chart/views/
         getMessage($JQ:JQuery<HTMLElement>) : any {
             let option:any = null;
 
-            if($JQ.hasClass("addMessage")) {    // 新增消息
+            if($JQ.hasClass("m-addContent")) {    // 新增消息
                 option =  {
                     "uid":0,    // 用户编号,0表示全服
                     "content":"",   // 消息内容
                     "send_time":0,  // 发送时间
                     "token":this.mainView.mainView.token
                 };
-            } else if($JQ.hasClass("updateMessage")) {  // 更新消息
+            } else if($JQ.hasClass("m-updateContent")) {  // 更新消息
                 option = {
                     "id":parseInt(<string>$JQ.find(".mid").val()), // 消息编号
                     "uid":0,    // 用户编号,0表示全服

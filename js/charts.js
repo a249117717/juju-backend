@@ -11,6 +11,9 @@ window.template.helper('formatDate', function (data, format) {
     }
     ;
 });
+window.template.helper('jsonStringify', function (data, format) {
+    return JSON.stringify(data);
+});
 var IndexMain = (function () {
     function IndexMain() {
         this.$el = $(".g-chartDetail");

@@ -164,6 +164,22 @@ interface resource {
      * 通用上传文件或图片
      */
     "upload"?:postUrl|Function
+    /**
+     * 系统配置列表
+     */
+    "systemConfigList"?:postUrl|Function
+     /**
+     * 新增系统配置
+     */
+    "addSystemConfig"?:postUrl|Function
+     /**
+     * 系统配置信息
+     */
+    "SystemConfigInfo"?:postUrl|Function
+     /**
+     * 更新系统配置
+     */
+    "updateSystemConfig"?:postUrl|Function
 }
 
 /**

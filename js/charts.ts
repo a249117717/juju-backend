@@ -14,11 +14,6 @@
     };
 });
 
-// 注册过滤器，将json转换为json字符串
-(<any>window).template.helper('jsonStringify',function(data,format){
-    return JSON.stringify(data);
-});
-
 // 主体
 class IndexMain {
     $el:JQuery<HTMLElement> = $(".g-chartDetail");    // 主体

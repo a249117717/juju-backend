@@ -84,17 +84,6 @@ define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views
                 });
             });
 
-            // 信息
-            this.$el.find(".detail").on("click",".btn-info",function(){
-                let $this:JQuery<HTMLElement> = $(this),
-                nid:number = parseInt($this.attr("nid"));
-                (<Function>_resource.SystemConfigInfo)(JSON.stringify({
-                    "id":nid,
-                    "token":self.mainView.mainView.token
-                }),function(data){
-                });
-            });
-
             // 更新
             this.$el.find(".detail").on("click",".btn-update",function(){
                 self.showUpdate($(this));
@@ -111,7 +100,7 @@ define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views
                     return;
                 };
 
-                (<any>window).layer.confirm("确认更新消息么？",function(e){
+                (<any>window).layer.confirm("确认更新配置么？",function(e){
                     _load(true);
                     (<Function>_resource.updateSystemConfig)(JSON.stringify(self.getConfig(self.$update)),function(data){
                         self.$update.find(".btn-cancel").click();
@@ -171,11 +160,10 @@ define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views
                 };
             } else if($JQ.hasClass("m-updateContent")) {  // 更新消息
                 option = {
-                    "id":parseInt(<string>$JQ.find(".nid").val()), // 消息编号
-                    "start_time":0,    // 开始时间
-                    "end_time":"",   // 结束时间
-                    "interval":parseInt(<string>$JQ.find(".inter").val()),  // 发送间隔
-                    "content":"",   // 配置内容
+                    "id":parseInt(<string>$JQ.find(".cid").val()), // 消息编号
+                    "key":$JQ.find(".configKey").val(),    // 键
+                    "value":$JQ.find(".configVal").val(),   // 值
+                    "remark":$JQ.find(".reason").val(),   // 备注
                     "token":this.mainView.mainView.token
                 };
             };
@@ -191,10 +179,10 @@ define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views
             let $tr:JQuery<HTMLElement> = $obj.parents("tr");
 
             this.initUpdate({
-                "nid":parseInt($obj.attr("nid")),
-                "key":"",
-                "value":"",
-                "content":<string>$tr.find(".ncontent").text()
+                "cid":parseInt($obj.attr("cid")),
+                "ckey":$tr.find(".ckey").text(),
+                "cvalue":$tr.find(".cvalue").text(),
+                "cremark":$tr.find(".cremark").text()
             });
             
             this.showOrHideByAni(this.$update);
@@ -233,19 +221,19 @@ define(["text!module/chart/views/systemConfigTemp.html","text!module/chart/views
         /**
          * 消息编号
          */
-        nid:number
+        cid:number
         /**
          * 键
          */
-        key:string
+        ckey:string
         /**
          * 值
          */
-        value:string
+        cvalue:string
         /**
          * 消息内容
          */
-        content:string
+        cremark:string
     }
 
     return SystemConfig;

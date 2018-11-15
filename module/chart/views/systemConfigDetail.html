@@ -1,6 +1,9 @@
 <!-- 系统配置详情 -->
 <thead>
     <tr>
+        <th>编号</th>
+        <th>创建时间</th>
+        <th>修改时间</th>
         <th>键</th>
         <th>值</th>
         <th>备注</th>
@@ -10,14 +13,14 @@
 <tbody>
     {{ each data as en index }}
         <tr>
-            {{ each en as con index }}
-                <td>{{ index }}</td>
-                <td>{{ jsonStringify(con) }}</td>
-            {{ /each }}
-            <td></td>
+            <td>{{ en.id }}</td>
+            <td>{{ formatDate(en.create_time,1) }}</td>
+            <td>{{ formatDate(en.modify_time,1) }}</td>
+            <td class="ckey">{{ en.key }}</td>
+            <td class="cvalue">{{ en.value }}</td>
+            <td class="cremark">{{ en.remark }}</td>
             <td>
-                <button class="btn btn-info mdui-ripple mdui-ripple-grey">信息</button>
-                <button class="btn btn-update mdui-ripple mdui-ripple-grey">更新</button>
+                <button class="btn btn-update mdui-ripple mdui-ripple-grey" cid="{{ en.id }}">更新</button>
             </td>
         </tr>
     {{ /each }}

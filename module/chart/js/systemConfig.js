@@ -73,14 +73,6 @@ define(["text!module/chart/views/systemConfigTemp.html", "text!module/chart/view
                     });
                 });
             });
-            this.$el.find(".detail").on("click", ".btn-info", function () {
-                var $this = $(this), nid = parseInt($this.attr("nid"));
-                _resource.SystemConfigInfo(JSON.stringify({
-                    "id": nid,
-                    "token": self.mainView.mainView.token
-                }), function (data) {
-                });
-            });
             this.$el.find(".detail").on("click", ".btn-update", function () {
                 self.showUpdate($(this));
             });
@@ -92,7 +84,7 @@ define(["text!module/chart/views/systemConfigTemp.html", "text!module/chart/view
                     return;
                 }
                 ;
-                window.layer.confirm("确认更新消息么？", function (e) {
+                window.layer.confirm("确认更新配置么？", function (e) {
                     _load(true);
                     _resource.updateSystemConfig(JSON.stringify(self.getConfig(self.$update)), function (data) {
                         self.$update.find(".btn-cancel").click();
@@ -135,11 +127,10 @@ define(["text!module/chart/views/systemConfigTemp.html", "text!module/chart/view
             }
             else if ($JQ.hasClass("m-updateContent")) {
                 option = {
-                    "id": parseInt($JQ.find(".nid").val()),
-                    "start_time": 0,
-                    "end_time": "",
-                    "interval": parseInt($JQ.find(".inter").val()),
-                    "content": "",
+                    "id": parseInt($JQ.find(".cid").val()),
+                    "key": $JQ.find(".configKey").val(),
+                    "value": $JQ.find(".configVal").val(),
+                    "remark": $JQ.find(".reason").val(),
                     "token": this.mainView.mainView.token
                 };
             }
@@ -149,10 +140,10 @@ define(["text!module/chart/views/systemConfigTemp.html", "text!module/chart/view
         SystemConfig.prototype.showUpdate = function ($obj) {
             var $tr = $obj.parents("tr");
             this.initUpdate({
-                "nid": parseInt($obj.attr("nid")),
-                "key": "",
-                "value": "",
-                "content": $tr.find(".ncontent").text()
+                "cid": parseInt($obj.attr("cid")),
+                "ckey": $tr.find(".ckey").text(),
+                "cvalue": $tr.find(".cvalue").text(),
+                "cremark": $tr.find(".cremark").text()
             });
             this.showOrHideByAni(this.$update);
         };

@@ -104,20 +104,20 @@ define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/vie
             });
             // 设置提示框
             chart.tooltip(true,{
-                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}</li>",
                 crosshairs: {
-                type: 'line'
+                    type: 'line'
                 }
             });
             // 设置坐标轴
             chart.axis('value', {
                 line: {
-                stroke: '#BDBDBD'
+                    stroke: '#BDBDBD'
                 }
             });
             chart.axis('create_time', {
                 line: {
-                stroke: '#BDBDBD'
+                    stroke: '#BDBDBD'
                 }
             });
             // 设置图例
@@ -148,20 +148,20 @@ define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/vie
             });
             // 设置提示框
             chart.tooltip(true,{
-                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}人</li>",
+                itemTpl:"<li><span style='margin:8px 7px 0 0;padding:3px;display:block;float:left;border-radius:100%;background-color:{color}'></span>{name} : {value}</li>",
                 crosshairs: {
-                type: 'line'
+                    type: 'line'
                 }
             });
             // 设置坐标轴
             chart.axis('value', {
                 line: {
-                stroke: '#BDBDBD'
+                    stroke: '#BDBDBD'
                 }
             });
             chart.axis('create_time', {
                 line: {
-                stroke: '#BDBDBD'
+                    stroke: '#BDBDBD'
                 }
             });
             // 设置图例
@@ -191,7 +191,7 @@ define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/vie
                 temp.push({
                     "create_time":en.create_time,
                     "type":"累计订单总额",
-                    "value":parseInt(en.total_cash)
+                    "value":parseInt(en.total_cash) / 100
                 });
                 temp.push({
                     "create_time":en.create_time,
@@ -201,7 +201,7 @@ define(["text!module/chart/views/payStatisticalTemp.html","text!module/chart/vie
                 temp.push({
                     "create_time":en.create_time,
                     "type":"累计购买钻石总额",
-                    "value":parseInt(en.total_diamond_cash)
+                    "value":parseInt(en.total_diamond_cash) / 100
                 });
             });
             

@@ -192,7 +192,7 @@ define(["text!module/chart/views/mallListTemp.html", "text!module/chart/views/ma
                 "price": $JQ.find(".price").val() * 100,
                 "token": this.mainView.mainView.token
             };
-            if ($JQ.is(".updateProcude")) {
+            if ($JQ.is(".m-updateContent")) {
                 option["id"] = parseInt($JQ.find(".mid").val());
             }
             ;

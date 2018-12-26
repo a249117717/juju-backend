@@ -14,12 +14,12 @@
     {{ each data as en }}
         <tr>
             <td>{{ formatDate(en.create_time,1) }}</td>
-            <td>{{ en.today_diamond_cash }}</td>
+            <td>{{ en.today_cash / 100 }}</td>
             <td>{{ en.today_user }}</td>
-            <td>{{ en.today_cash }}</td>
-            <td>{{ en.total_diamond_cash }}</td>
-            <td>{{ en.total_cash }}</td>
+            <td>{{ en.today_diamond_cash / 100 }}</td>
+            <td>{{ en.total_cash / 100 }}</td>
             <td>{{ en.total_user }}</td>
+            <td>{{ en.total_diamond_cash / 100 }}</td>
         </tr>
     {{ /each }}
 </tbody>

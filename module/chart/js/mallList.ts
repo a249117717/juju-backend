@@ -249,7 +249,7 @@ define(["text!module/chart/views/mallListTemp.html","text!module/chart/views/mal
                 "token":this.mainView.mainView.token
             };
 
-            if($JQ.is(".updateProcude")) {
+            if($JQ.is(".m-updateContent")) {
                 option["id"] = parseInt(<string>$JQ.find(".mid").val());
             };
 

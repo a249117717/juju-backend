@@ -48,7 +48,7 @@ var download = {
     });
 
     // 复制
-    function copy() {
+    (function(){
         var clipboard = new ClipboardJS('.btn-copy',{
             text:function() {
                 return $(".m-number .number").val();
@@ -61,6 +61,5 @@ var download = {
         clipboard.on('error', function(e) {
             layer.msg("非常抱歉，复制失败，你可能尝试自行复制");
         });
-    };
-    copy();
+    }());
 }());

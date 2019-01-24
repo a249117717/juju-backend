@@ -1,5 +1,5 @@
 var download = {
-    "android":"",   // 安卓下载地址
+    "android":"https://a.app.qq.com/o/simple.jsp?pkgname=com.wayou.juju",   // 安卓下载地址
     "iOS":""// iOS下载地址
 };   
 
